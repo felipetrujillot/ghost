@@ -3,7 +3,8 @@ definePageMeta({
   layout: "add-layout",
 });
 
-onMounted(async () => {
+/* onMounted(async () => {
+  return;
   const res = await $fetch("/api/hello", {
     method: "post",
     body: {
@@ -11,52 +12,49 @@ onMounted(async () => {
     },
   });
   console.log(res);
-});
+}); */
 </script>
 
 <template>
-  <div class="container container-sm">
-    <Card class="p-6 space-y-6">
-      <div>
-        <Label>Title</Label>
-        <Input placeholder="Text" />
-      </div>
+  <Card class="p-6 space-y-6">
+    <div>
+      <Label>URL</Label>
+      <Input placeholder="Text" />
+    </div>
 
-      <div>
-        <Label>Text</Label>
-        <Textarea placeholder="Text" rows="10" />
-      </div>
+    <div>
+      <Label>Title</Label>
+      <Input placeholder="Text" />
+    </div>
 
-      <div>
-        <Label>Gender</Label>
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a gender" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Fruits</SelectLabel>
-              <SelectItem value="male"> Male </SelectItem>
-              <SelectItem value="female"> Female </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+    <div>
+      <Label>Text</Label>
+      <Textarea placeholder="Text" rows="10" />
+    </div>
 
-      <div>
-        <Label>Folder Name</Label>
-        <Input placeholder="Text" />
-      </div>
+    <div>
+      <Label>Gender</Label>
+      <Select>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a gender" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Fruits</SelectLabel>
+            <SelectItem value="male"> Male </SelectItem>
+            <SelectItem value="female"> Female </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
 
-      <div class="text-end">
-        <Button>Submit</Button>
-      </div>
-    </Card>
-  </div>
+    <div>
+      <Label>Folder Name</Label>
+      <Input placeholder="Text" />
+    </div>
+
+    <div class="text-end">
+      <Button>Submit</Button>
+    </div>
+  </Card>
 </template>
-
-<style scoped>
-.container-sm {
-  max-width: 960px;
-}
-</style>

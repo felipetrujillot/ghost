@@ -1,4 +1,4 @@
-import { JSDOM } from "jsdom";
+import puppeteer from "puppeteer";
 
 export default defineEventHandler(async (event) => {
   const { url } = await readBody(event);
@@ -10,10 +10,29 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  const html = await test.text();
-  const dom = new JSDOM(html, { contentType: "text/html" });
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox"],
+    //headless: 'new',
+  });
+  const page = await browser.newPage();
+  await page.goto(url);
 
-  console.log(dom.window.document.querySelectorAll("font"));
+  //await page.waitForSelector(".title");
+
+  const textContent = await page.evaluate(() => document.body.textContent);
+
+  console.log(textContent);
+
+  /* console.log("here");
+  // Get the text content of the element with class "title"
+  const titleText = await page.$eval(".title", (element) =>
+    element.textContent.trim()
+  ); 
+  console.log(titleText);
+  */
+
+  await browser.close();
+
   return {
     hello: "world",
   };

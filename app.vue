@@ -13,3 +13,9 @@ useHead({
     </NuxtLayout>
   </div>
 </template>
+
+<style>
+.container-sm {
+  max-width: 960px;
+}
+</style>
