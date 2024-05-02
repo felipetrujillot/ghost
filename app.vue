@@ -1,5 +1,15 @@
+<script setup lang="ts">
+useHead({
+  bodyAttrs: {
+    class: "dark",
+  },
+});
+</script>
+
 <template>
   <div>
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
