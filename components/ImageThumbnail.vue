@@ -14,7 +14,7 @@ const newScreen = computed(() => {
 </script>
 
 <template>
-  <div style="min-height: 100vh; min-width: 100vw" class="relative">
+  <div style="min-height: 100vh; min-width: 100vw" class="relative bg-black">
     <div>
       <img
         class="absolute"
@@ -27,15 +27,26 @@ const newScreen = computed(() => {
       class="flex justify-center items-center relative"
     >
       <div class="container container-sm">
-        <div>
-          <h1
-            class="text-9xl font-semibold text-center tracking-widest uppercase"
-          >
-            Reverie
-          </h1>
-          <h2 class="text-start tracking-widest" style="max-width: inherit">
-            Polyphia
-          </h2>
+        <div class="flex justify-center">
+          <div class="relative">
+            <h1
+              class="text-9xl p-0 m-0 font-semibold tracking-widest uppercase text-white"
+            >
+              BLOODBATH
+            </h1>
+
+            <div class="flex justify-between px-2 m-0 p-0">
+              <h2
+                class="left-0 text-start tracking-widest text-white uppercase"
+              >
+                Polyphia
+              </h2>
+
+              <h2 class="left-0 text-start tracking-widest text-white">
+                @gh0stpalace
+              </h2>
+            </div>
+          </div>
         </div>
       </div>
     </div>

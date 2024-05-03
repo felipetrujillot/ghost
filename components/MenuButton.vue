@@ -6,12 +6,10 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <h1
-      :class="active === true ? 'text-dark-900' : 'text-sky-300'"
-      class="text-6xl font-extrabold tracking-tighter"
-    >
-      {{ title }}
-    </h1>
-  </div>
+  <h1
+    :class="active === true ? 'text-white' : 'text-sky-300'"
+    class="text-6xl font-extrabold tracking-tighter cursor-pointer hover:text-white"
+  >
+    {{ title }}
+  </h1>
 </template>
