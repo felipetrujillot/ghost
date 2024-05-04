@@ -55,6 +55,7 @@ fi
 # Create the file and add content
 echo "$file_content" | sudo tee "/etc/nginx/sites-available/$file_name" > /dev/null
 
+#
 ln -s "/etc/nginx/sites-available/$file_name" "/etc/nginx/sites-enabled/$file_name" 
 
 
