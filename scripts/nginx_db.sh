@@ -1,7 +1,7 @@
 #!/bin/bash
 
 file_name="db.ghost.conf"
-
+#
 file_content='server {
 
     charset utf-8;
