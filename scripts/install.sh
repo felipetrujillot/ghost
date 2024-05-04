@@ -6,7 +6,7 @@ echo "This script will install everything for you."
 echo "-------------"
 
 apt update -y 
-apt install -y curl wget git jq nginx certbot python3-certbot-nginx
+apt install -y curl wget git nginx
 
 echo "Node 20"
 
