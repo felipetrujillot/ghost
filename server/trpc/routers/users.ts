@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { Users } from '~/server/db/db_schema'
+import { Users, users } from '~/server/db/db_schema'
 import { publicProcedure, router } from '../trpc'
+import { db } from '~/server/db/db'
+import { z } from 'zod'
+import { eq } from 'drizzle-orm'
 
 /**
  *
@@ -11,8 +14,27 @@ export const userTrpc = router({
    *
    */
   getUsers: publicProcedure.query(async () => {
-    return {}
+    return await db.select().from(users)
   }),
+
+  /**
+   *
+   */
+  getUserById: publicProcedure
+    .input(
+      z.object({
+        id_user: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { id_user } = input
+      const findUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.id_user, id_user))
+
+      return findUser[0]
+    }),
 })
 
 /**

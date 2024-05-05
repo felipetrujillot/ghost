@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="border-b">
-      <div class="flex h-16 items-center px-4">
-        <nav class="flex items-center space-x-4 lg:space-x-6 mx-6 mx-6">
+      <div class="flex h-16 items-center container">
+        <nav class="flex items-center space-x-4 lg:space-x-6">
           <NuxtLink
             to="/"
             class="text-sm font-medium transition-colors hover:text-primary"
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="p-8 pt-6 space-y-4">
+    <div class="container pt-6 space-y-4">
       <slot />
     </div>
   </div>

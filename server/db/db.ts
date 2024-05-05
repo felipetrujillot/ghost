@@ -11,7 +11,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+/* const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const certPath = path.join(__dirname, '../../server/db/client-cert.pem')
 const caPath = path.join(__dirname, '../../server/db/server-ca.pem')
 const keyPath = path.join(__dirname, '../../server/db/client-key.pem')
@@ -23,7 +23,7 @@ const sslConfig = {
   key: fs.readFileSync(keyPath),
   rejectUnauthorized: false,
 }
-
+ */
 const params =
   process.dev === true
     ? {
@@ -34,9 +34,9 @@ const params =
       }
     : {
         database: 'ghost',
-        host: config.dbHost,
+        /*  host: config.dbHost,
         user: config.dbUser,
-        password: config.dbPassword,
+        password: config.dbPassword, */
         //ssl: sslConfig,
       }
 

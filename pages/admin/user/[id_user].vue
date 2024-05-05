@@ -1,30 +1,19 @@
 <script setup lang="ts">
-import TableBody from '~/components/ui/table/TableBody.vue'
-
+const { $trpc } = useNuxtApp()
 definePageMeta({
   layout: 'admin-layout',
+})
+const route = useRoute()
+
+const id_user = parseInt(route.params.id_user as string)
+
+const { data: user, pending } = await $trpc.user.getUserById.useQuery({
+  id_user,
 })
 </script>
 <template>
   <h1 class="text-2xl font-bold">Detalle Usuario</h1>
-  <Card>
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[100px]">#</TableHead>
-          <TableHead class="w-[100px]">Nombre</TableHead>
-          <TableHead class="w-[100px]">Apellido</TableHead>
-          <TableHead class="w-[100px]">email</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  </Card>
+  <p class="text-muted-foreground">Administra un usuario al detalle</p>
+  <VueSkeleton v-if="pending" />
+  <Card v-if="!pending">{{ user }} </Card>
 </template>
