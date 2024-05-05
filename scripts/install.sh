@@ -5,7 +5,7 @@ echo "ghost"
 echo "-------------"
 
 apt update -y 
-apt install -y curl wget git nginx php unzip php-curl php-mysqli php-simplexml
+apt install -y curl wget git nginx php unzip php-curl php-mysqli php-simplexml php-fpm php-unzip
 
 echo "Node 20"
 
