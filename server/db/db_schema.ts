@@ -11,12 +11,12 @@ import {
   mysqlSchema,
 } from 'drizzle-orm/mysql-core'
 
-export const workliteSchema = mysqlSchema('worklite')
+export const ghostSchema = mysqlSchema('worklite')
 
 /**
  *
  */
-export const users = workliteSchema.table('users', {
+export const users = ghostSchema.table('users', {
   id_user: int('id_user').autoincrement().notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   lastname: varchar('lastname', { length: 255 }).notNull(),
@@ -37,7 +37,27 @@ export const users = workliteSchema.table('users', {
 /**
  *
  */
-export const passwords_reset = workliteSchema.table('passwords_reset', {
+export const companies = mysqlTable('companies', {
+  id_company: int('id_company').autoincrement().notNull(),
+  company_name: varchar('company_name', { length: 255 }).notNull(),
+  company_rut: varchar('company_rut', { length: 255 }).notNull(),
+  company_giro: varchar('company_giro', { length: 255 }).notNull(),
+  company_address: varchar('company_address', { length: 255 }).notNull(),
+  company_razon_social: varchar('company_razon_social', {
+    length: 255,
+  }).notNull(),
+  company_comuna: varchar('company_comuna', { length: 255 }).notNull(),
+  company_region: varchar('company_region', { length: 255 }).notNull(),
+  company_phone: varchar('company_phone', { length: 255 }).notNull(),
+  active: int('active').notNull().default(1),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').onUpdateNow(),
+})
+
+/**
+ *
+ */
+export const passwords_reset = ghostSchema.table('passwords_reset', {
   id_password_reset: int('id_password_reset').primaryKey().autoincrement(),
   token: varchar('token', { length: 250 }).notNull(),
   id_user: int('id_user').notNull(),
