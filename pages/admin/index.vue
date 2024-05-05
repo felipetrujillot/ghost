@@ -3,5 +3,5 @@ console.log('er')
 </script>
 
 <template>
-  <div></div>
+  <div class="bg-"></div>
 </template>

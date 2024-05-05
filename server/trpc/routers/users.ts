@@ -39,7 +39,10 @@ export const userTrpc = router({
       const findUser = await db
         .select({
           name: users.name,
+          lastname: users.lastname,
           email: users.email,
+          role: users.role,
+          birthdate: users.birthdate,
           id_user: users.id_user,
           company_name: companies.company_name,
         })
@@ -48,6 +51,40 @@ export const userTrpc = router({
         .where(eq(users.id_user, id_user))
 
       return findUser[0]
+    }),
+
+  /**
+   *
+   */
+  updateUser: publicProcedure
+    .input(
+      z.object({
+        id_user: z.number(),
+        name: z.string(),
+        lastname: z.string(),
+        role: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      {
+        const { id_user, ...updateParams } = input
+        const updateUser = await db
+          .update(users)
+          .set(updateParams)
+          .where(eq(users.id_user, id_user))
+
+        if (updateUser[0].changedRows === 0) {
+          return {
+            status: 'warning' as const,
+            data: 'No se realizó ningún cambio',
+          }
+        }
+
+        return {
+          status: 'ok' as const,
+          data: 'La información se actualizó correctamente',
+        }
+      }
     }),
 })
 
