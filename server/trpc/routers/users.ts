@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { Users, users } from '~/server/db/db_schema'
+import { Users, companies, users } from '~/server/db/db_schema'
 import { publicProcedure, router } from '../trpc'
 import { db } from '~/server/db/db'
 import { z } from 'zod'
@@ -14,7 +14,15 @@ export const userTrpc = router({
    *
    */
   getUsers: publicProcedure.query(async () => {
-    return await db.select().from(users)
+    return await db
+      .select({
+        name: users.name,
+        email: users.email,
+        id_user: users.id_user,
+        company_name: companies.company_name,
+      })
+      .from(users)
+      .innerJoin(companies, eq(companies.id_company, users.id_company))
   }),
 
   /**
@@ -29,8 +37,14 @@ export const userTrpc = router({
     .query(async ({ input }) => {
       const { id_user } = input
       const findUser = await db
-        .select()
+        .select({
+          name: users.name,
+          email: users.email,
+          id_user: users.id_user,
+          company_name: companies.company_name,
+        })
         .from(users)
+        .innerJoin(companies, eq(companies.id_company, users.id_company))
         .where(eq(users.id_user, id_user))
 
       return findUser[0]

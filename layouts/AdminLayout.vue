@@ -4,24 +4,17 @@
       <div class="flex h-16 items-center container">
         <nav class="flex items-center space-x-4 lg:space-x-6">
           <NuxtLink
-            to="/"
+            to="/admin/users"
             class="text-sm font-medium transition-colors hover:text-primary"
           >
-            Overview
+            Usuarios
           </NuxtLink>
 
           <NuxtLink
-            to="/"
+            to="/admin/companies"
             class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
-            Customers
-          </NuxtLink>
-
-          <NuxtLink
-            to="/"
-            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-          >
-            Customers
+            Empresas
           </NuxtLink>
         </nav>
 

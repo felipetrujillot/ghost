@@ -4,10 +4,11 @@ definePageMeta({
   layout: 'admin-layout',
 })
 
-const { data: users, pending } = await $trpc.user.getUsers.useQuery()
+const { data: companies, pending } =
+  await $trpc.companies.getCompanies.useQuery()
 </script>
 <template>
-  <h1 class="text-2xl font-bold">Usuarios</h1>
+  <h1 class="text-2xl font-bold">Empresas</h1>
 
   <VueSkeleton v-if="pending" />
   <Card v-if="!pending">
@@ -21,12 +22,13 @@ const { data: users, pending } = await $trpc.user.getUsers.useQuery()
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="u in users" :key="u.id_user">
-          <TableCell class="w-[100px]">{{ u.id_user }}</TableCell>
-          <TableCell class="w-[100px]">{{ u.name }}</TableCell>
-          <TableCell class="w-[100px]">{{ u.email }}</TableCell>
+        <TableRow v-for="c in companies" :key="c.id_company">
+          <TableCell class="w-[100px]">{{ c.id_company }}</TableCell>
+          <TableCell class="w-[100px]">{{ c.company_name }}</TableCell>
+          <TableCell class="w-[100px]">{{ c.company_rut }}</TableCell>
           <TableCell class="w-[100px]">
-            <Button @click.prevent="$router.push(`/admin/user/${u.id_user}`)"
+            <Button
+              @click.prevent="$router.push(`/admin/company/${c.id_company}`)"
               >Detalle</Button
             >
           </TableCell>

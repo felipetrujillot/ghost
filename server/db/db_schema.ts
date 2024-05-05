@@ -18,6 +18,7 @@ export const ghostSchema = mysqlSchema('worklite')
  */
 export const users = ghostSchema.table('users', {
   id_user: int('id_user').autoincrement().notNull(),
+  id_company: int('id_company').notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   lastname: varchar('lastname', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
