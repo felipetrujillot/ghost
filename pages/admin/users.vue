@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const { $trpc } = useNuxtApp()
+documentTitle('Admin - Usuarios')
 definePageMeta({
   layout: 'admin-layout',
 })
-documentTitle('Admin - Usuarios')
 
 const { data: users, pending } = await $trpc.user.getUsers.useQuery()
 </script>
