@@ -67,7 +67,7 @@ watch(busqueda, () => {
           variant="outline"
           @click.prevent="busqueda = ''"
         >
-          <X />
+          <X :size="20" />
           <!--           <i
             class="ph ph-magnifying-glass text-xl"
             v-if="busqueda!.length === 0"

@@ -1,7 +1,7 @@
 import { inferAsyncReturnType } from '@trpc/server'
 //import { v4 as uuid } from 'uuid'
 import { desencriptaToken } from './routers/users'
-
+import type { H3Event } from 'h3'
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context

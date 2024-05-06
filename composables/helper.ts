@@ -488,7 +488,7 @@ export const documentTitle = (title: string) => {
   const projectName = res.$config.public.projectName
 
   useHead({
-    title: `${title} - ${projectName}`,
+    title: `${title} | ${projectName}`,
     meta: [{ name: 'description', content: projectName }],
   })
 }

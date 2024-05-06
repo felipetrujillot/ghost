@@ -7,10 +7,10 @@
  */
 import { drizzle } from 'drizzle-orm/mysql2'
 import mysql from 'mysql2/promise'
-import path from 'path'
+/* import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs'
-
+ */
 const config = useRuntimeConfig()
 /* const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const certPath = path.join(__dirname, '../../server/db/client-cert.pem')
