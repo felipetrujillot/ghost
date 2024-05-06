@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { $trpc } = useNuxtApp()
+documentTitle('Admin - Detalle Usuario')
+
 definePageMeta({
   layout: 'admin-layout',
 })
@@ -16,6 +18,15 @@ const formData = ref({
   role: '',
   birthdate: '',
 })
+
+const formError = {
+  id_user: false,
+  name: false,
+  lastname: false,
+  email: false,
+  role: false,
+  birthdate: false,
+}
 
 /**
  *
@@ -60,6 +71,7 @@ onMounted(async () => {
         <Label> Nombre </Label>
         <Input
           v-model="formData.name"
+          :class="formError.name ? 'border-primary' : ''"
           placeholder="Primer Nombre"
           type="text"
         />
@@ -69,6 +81,7 @@ onMounted(async () => {
         <Label> Apellido </Label>
         <Input
           v-model="formData.lastname"
+          :class="formError.lastname ? 'border-primary' : ''"
           placeholder="Primer Apellido"
           type="text"
         />
@@ -78,6 +91,7 @@ onMounted(async () => {
         <Label> Email </Label>
         <Input
           v-model="formData.email"
+          :class="formError.email ? 'border-primary' : ''"
           placeholder="hola@gmail.com"
           type="email"
         />

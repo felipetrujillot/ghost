@@ -4,12 +4,98 @@ import { Users, companies, users } from '~/server/db/db_schema'
 import { publicProcedure, router } from '../trpc'
 import { db } from '~/server/db/db'
 import { z } from 'zod'
-import { eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
+import { RouterOutput } from '.'
 
 /**
  *
  */
 export const userTrpc = router({
+  /**
+   * Busca un proyecto según id_proyecto_linkcloud
+   * @param email
+   * @param password
+   */
+  loginApi: publicProcedure
+    .input(
+      z.object({
+        email: z.string().email(),
+        password: z.string(),
+      })
+    )
+    .mutation(async (opts): Promise<LoginResponse> => {
+      const { email, password } = opts.input
+
+      /**
+       * busca usuario y válida que esté active
+       */
+      const usuario = await db
+        .select({
+          active: companies.active,
+          id_user: users.id_user,
+          id_company: users.id_company,
+          name: users.name,
+          lastname: users.lastname,
+          password: users.password,
+          email: users.email,
+          birthdate: users.birthdate,
+          healthcare: users.healthcare,
+          area: users.area,
+          gender: users.gender,
+          phone: users.phone,
+          logged_in: users.logged_in,
+          role: users.role,
+          created_at: users.created_at,
+          updated_at: users.updated_at,
+        })
+        .from(users)
+        .innerJoin(companies, eq(companies.id_company, users.id_company))
+        .where(
+          and(eq(users.email, email.toLocaleLowerCase().replace(/\s/g, '')))
+        )
+        .limit(1)
+
+      if (usuario.length == 0) {
+        return {
+          status: 'err' as const,
+          data: 'No se encontró el usuario',
+        } as const
+      }
+      if (usuario[0].active === 0) {
+        return {
+          status: 'err' as const,
+          data: 'El usuario no se encuentra active',
+        } as const
+      }
+
+      let dbPass = String(usuario[0].password.replace(/\s/g, ''))
+      dbPass = dbPass.replace(/^\$2y(.+)$/i, '$2a$1')
+
+      const bcrypt = await bcryptToken(usuario[0], password, dbPass)
+
+      await db
+        .update(users)
+        .set({ logged_in: 1 })
+
+        .where(eq(users.id_user, usuario[0].id_user))
+      return bcrypt
+    }),
+
+  /**
+   *
+   */
+  validaToken: publicProcedure
+    .input(
+      z.object({
+        token: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { token } = input
+      const res = await desencriptaToken(token)
+      return res
+    }),
+
   /**
    *
    */
@@ -23,6 +109,7 @@ export const userTrpc = router({
       })
       .from(users)
       .innerJoin(companies, eq(companies.id_company, users.id_company))
+      .orderBy(desc(users.id_user))
   }),
 
   /**
@@ -121,3 +208,57 @@ export const hashPasswordBcrypt = async (plaintextPassword: string) => {
   // Return the hashed password
   return hash
 }
+
+type LoginResponse =
+  | { status: 'err'; data: string }
+  | {
+      status: 'ok'
+      data: string
+      token: string
+      usuario_db: Users
+    }
+
+/**
+ *
+ * @param usuario
+ * @param id_company
+ * @param password
+ * @param dbPass
+ * @returns
+ */
+export const bcryptToken = async (
+  usuario: Users,
+  password: string,
+  dbPass: string
+) => {
+  const config = useRuntimeConfig()
+
+  const usuarioPartner = {
+    ...usuario,
+  }
+  const decoded: LoginResponse = <LoginResponse>await new Promise((resolve) => {
+    bcrypt.compare(password, dbPass, (bcryptErr, isMatch) => {
+      if (bcryptErr || !isMatch) {
+        resolve({
+          status: 'err' as const,
+          data: 'La contraseña no es válida',
+        })
+      }
+
+      // Create and sign the JWT token
+      const token = jwt.sign(usuarioPartner, config.jwtSecret as string, {
+        expiresIn: '3y',
+      })
+      resolve({
+        status: 'ok' as const,
+        data: 'Login correcto',
+        usuario_db: usuarioPartner,
+        token: token,
+      })
+    })
+  })
+
+  return decoded
+}
+
+export type GetUsers = RouterOutput['user']['getUsers']

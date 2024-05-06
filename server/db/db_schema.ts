@@ -11,7 +11,7 @@ import {
   mysqlSchema,
 } from 'drizzle-orm/mysql-core'
 
-export const ghostSchema = mysqlSchema('worklite')
+export const ghostSchema = mysqlSchema('ghost')
 
 /**
  *

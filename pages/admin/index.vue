@@ -1,5 +1,7 @@
 <script setup lang="ts">
-console.log('er')
+definePageMeta({
+  layout: 'admin-layout',
+})
 </script>
 
 <template>

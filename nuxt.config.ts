@@ -18,4 +18,15 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui',
   },
+
+  runtimeConfig: {
+    jwtSecret: process.env.NUXT_JWT_SECRET,
+    dbPassword: process.env.NUXT_DB_PASSWORD || '',
+    dbHost: process.env.NUXT_DB_HOST || '',
+    dbUser: process.env.NUXT_DB_USER || 'root',
+
+    public: {
+      projectName: process.env.NUXT_PROJECT_NAME || 'NUXT',
+    },
+  },
 })
