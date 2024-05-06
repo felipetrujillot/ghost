@@ -43,8 +43,8 @@ file_content='server {
         proxy_set_header X-Real-IP $remote_addr;
     }
 
-    error_log  /var/log/nginx/wl-error.log;
-    access_log /var/log/nginx/wl.log;
+    error_log  /var/log/nginx/ghost-error.log;
+    access_log /var/log/nginx/ghost.log;
 }'
 
 if [ -e "/etc/nginx/sites-available/$file_name" ]; then

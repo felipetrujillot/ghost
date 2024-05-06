@@ -22,7 +22,7 @@ const { totalPages, filtered, busqueda, page } = useDynamicTable({
     v-model:page="page"
     :totalPages="totalPages"
     :filtered="filtered"
-    placeholder="Busca un usuario"
+    placeholder="Busca una empresa"
   >
     <TableHeader>
       <TableRow>

@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     dbPassword: process.env.NUXT_DB_PASSWORD || '',
     dbHost: process.env.NUXT_DB_HOST || '',
     dbUser: process.env.NUXT_DB_USER || 'root',
+    dbName: process.env.NUXT_DB_NAME || 'ghost',
 
     public: {
       projectName: process.env.NUXT_PROJECT_NAME || 'NUXT',
