@@ -20,6 +20,10 @@ useHead({
   max-width: 960px;
 }
 
+.container-xs {
+  max-width: 720px;
+}
+
 @keyframes fade {
   0% {
     opacity: 0;

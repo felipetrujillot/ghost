@@ -376,6 +376,31 @@ export const useCtrlKey = (
   })
 }
 
+export const useMetaKey = (
+  keysSelected: KeyboardShortcutKey,
+  emit: Function
+) => {
+  const ctrlEvent = (e: KeyboardEvent) => {
+    const { key, metaKey } = e
+
+    if (metaKey && key === keysSelected) {
+      e.preventDefault()
+      emit()
+    }
+  }
+
+  /**
+   */
+  onMounted(() => {
+    document.addEventListener('keydown', ctrlEvent)
+  })
+
+  /**
+   */
+  onUnmounted(() => {
+    document.removeEventListener('keydown', ctrlEvent)
+  })
+}
 /**
  *
  * @param emit

@@ -26,6 +26,13 @@ const open = ref(false)
           </NuxtLink>
 
           <NuxtLink
+            to="/ai/notes"
+            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            Notas
+          </NuxtLink>
+
+          <NuxtLink
             to="/ai/rfp"
             class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >

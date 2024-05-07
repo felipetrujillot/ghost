@@ -9,14 +9,15 @@ import {
   int,
   timestamp,
   mysqlSchema,
+  text,
 } from 'drizzle-orm/mysql-core'
 
-export const ghostSchema = mysqlSchema('ghost')
+export const mySchema = mysqlSchema('ghost')
 
 /**
  *
  */
-export const users = ghostSchema.table('users', {
+export const users = mySchema.table('users', {
   id_user: int('id_user').autoincrement().notNull(),
   id_company: int('id_company').notNull(),
   name: varchar('name', { length: 255 }).notNull(),
@@ -38,7 +39,7 @@ export const users = ghostSchema.table('users', {
 /**
  *
  */
-export const companies = mysqlTable('companies', {
+export const companies = mySchema.table('companies', {
   id_company: int('id_company').autoincrement().notNull(),
   company_name: varchar('company_name', { length: 255 }).notNull(),
   company_rut: varchar('company_rut', { length: 255 }).notNull(),
@@ -55,10 +56,19 @@ export const companies = mysqlTable('companies', {
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
 
+export const notes = mySchema.table('notes', {
+  id_note: int('id_note').primaryKey().autoincrement(),
+  title_note: varchar('title_note', { length: 250 }).notNull(),
+  text_note: text('text_note').notNull(),
+  active: int('active').notNull().default(1),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').onUpdateNow(),
+})
+
 /**
  *
  */
-export const passwords_reset = ghostSchema.table('passwords_reset', {
+export const passwords_reset = mySchema.table('passwords_reset', {
   id_password_reset: int('id_password_reset').primaryKey().autoincrement(),
   token: varchar('token', { length: 250 }).notNull(),
   id_user: int('id_user').notNull(),
