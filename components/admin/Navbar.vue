@@ -6,7 +6,7 @@ const open = ref(false)
 <template>
   <header class="h-16">
     <div
-      style="z-index: 99"
+      style="z-index: 1"
       class="flex fixed h-16 bg-background border-b items-center w-screen min-w-screen"
     >
       <div class="flex container">
@@ -23,6 +23,13 @@ const open = ref(false)
             class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Empresas
+          </NuxtLink>
+
+          <NuxtLink
+            to="/ai/rfp"
+            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            RFP
           </NuxtLink>
         </nav>
 

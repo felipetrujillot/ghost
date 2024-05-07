@@ -12,7 +12,7 @@ const props = defineProps<{
 const { totalPages, filtered, busqueda, page } = useDynamicTable({
   data: props.users,
   limit: 6,
-  varColumn: ['company_name', 'name'],
+  varColumn: ['company_name', 'name', 'email'],
 })
 </script>
 
