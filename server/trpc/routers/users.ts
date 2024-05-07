@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import { Users, companies, users } from '~/server/db/db_schema'
-import { publicProcedure, router } from '../trpc'
+import { protectedProcedure, publicProcedure, router } from '../trpc'
 import { db } from '~/server/db/db'
 import { z } from 'zod'
 import { and, desc, eq } from 'drizzle-orm'
@@ -84,7 +84,7 @@ export const userTrpc = router({
   /**
    *
    */
-  validaToken: publicProcedure
+  validaToken: protectedProcedure
     .input(
       z.object({
         token: z.string(),
@@ -99,7 +99,7 @@ export const userTrpc = router({
   /**
    *
    */
-  getUsers: publicProcedure.query(async () => {
+  getUsers: protectedProcedure.query(async () => {
     return await db
       .select({
         name: users.name,
@@ -115,7 +115,7 @@ export const userTrpc = router({
   /**
    *
    */
-  getUserById: publicProcedure
+  getUserById: protectedProcedure
     .input(
       z.object({
         id_user: z.number(),
@@ -143,7 +143,7 @@ export const userTrpc = router({
   /**
    *
    */
-  updateUser: publicProcedure
+  updateUser: protectedProcedure
     .input(
       z.object({
         id_user: z.number(),

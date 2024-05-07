@@ -1,5 +1,5 @@
 import { db } from '~/server/db/db'
-import { publicProcedure, router } from '../trpc'
+import { protectedProcedure, router } from '../trpc'
 import { companies } from '~/server/db/db_schema'
 import { desc, eq } from 'drizzle-orm'
 import { z } from 'zod'
@@ -12,14 +12,14 @@ export const companiesTrpc = router({
   /**
    *
    */
-  getCompanies: publicProcedure.query(async () => {
+  getCompanies: protectedProcedure.query(async () => {
     return await db.select().from(companies).orderBy(desc(companies.id_company))
   }),
 
   /**
    *
    */
-  getCompanyById: publicProcedure
+  getCompanyById: protectedProcedure
     .input(
       z.object({
         id_company: z.number(),
