@@ -24,7 +24,7 @@ const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
     <h1 class="text-2xl font-bold">{{ project.project_name }}</h1>
 
     <DocumentTitle :title="project.project_name" />
-    <Tabs default-value="tablero" v-model="tabs">
+    <!-- <Tabs default-value="tablero" v-model="tabs">
       <TabsList>
         <TabsTrigger value="tablero"> Tablero </TabsTrigger>
         <TabsTrigger value="chat"> Todas las tareas </TabsTrigger>
@@ -32,7 +32,7 @@ const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
 
       <TabsContent value="tablero"> </TabsContent>
       <TabsContent value="chat"> </TabsContent>
-    </Tabs>
+    </Tabs> -->
 
     <TasksDragableGrid :tasks="data" />
   </template>

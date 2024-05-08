@@ -34,6 +34,7 @@ export const tasksTrpc = router({
       z.object({
         id_task: z.number(),
         task_status: z.number(),
+        task_name: z.string(),
       })
     )
     .mutation(async ({ input }) => {
@@ -46,6 +47,33 @@ export const tasksTrpc = router({
       }
     }),
 
+  newTask: protectedProcedure
+    .input(
+      z.object({
+        task_status: z.number(),
+        id_project: z.number(),
+        task_name: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { task_name, task_status, id_project } = input
+
+      const insertTask = await db.insert(tasks).values({
+        task_name,
+        task_status,
+        id_project,
+      })
+
+      const findTask = await db
+        .select()
+        .from(tasks)
+        .where(eq(tasks.id_task, insertTask[0].insertId))
+
+      return {
+        status: 'ok' as const,
+        data: findTask[0],
+      }
+    }),
   /**
    *
    */

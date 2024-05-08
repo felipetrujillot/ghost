@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { SquarePen } from 'lucide-vue-next'
 import type { GetTasksByIdProject } from '~/server/trpc/routers/tasks'
 const { $trpc } = useNuxtApp()
 const props = defineProps<{
   tasks: GetTasksByIdProject
 }>()
 
+const route = useRoute()
+const id_project = parseInt(route.params.id_project as string)
 const tasksRef = ref(props.tasks)
 
 const filterTask = (status: number) => {
@@ -34,15 +35,15 @@ const onDrop = (event: DragEvent, newStatus: number) => {
 
   const id_task = parseInt(event.dataTransfer.getData('id_task'))
 
-  /* tasksRef.value = tasksRef.value.filter((t) => {
-    if (t.id_task !== id_task) return t
+  const foundTask = tasksRef.value.filter((t) => {
+    if (t.id_task === id_task) return t
   })
- */
 
   $trpc.tasks.updateTask
     .mutate({
       id_task: id_task,
       task_status: newStatus,
+      task_name: foundTask[0].task_name,
     })
     .then((res) => {
       console.log(res)
@@ -57,91 +58,143 @@ const onDrop = (event: DragEvent, newStatus: number) => {
     }
   })
 }
+
+/**
+ *
+ */
+const emitUpdateTask = (t: GetTasksByIdProject[0]) => {
+  tasksRef.value.forEach((task) => {
+    if (task.id_task === t.id_task) {
+      task = t
+    }
+  })
+}
+
+/**
+ *
+ */
+const newTask = async (taskStatus: number) => {
+  const { status, data } = await $trpc.tasks.newTask.mutate({
+    id_project,
+    task_name: '',
+    task_status: taskStatus,
+  })
+
+  if (status === 'ok') {
+    tasksRef.value.push(data)
+  }
+}
 </script>
 
 <template>
   <div class="grid grid-cols-4 gap-4">
     <Card
-      class="p-2 h-80"
+      class="p-2 min-h-80"
       @drop="onDrop($event, 1)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <Badge variant="secondary"> Sin empezar </Badge>
+      <div class="flex justify-between">
+        <Badge variant="secondary"> Sin empezar </Badge>
+        <p
+          class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
+          @click.prevent="newTask(1)"
+        >
+          Nueva tarea
+        </p>
+      </div>
 
       <Card
         class="p-2 cursor-pointer bg-muted/40"
         v-for="t in filterTask(1)"
+        :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <p class="text-md">
-          {{ t.task_name }}
-        </p>
+        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
       </Card>
     </Card>
 
     <Card
-      class="p-2 h-80"
+      class="p-2 min-h-80"
       @drop="onDrop($event, 2)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <Badge> En Curso </Badge>
+      <div class="flex justify-between">
+        <Badge> En Curso </Badge>
+
+        <p
+          class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
+          @click.prevent="newTask(2)"
+        >
+          Nueva tarea
+        </p>
+      </div>
 
       <Card
         class="p-2 cursor-pointer bg-muted/40"
         v-for="t in filterTask(2)"
+        :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <div class="flex justify-between gap-2">
-          <!--   <p class="text-md">
-            {{ t.task_name }}
-          </p> -->
-          <Textarea v-model="t.task_name" class="min-h-10" />
-          <SquarePen :size="20" />
-        </div>
+        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
       </Card>
     </Card>
 
     <Card
-      class="p-2 h-80"
+      class="p-2 min-h-80"
       @drop="onDrop($event, 3)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <Badge class="bg-green-700"> Listo </Badge>
+      <div class="flex justify-between">
+        <Badge class="bg-green-700"> Listo </Badge>
+        <p
+          class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
+          @click.prevent="newTask(3)"
+        >
+          Nueva tarea
+        </p>
+      </div>
 
       <Card
         class="p-2 cursor-pointer bg-muted/40"
         v-for="t in filterTask(3)"
+        :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <p class="text-md">
-          {{ t.task_name }}
-        </p>
+        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
       </Card>
     </Card>
 
     <Card
-      class="p-2 h-80"
+      class="p-2 min-h-80"
       @drop="onDrop($event, 4)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <Badge variant="outline"> Archivados </Badge>
+      <div class="flex justify-between">
+        <Badge variant="outline"> Archivados </Badge>
+
+        <p
+          class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
+          @click.prevent="newTask(4)"
+        >
+          Nueva tarea
+        </p>
+      </div>
 
       <Card
         class="p-2 cursor-pointer bg-muted/40"
         v-for="t in filterTask(4)"
+        :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <p class="text-md">
-          {{ t.task_name }}
-        </p>
+        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
       </Card>
     </Card>
   </div>
