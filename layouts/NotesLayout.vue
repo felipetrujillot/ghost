@@ -5,11 +5,17 @@ const { $trpc, $router } = useNuxtApp()
  *
  */
 const { data, pending } = $trpc.notes.getNotes.useQuery()
-
 const route = useRoute()
 
+/**
+ *
+ */
 const newNote = async () => {
-  const { status, data } = await $trpc.notes.newNote.query()
+  return
+  const { status, data } = await $trpc.notes.newNote.mutate({
+    note_text: '',
+    note_name: 'Nueva Nota',
+  })
 
   $router.push(`/ai/note/${data}`)
 }
@@ -19,28 +25,65 @@ const newNote = async () => {
   <div>
     <AdminNavbar />
 
-    <div
-      class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
-    >
-      <div class="hidden border-r bg-muted/40 md:block">
-        <div
-          class="flex h-full max-h-screen flex-col gap-2"
-          style="width: 280px"
-        >
-          <div class="flex-1 fixed my-4" style="width: 280px">
+    <div class="grid w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div class="hidden lg:block">
+        <div class="flex flex-col gap-2" style="width: 280px">
+          <div
+            class="fixed flex flex-col justify-between border-r py-4 bg-muted/40 h-full"
+            style="width: 280px"
+          >
             <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
               <template v-if="!pending">
+                <Accordion
+                  type="single"
+                  class="w-full"
+                  collapsible
+                  v-for="item in data"
+                  :key="item.id_group_note.toString()"
+                  :default-value="item.id_group_note.toString()"
+                >
+                  <AccordionItem
+                    :value="item.id_group_note.toString()"
+                    class="border-none"
+                  >
+                    <AccordionTrigger>{{ item.group_name }}</AccordionTrigger>
+                    <AccordionContent
+                      v-for="n in item.notes"
+                      class="space-y-1 gap-2"
+                    >
+                      <NuxtLink
+                        :to="`/ai/note/${n.id_note}`"
+                        :class="
+                          route.path === `/ai/note/${n.id_note}`
+                            ? 'text-primary'
+                            : 'text-muted-foreground'
+                        "
+                        class="flex items-center gap-3 rounded-lg px-3 transition-all hover:text-primary"
+                      >
+                        {{ n.note_name }}
+                      </NuxtLink>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </template>
+
+              <!-- <template v-if="!pending">
                 <template v-for="n in data">
                   <NuxtLink
                     :to="`/ai/note/${n.id_note}`"
-                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                    :class="
+                      route.path === `/ai/note/${n.id_note}`
+                        ? 'text-primary'
+                        : 'text-muted-foreground'
+                    "
+                    class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
                   >
-                    {{ n.title_note }}
+                    {{ n.note_name }}
                   </NuxtLink>
                 </template>
-              </template>
+              </template> -->
             </nav>
-            <div class="mt-4 text-end px-4">
+            <div class="mb-20 text-end px-4">
               <Button @click.prevent="newNote">Nuevo</Button>
             </div>
           </div>
@@ -54,13 +97,5 @@ const newNote = async () => {
         </main>
       </div>
     </div>
-    <!--  <div
-      class="bg-neutral-50 dark:bg-muted/40"
-      style="min-height: calc(100vh - 4.1rem)"
-    >
-      <div class="container py-6 space-y-4">
-        <slot />
-      </div>
-    </div> -->
   </div>
 </template>

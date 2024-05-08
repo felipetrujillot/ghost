@@ -10,17 +10,34 @@ const id_note = parseInt(route.params.id_note as string)
 const { data: note, pending } = $trpc.notes.getNoteById.useQuery({
   id_note,
 })
+
+/**
+ *
+ */
+const saveNote = async (res: {
+  id_note: number
+  note_text: string
+  note_name: string
+}) => {
+  const { status, data } = await $trpc.notes.updateNote.mutate({
+    id_note: res.id_note,
+    note_text: res.note_text,
+    note_name: res.note_name,
+  })
+  toast(status, data)
+}
 </script>
 <template>
-  <div class="w-full container-xs ml-auto mr-auto">
+  <div class="container-xs">
     <VueSkeleton v-if="pending" />
 
     <template v-if="!pending && note">
-      <DocumentTitle :title="note.title_note" />
+      <DocumentTitle :title="note.note_name" />
       <Tiptap
         :id_note="id_note"
-        :text_note="note.text_note"
-        :title_note="note.title_note"
+        :note_text="note.note_text"
+        :note_name="note.note_name"
+        @saveNote="saveNote"
       />
     </template>
   </div>

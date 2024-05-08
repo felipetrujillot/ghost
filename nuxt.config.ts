@@ -19,6 +19,26 @@ export default defineNuxtConfig({
     componentDir: './components/ui',
   },
 
+  app: {
+    head: {
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      htmlAttrs: {
+        lang: 'es-CL',
+      },
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: '/icon.svg',
+        },
+      ],
+    },
+  },
+
   runtimeConfig: {
     jwtSecret: process.env.NUXT_JWT_SECRET,
     dbPassword: process.env.NUXT_DB_PASSWORD || '',

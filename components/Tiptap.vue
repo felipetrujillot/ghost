@@ -10,15 +10,16 @@ const { $trpc } = useNuxtApp()
  *
  */
 const props = defineProps<{
-  title_note: string
-  text_note: string
+  note_name: string
+  note_text: string
   id_note: number
 }>()
 
-const titleRef = ref(props.title_note)
+const emit = defineEmits(['saveNote'])
+const titleRef = ref(props.note_name)
 
 const editor = useEditor({
-  content: props.text_note,
+  content: props.note_text,
   extensions: [StarterKit, Link],
   editorProps: {
     attributes: {
@@ -27,19 +28,19 @@ const editor = useEditor({
   },
 })
 
+/**
+ *
+ */
 const save = async () => {
-  console.log('here')
   if (!editor.value) return
-  const text_note = editor.value.getHTML()
 
-  const { status, data } = await $trpc.notes.updateNote.mutate({
+  const note_text = editor.value.getHTML()
+
+  emit('saveNote', {
     id_note: props.id_note,
-    text_note: text_note,
-    title_note: titleRef.value,
+    note_text: note_text,
+    note_name: titleRef.value,
   })
-
-  toast(status, data)
-  //  console.log(editor.value.view.dom)
 }
 useMetaKey('s', () => {
   save()
@@ -117,12 +118,14 @@ useMetaKey('s', () => {
       </Button> -->
     </div>
 
-    <div class="p-0">
+    <div class="p-0 min-h-72">
       <editor-content :editor="editor" />
       <!--         class="space-y-2 editorFix flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
  -->
     </div>
 
-    <Button @click.prevent="save">Save</Button>
+    <div class="text-end">
+      <Button @click.prevent="save">Guardar</Button>
+    </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 import { db } from '~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import { companies, notes } from '~/server/db/db_schema'
+import { companies, group_notes, notes } from '~/server/db/db_schema'
 import { desc, eq } from 'drizzle-orm'
 import { RouterOutput } from '.'
 import { z } from 'zod'
@@ -13,7 +13,36 @@ export const notesTrpc = router({
    *
    */
   getNotes: protectedProcedure.query(async () => {
-    return await db.select().from(notes).orderBy(desc(notes.id_note))
+    const findNotes = await db
+      .select()
+      .from(notes)
+      .orderBy(desc(notes.id_note))
+      .where(eq(notes.active, 1))
+
+    const findGroups = await db
+      .select()
+      .from(group_notes)
+      .orderBy(desc(group_notes.id_group_note))
+      .where(eq(group_notes.active, 1))
+
+    type ArrayOfGroups = (typeof findGroups)[0] & { notes: typeof findNotes }
+    const newArr: ArrayOfGroups[] = []
+
+    findGroups.forEach((g) => {
+      const foundedArray: typeof findNotes = []
+      findNotes.forEach((n) => {
+        if (g.id_group_note === n.id_group_note) {
+          foundedArray.push(n)
+        }
+      })
+
+      newArr.push({
+        ...g,
+        notes: foundedArray,
+      })
+    })
+
+    return newArr
   }),
 
   /**
@@ -43,16 +72,16 @@ export const notesTrpc = router({
     .input(
       z.object({
         id_note: z.number(),
-        text_note: z.string(),
-        title_note: z.string(),
+        note_text: z.string(),
+        note_name: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { id_note, text_note, title_note } = input
+      const { id_note, note_text, note_name } = input
 
       await db
         .update(notes)
-        .set({ text_note, title_note })
+        .set({ note_text, note_name })
         .where(eq(notes.id_note, id_note))
 
       return {
@@ -64,16 +93,24 @@ export const notesTrpc = router({
   /**
    *
    */
-  newNote: protectedProcedure.query(async () => {
-    const insertNote = await db.insert(notes).values({
-      text_note: '',
-      title_note: 'Nueva nota',
-    })
-    return {
-      status: 'ok' as const,
-      data: insertNote[0].insertId,
-    }
-  }),
+  newNote: protectedProcedure
+    .input(
+      z.object({
+        note_text: z.string(),
+        note_name: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { note_text, note_name } = input
+      const insertNote = await db.insert(notes).values({
+        note_text,
+        note_name,
+      })
+      return {
+        status: 'ok' as const,
+        data: insertNote[0].insertId,
+      }
+    }),
 })
 
-export type GetCompanies = RouterOutput['companies']['getCompanies']
+export type GetNotes = RouterOutput['notes']['getNotes']

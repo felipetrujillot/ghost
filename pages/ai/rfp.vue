@@ -49,8 +49,8 @@ const tabs = ref('resumen')
           <TabsTrigger value="resumen"> Resumen </TabsTrigger>
           <TabsTrigger value="chat"> Chat IA </TabsTrigger>
         </TabsList>
-        <TabsContent value="resumen"> </TabsContent>
-        <TabsContent value="chat"> </TabsContent>
+        <!--   <TabsContent value="resumen"> </TabsContent>
+        <TabsContent value="chat"> </TabsContent> -->
       </Tabs>
 
       <Card v-if="tabs === 'chat'">

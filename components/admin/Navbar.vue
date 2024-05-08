@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { CircleUser, CircleUserRound } from 'lucide-vue-next'
 const open = ref(false)
+
+const route = useRoute()
 </script>
 
 <template>
@@ -11,30 +13,49 @@ const open = ref(false)
     >
       <div class="flex container">
         <nav class="flex items-center space-x-4 lg:space-x-6">
+          <img src="/icon.svg" width="20" height="20" />
           <NuxtLink
             to="/admin/users"
             class="text-sm font-medium transition-colors hover:text-primary"
+            :class="
+              route.path === `/admin/users` ? '' : 'text-muted-foreground'
+            "
           >
             Usuarios
           </NuxtLink>
 
           <NuxtLink
             to="/admin/companies"
-            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            :class="
+              route.path === `/admin/companies` ? '' : 'text-muted-foreground'
+            "
+            class="text-sm font-medium transition-colors hover:text-primary"
           >
             Empresas
           </NuxtLink>
 
           <NuxtLink
             to="/ai/notes"
-            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            :class="route.path === `/ai/notes` ? '' : 'text-muted-foreground'"
+            class="text-sm font-medium transition-colors hover:text-primary"
           >
             Notas
           </NuxtLink>
 
           <NuxtLink
+            to="/ai/projects"
+            :class="
+              route.path === `/ai/projects` ? '' : 'text-muted-foreground'
+            "
+            class="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Proyectos
+          </NuxtLink>
+
+          <NuxtLink
             to="/ai/rfp"
-            class="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            :class="route.path === `/ai/rfp` ? '' : 'text-muted-foreground'"
+            class="text-sm font-medium transition-colors hover:text-primary"
           >
             RFP
           </NuxtLink>

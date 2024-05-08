@@ -17,10 +17,16 @@ useHead({
 
 <style>
 .container-sm {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
   max-width: 960px;
 }
 
 .container-xs {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
   max-width: 720px;
 }
 
