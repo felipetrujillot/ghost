@@ -87,7 +87,7 @@ const newTask = async (taskStatus: number) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     <Card
       class="p-2 min-h-80"
       @drop="onDrop($event, 1)"

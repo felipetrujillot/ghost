@@ -25,7 +25,7 @@ const saveNote = async (res: {
   <div class="container-xs">
     <Tiptap
       :id_note="0"
-      note_text=""
+      :note_text="`<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>`"
       note_name="Nueva Nota"
       @saveNote="saveNote"
     />

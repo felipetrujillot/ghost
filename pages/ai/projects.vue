@@ -18,7 +18,7 @@ const tabs = ref('resumen')
     <VueSkeleton v-if="pending" />
 
     <template v-if="!pending && projects">
-      <div class="grid grid-cols-3 align-stretch gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 align-stretch gap-4">
         <Card
           @click.prevent="$router.push(`/ai/project/${p.id_project}`)"
           class="cursor-pointer"

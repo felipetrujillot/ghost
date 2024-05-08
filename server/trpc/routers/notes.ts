@@ -98,12 +98,14 @@ export const notesTrpc = router({
       z.object({
         note_text: z.string(),
         note_name: z.string(),
+        id_group_note: z.number(),
       })
     )
     .mutation(async ({ input }) => {
-      const { note_text, note_name } = input
+      const { note_text, note_name, id_group_note } = input
       const insertNote = await db.insert(notes).values({
         note_text,
+        id_group_note,
         note_name,
       })
       return {
