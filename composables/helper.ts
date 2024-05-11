@@ -517,3 +517,37 @@ export const documentTitle = (title: string) => {
     meta: [{ name: 'description', content: projectName }],
   })
 }
+
+export const newQuestion = async (inputQuestion: string) => {
+  const response = await fetch('http://localhost:1234/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'assistant',
+          content: `### Instruction: 
+          Eres una asistente útil llamada Diana, tu función es ser un planificador experto de proyectos en la categoría designada. Tu función será ser extremadamente riguroso y ser capaz de adelantarse a posibles problemas. Proporciona una respuesta detallada a la pregunta. Tus respuestas deben ser siempre directamente a la pregunta realizada. Responde siempre en el idioma español. ${inputQuestion}\n###Response: `,
+        },
+      ],
+      stop: ['### Instruction:'],
+      //prePrompt: `
+      //Eres una asistente útil llamada dayana, utilizarás el contexto proporcionado para responder las preguntas del usuario.
+      //todas tus respuestas seran en español, Lee el contexto proporcionado antes de responder preguntas y piensa paso a paso. Si no puedes responder una pregunta del usuario
+      //basándote en el contexto proporcionado, informa al usuario.
+      //No utilices ninguna otra información para responder al usuario. Proporciona una respuesta detallada a la pregunta. Responde siempre en el idioma español.`,
+      temperature: 0.7,
+      max_tokens: -1,
+      stream: false,
+    }),
+  })
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`)
+  }
+
+  const data = await response.json()
+
+  return data.choices[0].message.content
+}

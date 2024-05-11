@@ -75,8 +75,9 @@ export const notes = mySchema.table('notes', {
 export const tasks = mySchema.table('tasks', {
   id_task: int('id_task').primaryKey().autoincrement(),
   id_project: int('id_project').notNull(),
-  task_name: varchar('task_name', { length: 250 }).notNull(),
+  task_name: varchar('task_name', { length: 2000 }).notNull(),
   task_status: int('task_status').notNull(),
+  task_description: text('task_description').notNull(),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
@@ -85,6 +86,7 @@ export const tasks = mySchema.table('tasks', {
 export const projects = mySchema.table('projects', {
   id_project: int('id_project').primaryKey().autoincrement(),
   project_name: varchar('project_name', { length: 250 }).notNull(),
+  project_description: text('project_description').notNull(),
   progress: int('progress').notNull().default(1),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),

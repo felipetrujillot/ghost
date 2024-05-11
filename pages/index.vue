@@ -63,7 +63,13 @@ const newLogin = async () => {
     <div
       class="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex"
     >
-      <div class="absolute inset-0 bg-zinc-900"></div>
+      <div class="absolute inset-0 bg-zinc-900">
+        <img
+          class="absolute top-0 w-full max-h-screen left-0"
+          src="/midjourney.png"
+          style="opacity: 0.7"
+        />
+      </div>
       <div class="relative z-20 flex items-center text-lg font-medium">
         <!-- <svg
           xmlns="http://www.w3.org/2000/svg"

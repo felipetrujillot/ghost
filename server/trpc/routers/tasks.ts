@@ -53,14 +53,16 @@ export const tasksTrpc = router({
         task_status: z.number(),
         id_project: z.number(),
         task_name: z.string(),
+        task_description: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { task_name, task_status, id_project } = input
+      const { task_name, task_status, id_project, task_description } = input
 
       const insertTask = await db.insert(tasks).values({
         task_name,
         task_status,
+        task_description,
         id_project,
       })
 

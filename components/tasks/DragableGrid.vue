@@ -77,6 +77,7 @@ const newTask = async (taskStatus: number) => {
   const { status, data } = await $trpc.tasks.newTask.mutate({
     id_project,
     task_name: '',
+    task_description: '',
     task_status: taskStatus,
   })
 

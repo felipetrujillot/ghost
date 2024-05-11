@@ -19,7 +19,18 @@ export const projectsTrpc = router({
    *
    */
   getProjects: protectedProcedure.query(async () => {
-    return await db.select().from(projects).orderBy(desc(projects.id_project))
+    const res = await db
+      .select({
+        id_project: projects.id_project,
+        project_name: projects.project_name,
+        total_tasks: projects.progress,
+        progress: projects.progress,
+      })
+      .from(projects)
+      //.innerJoin(tasks, eq(tasks.id_project, projects.id_project))
+      .orderBy(desc(projects.id_project))
+
+    return res
   }),
 
   /**
@@ -38,5 +49,29 @@ export const projectsTrpc = router({
         .from(projects)
         .where(eq(projects.id_project, id_project))
       return res[0]
+    }),
+
+  /**
+   *
+   */
+  newProject: protectedProcedure
+    .input(
+      z.object({
+        project_name: z.string(),
+        project_description: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { project_name, project_description } = input
+
+      const insertProject = await db.insert(projects).values({
+        project_description,
+        project_name,
+        progress: 0,
+      })
+      return {
+        status: 'ok' as const,
+        data: insertProject[0].insertId,
+      }
     }),
 })

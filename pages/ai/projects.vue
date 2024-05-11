@@ -12,7 +12,12 @@ const tabs = ref('resumen')
 
 <template>
   <div class="container-sm space-y-4">
-    <h1 class="text-2xl font-bold">Mis Proyectos</h1>
+    <div class="flex justify-between">
+      <h1 class="text-2xl font-bold">Mis Proyectos</h1>
+      <Button @click.prevent="$router.push('/ai/project/new')"
+        >Nuevo Proyecto</Button
+      >
+    </div>
     <p class="text-muted-foreground">Listado de tus proyectos</p>
 
     <VueSkeleton v-if="pending" />

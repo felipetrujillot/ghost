@@ -23,6 +23,7 @@ const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
   <template v-if="!pending && data && !pendingProject && project">
     <h1 class="text-2xl font-bold">{{ project.project_name }}</h1>
 
+    <h2>{{ project.project_description }}</h2>
     <DocumentTitle :title="project.project_name" />
     <!-- <Tabs default-value="tablero" v-model="tabs">
       <TabsList>

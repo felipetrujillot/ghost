@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ChevronDown, Ellipsis } from 'lucide-vue-next'
+
 const { $trpc, $router } = useNuxtApp()
 
 /**
@@ -15,10 +17,13 @@ const newNote = async () => {
   const { status, data } = await $trpc.notes.newNote.mutate({
     note_text: '',
     note_name: 'Nueva Nota',
+    id_group_note: 0,
   })
 
   $router.push(`/ai/note/${data}`)
 }
+
+const open = ref(false)
 </script>
 
 <template>
@@ -34,58 +39,11 @@ const newNote = async () => {
           >
             <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
               <template v-if="!pending">
-                <Accordion
-                  type="single"
-                  class="w-full"
-                  collapsible
-                  v-for="item in data"
-                  :key="item.id_group_note.toString()"
-                  :default-value="item.id_group_note.toString()"
-                >
-                  <AccordionItem
-                    :value="item.id_group_note.toString()"
-                    class="border-none"
-                  >
-                    <AccordionTrigger>{{ item.group_name }}</AccordionTrigger>
-                    <AccordionContent
-                      v-for="n in item.notes"
-                      class="space-y-1 gap-2"
-                    >
-                      <NuxtLink
-                        :to="`/ai/note/${n.id_note}`"
-                        :class="
-                          route.path === `/ai/note/${n.id_note}`
-                            ? 'text-primary'
-                            : 'text-muted-foreground'
-                        "
-                        class="flex items-center gap-3 rounded-lg px-3 transition-all hover:text-primary"
-                      >
-                        {{ n.note_name }}
-                      </NuxtLink>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </template>
-
-              <!-- <template v-if="!pending">
-                <template v-for="n in data">
-                  <NuxtLink
-                    :to="`/ai/note/${n.id_note}`"
-                    :class="
-                      route.path === `/ai/note/${n.id_note}`
-                        ? 'text-primary'
-                        : 'text-muted-foreground'
-                    "
-                    class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
-                  >
-                    {{ n.note_name }}
-                  </NuxtLink>
+                <template v-for="item in data" :key="item.id_group_note">
+                  <NotesGroupMenu :item="item" />
                 </template>
-              </template> -->
+              </template>
             </nav>
-            <div class="mb-20 text-end px-4">
-              <Button @click.prevent="newNote">Nuevo</Button>
-            </div>
           </div>
         </div>
       </div>
