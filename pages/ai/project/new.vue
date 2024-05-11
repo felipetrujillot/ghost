@@ -24,7 +24,7 @@ const newProject = async () => {
   const res = await newQuestion(
     `Escríbeme una lista de tareas para poder realizar un proyecto llamado ${addForm.value.project_name} para la empresa ${addForm.value.project_company}, que es del rubro o categoría del área de ${addForm.value.project_category}, este proyecto requiere completarse a través del tiempo y se trata de ${addForm.value.project_description}, cada ítem de la lista deberá tener un titular breve, y una descripción prolongada detallando qué se trata cada punto, la lista debe ser enumerada y el titular debe separarse del contenido con un ":"`
   ).catch((err) => {
-    toast('err', 'El sistema no se encuentra activo')
+    toast('warning', 'La IA no se encuentra disponible')
     isLoading.value = false
     throw err
   })

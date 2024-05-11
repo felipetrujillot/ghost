@@ -131,8 +131,21 @@ export const toast = async (
 ) => {
   const { useToast } = await import('@/components/ui/toast/use-toast')
   const { toast } = useToast()
+  if (status === 'err' || status === 'error') {
+    return toast({
+      description: msg,
+      variant: 'destructive',
+    })
+  }
 
-  toast({
+  if (status === 'warning' || status === 'wrn') {
+    return toast({
+      description: msg,
+      variant: 'warning',
+    })
+  }
+
+  return toast({
     description: msg,
   })
 
