@@ -5,10 +5,16 @@ const props = defineProps<{
   tasks: GetTasksByIdProject
 }>()
 
+/**
+ *
+ */
 const route = useRoute()
 const id_project = parseInt(route.params.id_project as string)
 const tasksRef = ref(props.tasks)
 
+/**
+ *
+ */
 const filterTask = (status: number) => {
   return tasksRef.value.filter((t) => t.task_status === status)
 }
@@ -39,6 +45,9 @@ const onDrop = (event: DragEvent, newStatus: number) => {
     if (t.id_task === id_task) return t
   })
 
+  /**
+   *
+   */
   $trpc.tasks.updateTask
     .mutate({
       id_task: id_task,
@@ -52,6 +61,7 @@ const onDrop = (event: DragEvent, newStatus: number) => {
       toast('err', 'Hubo un problema al intentar actualizar la información')
       throw err
     })
+
   tasksRef.value.forEach((t) => {
     if (t.id_task === id_task) {
       t.task_status = newStatus

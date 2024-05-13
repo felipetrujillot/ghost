@@ -13,19 +13,24 @@ const tabs = ref('resumen')
 <template>
   <div class="container-sm space-y-4">
     <div class="flex justify-between">
-      <h1 class="text-2xl font-bold">Mis Proyectos</h1>
-      <Button @click.prevent="$router.push('/ai/project/new')"
-        >Nuevo Proyecto</Button
-      >
+      <div>
+        <VueBreadCrumb text="NoName / " />
+        <VueBreadCrumb text="Proyectos" />
+        <h1 class="text-2xl font-bold">Mis Proyectos</h1>
+        <p class="text-muted-foreground">Listado de tus proyectos</p>
+      </div>
+      <div>
+        <Button @click.prevent="$router.push('/project/new')"
+          >Nuevo Proyecto</Button
+        >
+      </div>
     </div>
-    <p class="text-muted-foreground">Listado de tus proyectos</p>
-
     <VueSkeleton v-if="pending" />
 
     <template v-if="!pending && projects">
       <div class="grid grid-cols-1 md:grid-cols-3 align-stretch gap-4">
         <Card
-          @click.prevent="$router.push(`/ai/project/${p.id_project}`)"
+          @click.prevent="$router.push(`/project/${p.id_project}`)"
           class="cursor-pointer"
           v-for="p in projects"
           :key="p.id_project"

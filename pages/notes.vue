@@ -18,7 +18,7 @@ const saveNote = async (res: {
     note_name: res.note_name,
   })
 
-  $router.push(`/ai/note/${data}`)
+  $router.push(`/note/${data}`)
 }
 </script>
 <template>

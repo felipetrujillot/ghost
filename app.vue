@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useFocus } from '@vueuse/core'
 useHead({
   bodyAttrs: {
-    class: 'dark',
+    class: 'light',
   },
 })
 </script>

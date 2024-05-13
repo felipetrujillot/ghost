@@ -16,7 +16,7 @@ const newNote = async () => {
     note_name: 'Nueva Nota',
   })
 
-  $router.push(`/ai/note/${data}`)
+  $router.push(`/note/${data}`)
 }
 </script>
 
@@ -31,9 +31,9 @@ const newNote = async () => {
           <template v-if="!pending">
             <template v-for="n in notes">
               <NuxtLink
-                :to="`/ai/note/${n.id_note}`"
+                :to="`/note/${n.id_note}`"
                 :class="
-                  route.path === `/ai/note/${n.id_note}`
+                  route.path === `/note/${n.id_note}`
                     ? 'text-primary'
                     : 'text-muted-foreground'
                 "

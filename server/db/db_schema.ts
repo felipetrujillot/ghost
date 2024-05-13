@@ -87,6 +87,8 @@ export const projects = mySchema.table('projects', {
   id_project: int('id_project').primaryKey().autoincrement(),
   project_name: varchar('project_name', { length: 250 }).notNull(),
   project_description: text('project_description').notNull(),
+  project_company: text('project_company').notNull(),
+  project_category: text('project_category').notNull(),
   progress: int('progress').notNull().default(1),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),

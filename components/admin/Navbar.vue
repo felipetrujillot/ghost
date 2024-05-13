@@ -35,29 +35,19 @@ const route = useRoute()
           </NuxtLink>
 
           <NuxtLink
-            to="/ai/notes"
-            :class="route.path === `/ai/notes` ? '' : 'text-muted-foreground'"
+            to="/notes"
+            :class="route.path === `/notes` ? '' : 'text-muted-foreground'"
             class="text-sm font-medium transition-colors hover:text-primary"
           >
             Notas
           </NuxtLink>
 
           <NuxtLink
-            to="/ai/projects"
-            :class="
-              route.path === `/ai/projects` ? '' : 'text-muted-foreground'
-            "
+            to="/projects"
+            :class="route.path === `/projects` ? '' : 'text-muted-foreground'"
             class="text-sm font-medium transition-colors hover:text-primary"
           >
             Proyectos
-          </NuxtLink>
-
-          <NuxtLink
-            to="/ai/rfp"
-            :class="route.path === `/ai/rfp` ? '' : 'text-muted-foreground'"
-            class="text-sm font-medium transition-colors hover:text-primary"
-          >
-            RFP
           </NuxtLink>
         </nav>
 

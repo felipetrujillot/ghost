@@ -56,7 +56,7 @@ const newProject = async () => {
 
     isLoading.value = false
 
-    $router.push(`/ai/project/${data}`)
+    $router.push(`/project/${data}`)
   }
 }
 
@@ -78,8 +78,16 @@ const convertTextToList = (fullText: string) => {
 
 <template>
   <div class="container-sm space-y-4">
-    <h1 class="text-2xl font-bold">Crear nuevo proyecto</h1>
-    <p class="text-muted-foreground">Describe tu nuevo proyectos</p>
+    <div class="flex justify-between">
+      <div>
+        <VueBreadCrumb text="NoName / " />
+        <VueBreadCrumb text="Proyectos / " to="/projects" />
+        <VueBreadCrumb text="Crear" />
+
+        <h1 class="text-2xl font-bold">Nuevo proyecto</h1>
+        <p class="text-muted-foreground">Describe tu nuevo proyectos</p>
+      </div>
+    </div>
 
     <Card>
       <div>

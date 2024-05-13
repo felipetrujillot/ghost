@@ -21,9 +21,18 @@ const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
 <template>
   <VueSkeleton v-if="pending || pendingProject" />
   <template v-if="!pending && data && !pendingProject && project">
-    <h1 class="text-2xl font-bold">{{ project.project_name }}</h1>
+    <div>
+      <VueBreadCrumb text="NoName / " />
+      <VueBreadCrumb text="Proyectos / " to="/projects" />
+      <VueBreadCrumb
+        text="Detalle Proyecto / "
+        :to="`/project/${id_project}`"
+      />
+      <VueBreadCrumb text="Tareas" />
+      <h1 class="text-2xl font-bold">{{ project.project_name }}</h1>
+      <p class="text-muted-foreground">Mis tareas</p>
+    </div>
 
-    <h2>{{ project.project_description }}</h2>
     <DocumentTitle :title="project.project_name" />
     <!-- <Tabs default-value="tablero" v-model="tabs">
       <TabsList>

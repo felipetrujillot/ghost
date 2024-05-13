@@ -20,7 +20,7 @@ const newNote = async () => {
     id_group_note: 0,
   })
 
-  $router.push(`/ai/note/${data}`)
+  $router.push(`/note/${data}`)
 }
 
 const open = ref(false)

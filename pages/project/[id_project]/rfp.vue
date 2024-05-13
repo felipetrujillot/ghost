@@ -6,26 +6,48 @@ documentTitle('RFP')
 definePageMeta({
   layout: 'admin-layout',
 })
+const route = useRoute()
+const id_project = parseInt(route.params.id_project as string)
+/**
+ *
+ */
+const { data: project, pending } = $trpc.projects.getProjectById.useQuery({
+  id_project,
+})
 
 const tabs = ref('resumen')
 </script>
 
 <template>
-  <div class="w-full container-sm ml-auto mr-auto">
-    <div class="space-y-4">
+  <div class="w-full container-sm ml-auto mr-auto space-y-4">
+    <div>
+      <VueBreadCrumb text="NoName / " />
+      <VueBreadCrumb text="Proyectos / " to="/projects" />
+      <VueBreadCrumb
+        text="Detalle Proyecto / "
+        :to="`/project/${id_project}`"
+      />
+      <VueBreadCrumb text="RFP" />
       <h1 class="text-2xl font-bold">RFP</h1>
       <p class="text-muted-foreground">Detalle de tu RFP</p>
+    </div>
 
+    <VueSkeleton v-if="pending" />
+
+    <div class="space-y-4" v-if="!pending && project">
       <div class="space-y-4">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 align-stretch">
           <Card>
-            <h1 class="font-bold">RFP Empresa Mandante S.A</h1>
-            <h2>77.777.77-7</h2>
-            <p class="text-muted-foreground">Fecha: 06-05-2024, 12:20</p>
+            <h1 class="font-bold">RFP {{ project.project_company }}</h1>
+            <!-- <h2>77.777.77-7</h2> -->
+            <p class="text-muted-foreground">
+              {{ formatearTimeStamp(project.created_at).nuevaFecha }}
+              {{ formatearTimeStamp(project.created_at).nuevaHora }}
+            </p>
           </Card>
 
           <Card>
-            <h1>Mis documentos</h1>
+            <h1 class="font-bold">Mis documentos</h1>
             <p class="text-sm text-muted-foreground">
               Recuerda que estos documentos son confidenciales
             </p>

@@ -16,7 +16,7 @@ const newNote = async () => {
     id_group_note: props.item.id_group_note,
   })
 
-  $router.push(`/ai/note/${data}`)
+  $router.push(`/note/${data}`)
 }
 </script>
 <template>
@@ -56,7 +56,7 @@ const newNote = async () => {
 
       <AccordionContent class="space-y-1 gap-2">
         <NuxtLink
-          :to="`/ai/note/${n.id_note}`"
+          :to="`/note/${n.id_note}`"
           v-for="n in item.notes"
           class="flex items-center gap-3 rounded-lg px-3 transition-all hover:text-primary"
         >
