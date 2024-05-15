@@ -3,6 +3,10 @@ import { CircleUser, CircleUserRound } from 'lucide-vue-next'
 const open = ref(false)
 
 const route = useRoute()
+
+const logout = () => {
+  logoutToIndex()
+}
 </script>
 
 <template>
@@ -95,6 +99,25 @@ const route = useRoute()
                     <a class="text-md font-medium">
                       <!-- <i class="bi bi-person"></i> -->
                       Configuraciones</a
+                    >
+                  </Button>
+                </div>
+              </Command>
+
+              <Command>
+                <div>
+                  <Button
+                    @click.prevent="logout"
+                    :class="
+                      'profile' === 'profile'
+                        ? 'bg-black text-white'
+                        : 'bg-white text-dark'
+                    "
+                    class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
+                  >
+                    <a class="text-md font-medium">
+                      <!-- <i class="bi bi-person"></i> -->
+                      Salir</a
                     >
                   </Button>
                 </div>

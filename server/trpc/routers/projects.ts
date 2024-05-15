@@ -59,13 +59,22 @@ export const projectsTrpc = router({
       z.object({
         project_name: z.string(),
         project_description: z.string(),
+        project_company: z.string(),
+        project_category: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { project_name, project_description } = input
+      const {
+        project_name,
+        project_description,
+        project_company,
+        project_category,
+      } = input
 
       const insertProject = await db.insert(projects).values({
+        project_company,
         project_description,
+        project_category,
         project_name,
         progress: 0,
       })

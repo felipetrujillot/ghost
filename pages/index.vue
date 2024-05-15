@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const { $trpc, $router } = useNuxtApp()
+definePageMeta({
+  middleware: 'rootauth',
+})
 /**
  *
  */
@@ -171,4 +174,61 @@ const newLogin = async () => {
     </div>
   </div>
   <!--  <ImageThumbnail /> -->
+
+  <div class="relative min-h-screen lg:grid-cols-2 lg:px-0 py-16">
+    <div class="container h-full">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <Card class="p-0 relative h-full pb-10 pt-24">
+          <img
+            class="absolute rounded-md h-full w-full top-0 left-0"
+            src="https://storage.googleapis.com/hubdesign-repositorio/qa/public/uploads/1695236954129-pexelsphoto3183183.jpeg"
+            style="opacity: 0.7"
+          />
+          <div class="relative">
+            <div class="m-10 mb-16 space-y-6">
+              <h1 class="font-bold text-3xl">Lorem Ipsum</h1>
+              <p class="text-lg">
+                “This library has saved me countless hours of work and helped me
+                deliver stunning designs to my clients faster than ever before.”
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card class="p-0 relative h-full pb-10 pt-24">
+          <img
+            class="absolute rounded-md h-full w-full top-0 left-0"
+            src="https://storage.googleapis.com/hubdesign-repositorio/qa/public/uploads/1695236972908-1683129310565.jpg"
+            style="opacity: 0.4"
+          />
+          <div class="relative">
+            <div class="m-10 mb-16 space-y-6">
+              <h1 class="font-bold text-3xl">Lorem Ipsum</h1>
+              <p class="text-lg">
+                “This library has saved me countless hours of work and helped me
+                deliver stunning designs to my clients faster than ever before.”
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card class="p-0 relative h-full pb-10 pt-24">
+          <img
+            class="absolute rounded-md h-full w-full top-0 left-0"
+            src="/midjourney.png"
+            style="opacity: 0.7"
+          />
+          <div class="relative">
+            <div class="m-10 mb-16 space-y-6">
+              <h1 class="font-bold text-3xl">Lorem Ipsum</h1>
+              <p class="text-lg">
+                “This library has saved me countless hours of work and helped me
+                deliver stunning designs to my clients faster than ever before.”
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
 </template>

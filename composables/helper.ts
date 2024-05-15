@@ -305,7 +305,7 @@ export const isAuthenticated = async () => {
   const res = await $trpc.user.validaToken.query({ token: token.value! })
 
   if ('id_company' in res && 'id_user' in res && 'role' in res) {
-    return true
+    return res.role
   }
 
   return false
@@ -529,6 +529,30 @@ export const documentTitle = (title: string) => {
     title: `${title} - ${projectName}`,
     meta: [{ name: 'description', content: projectName }],
   })
+}
+
+/**
+ *
+ */
+export const newQuestionPython = async (newQuestion: string) => {
+  const data = new URLSearchParams()
+  data.append('user_prompt', newQuestion)
+
+  const response = await fetch('http://127.0.0.1:5110/api/prompt_route', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: data,
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP Error! Status: ${response.status}`)
+  }
+
+  const r = await response.json()
+
+  return r.Answer
 }
 
 export const newQuestion = async (inputQuestion: string) => {

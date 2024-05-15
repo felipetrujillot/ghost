@@ -1,11 +1,50 @@
 <script setup lang="ts">
 const exportResponse = ref('')
 const isLoading = ref(false)
-const inputQuestion = ref('')
+const inputQuestion = ref('hola')
 
 definePageMeta({
   layout: 'admin-layout',
 })
+
+/**
+ *
+ */
+const newQuestion = async () => {
+  fetch('http://127.0.0.1:8000/stream')
+    .then((response) => {
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder('utf-8')
+      let partialData = ''
+
+      return reader.read().then(function processText({ done, value }) {
+        if (done) {
+          console.log('Stream complete')
+          return
+        }
+
+        partialData += decoder.decode(value, { stream: true })
+
+        const lines = partialData.split('\n')
+
+        // Process each line of JSON
+        lines.forEach((line) => {
+          if (line.trim() !== '') {
+            const jsonData = JSON.parse(line)
+            console.log(jsonData)
+            // Do something with jsonData
+          }
+        })
+
+        partialData = lines.pop() // Store the incomplete line for next iteration
+
+        return reader.read().then(processText)
+      })
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error)
+    })
+}
 /**
  *
  */
@@ -84,9 +123,9 @@ const createQuestion = async () => {
       type="text"
       v-model="inputQuestion"
       :disabled="isLoading"
-      @keyup.enter="createQuestion()"
+      @keyup.enter="newQuestion()"
       placeholder="Envía un mensaje"
     />
-    <Button @click="createQuestion()"> Enviar </Button>
+    <Button @click="newQuestion()"> Enviar </Button>
   </div>
 </template>
