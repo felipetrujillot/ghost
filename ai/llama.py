@@ -8,7 +8,14 @@ from prompt_template_utils import get_prompt_template
 from langchain.chains import RetrievalQA
 from langchain.vectorstores import Chroma
 from langchain.embeddings import HuggingFaceInstructEmbeddings
+from transformers import (
+    GenerationConfig,
+    pipeline,
+)
+import logging
 
+from langchain.llms import HuggingFacePipeline
+from run_localGPT import load_model
 """
 """
 def device_type():
@@ -23,7 +30,7 @@ def device_type():
 """
 """
 def llm():
-
+   
     SHOW_SOURCES = True
     DEVICE_TYPE = device_type()
     EMBEDDINGS = HuggingFaceInstructEmbeddings(model_name=EMBEDDING_MODEL_NAME, model_kwargs={"device": DEVICE_TYPE})
@@ -51,23 +58,39 @@ def llm():
         "n_gpu_layers":1,
         "stream": True, 
     }
-    
-    llm = LlamaCpp(**kwargs)
 
     
-    stream = llm(
-            "¿Cómo te llamas?",
+    llm = load_model(device_type=DEVICE_TYPE, model_id=MODEL_ID, model_basename=MODEL_BASENAME, LOGGING=logging)
+
+    """  model = LlamaCpp(**kwargs)
+    generation_config = GenerationConfig.from_pretrained(MODEL_ID)
+
+    pipe = pipeline(
+        "text-generation",
+        model=model,
+        #tokenizer=tokenizer,
+        max_length=MAX_NEW_TOKENS,
+        temperature=0.2,
+        # top_p=0.95,
+        repetition_penalty=1.15,
+        generation_config=generation_config,
+        num_return_sequences=1,
+    )
+
+    llm = HuggingFacePipeline(pipeline=pipe) """
+    
+    """ stream = llm(
+            "¿De qué se trata el documento?",
             #max_tokens=48,
             #stop=["Q:", "\n"],
             #stream=True
         )
-    #print(output)
     for output in stream:
             #print(output)
-            yield json.dumps({"index": output}, indent=2) 
+            yield json.dumps({"index": output}, indent=2)  """
    
     
-    """ prompt, memory = get_prompt_template(promptTemplate_type="llama", history=False)
+    prompt, memory = get_prompt_template(promptTemplate_type="mistral", history=False)
 
     QA = RetrievalQA.from_chain_type(
         llm=llm,
@@ -79,12 +102,14 @@ def llm():
         },
     )
 
-    stream = QA("¿Cómo te llamas?")
+    stream = QA("""
+                Escríbeme una lista de tareas para poder realizar un proyecto, este proyecto requiere completarse a través del tiempo y se trata de lo que se encuentra en el documento. Cada ítem de la lista deberá tener un titular breve, y una descripción prolongada detallando qué se trata cada punto, la lista debe ser enumerada y el titular debe separarse del contenido con un ":"
+                """)
     result = stream["result"]
 
     for output in result:
         text = json.dumps({"index": output}, indent=2)
-        yield text """
+        yield text
     
 
 """
@@ -94,8 +119,5 @@ for output in llm():
 
     val = json.loads(output)
     nnnn += val["index"]
-
-    #nnnn += output["index"]
-    #print(output["index"] )
 
 print(nnnn)

@@ -8,6 +8,7 @@ dist
 public/video.mp4
 __pycache__
 ai/DB
+ai/models
 # Node dependencies
 node_modules
 
