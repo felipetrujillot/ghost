@@ -56,10 +56,6 @@ const open = ref(false)
       <div class="grid grid-cols-3 gap-4 items-stretch">
         <Card>
           <p class="text-end">Progreso: {{ project.progress }}%</p>
-
-          <p>todo</p>
-          <p>todo</p>
-          <p>todo</p>
           <Progress :model-value="project.progress" />
         </Card>
 
@@ -70,7 +66,7 @@ const open = ref(false)
               <p class="text-sm text-muted-foreground">Documentos relevantes</p>
             </div>
 
-            <div class="">
+            <div class="mt-4">
               <Button
                 @click.prevent="$router.push(`/project/${id_project}/rfp`)"
                 class="w-full"
@@ -89,7 +85,7 @@ const open = ref(false)
               <p class="text-sm text-muted-foreground">Mis tareas asignadas</p>
             </div>
 
-            <div class="">
+            <div class="mt-4">
               <Button
                 @click.prevent="$router.push(`/project/${id_project}/tasks`)"
                 class="w-full"

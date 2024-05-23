@@ -33,7 +33,7 @@ const saveNote = async (res: {
 
     <template v-if="!pending && note">
       <DocumentTitle :title="note.note_name" />
-      <Tiptap
+      <TiptapTitle
         :id_note="id_note"
         :note_text="note.note_text"
         :note_name="note.note_name"

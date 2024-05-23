@@ -23,7 +23,7 @@ const saveNote = async (res: {
 </script>
 <template>
   <div class="container-xs">
-    <Tiptap
+    <TiptapTitle
       :id_note="0"
       :note_text="`<p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p>`"
       note_name="Nueva Nota"

@@ -5,6 +5,7 @@ import {
   group_notes,
   notes,
   projects,
+  projects_users,
   tasks,
 } from '~/server/db/db_schema'
 import { desc, eq } from 'drizzle-orm'
@@ -51,6 +52,29 @@ export const projectsTrpc = router({
       return res[0]
     }),
 
+  /**
+   *
+   */
+  getUserByIdProject: protectedProcedure
+    .input(
+      z.object({
+        id_project: z.number(),
+      })
+    )
+    .query(async ({ input }) => {
+      const { id_project } = input
+
+      /**
+       *
+       */
+
+      const res = await db
+        .select()
+        .from(projects_users)
+        .where(eq(projects_users.id_project, id_project))
+
+      return res
+    }),
   /**
    *
    */

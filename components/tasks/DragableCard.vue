@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useFocus } from '@vueuse/core'
+import Tiptap from '../Tiptap.vue'
 import { SquarePen } from 'lucide-vue-next'
 import type { GetTasksByIdProject } from '~/server/trpc/routers/tasks'
 const { $trpc } = useNuxtApp()
@@ -21,6 +22,7 @@ const formatStatus = computed(() => {
   if (props.task.task_status === 3) return 'Listo'
   return 'Sin Empezar'
 })
+
 /**
  *
  */
@@ -30,6 +32,7 @@ const updateTask = () => {
       id_task: modelTask.value.id_task,
       task_status: modelTask.value.task_status,
       task_name: modelTask.value.task_name,
+      task_description: modelTask.value.task_description,
     })
     .then((res) => {
       console.log(res)
@@ -71,6 +74,16 @@ const changeEditTask = async () => {
   await nextTick()
   focused.value = !focused.value
 }
+
+/**
+ *
+ * @param text
+ */
+const saveNote = (text: string) => {
+  modelTask.value.task_description = text
+  updateTask()
+  toast('ok', 'Se actualizó la información')
+}
 </script>
 
 <template>
@@ -102,7 +115,14 @@ const changeEditTask = async () => {
     </div>
     <SheetContent side="right" v-model:overlay="overlay">
       <SheetHeader>
-        <SheetTitle class="text-3xl">{{ task.task_name }}</SheetTitle>
+        <SheetTitle>
+          <Textarea
+            class="text-2xl font-bold m-0 p-0 min-h-1 resize border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            v-model="modelTask.task_name"
+          ></Textarea>
+          <!--  {{ task.task_name }}
+         -->
+        </SheetTitle>
         <SheetDescription> </SheetDescription>
       </SheetHeader>
       <div class="pt-4 pb-8 overflow-y-auto h-full space-y-4">
@@ -115,12 +135,14 @@ const changeEditTask = async () => {
           Responsable: Sin definir
         </p>
 
+        <p class="text-md font-medium text-muted-foreground">Fecha Límite:</p>
+
         <p class="text-md font-medium text-muted-foreground">
           Estado: {{ formatStatus }}
         </p>
-        <p>
-          {{ task.task_description }}
-        </p>
+
+        <Tiptap :text="modelTask.task_description" @saveNote="saveNote" />
+        <p></p>
       </div>
     </SheetContent>
   </Sheet>

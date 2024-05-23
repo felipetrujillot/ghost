@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { EditorContent, useEditor } from '@tiptap/vue-3'
+import { Editor, EditorContent, useEditor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
+import Highlight from '@tiptap/extension-highlight'
+import Typography from '@tiptap/extension-typography'
 import Link from '@tiptap/extension-link'
+import Textarea from './ui/textarea/Textarea.vue'
+const { $trpc } = useNuxtApp()
 /**
  *
  */
 const props = defineProps<{
-  text: string
+  note_name: string
+  note_text: string
+  id_note: number
 }>()
 
 const emit = defineEmits(['saveNote'])
+const titleRef = ref(props.note_name)
 
 const editor = useEditor({
-  content: props.text,
+  content: props.note_text,
   extensions: [StarterKit, Link],
   editorProps: {
     attributes: {
@@ -29,7 +36,11 @@ const save = async () => {
 
   const note_text = editor.value.getHTML()
 
-  emit('saveNote', note_text)
+  emit('saveNote', {
+    id_note: props.id_note,
+    note_text: note_text,
+    note_name: titleRef.value,
+  })
 }
 useMetaKey('s', () => {
   save()
@@ -39,6 +50,13 @@ useMetaKey('s', () => {
 <template>
   <div v-if="editor" class="space-y-4">
     <div class="flex flex-wrap justify-between gap-4">
+      <div class="flex grow">
+        <Input
+          class="text-4xl font-bold m-0 p-0 min-h-1 h-12 resize border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          v-model="titleRef"
+        ></Input>
+      </div>
+
       <div class="flex flex-wrap flex-row-reverse gap-2" v-if="1 + 1 === 3">
         <Button
           @click="editor.chain().focus().toggleBold().run()"

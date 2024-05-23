@@ -83,6 +83,22 @@ export const tasks = mySchema.table('tasks', {
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
 
+/**
+ *
+ */
+export const tasks_users = mySchema.table('tasks_users', {
+  id_task_user: int('id_task_user').primaryKey().autoincrement(),
+  id_task: int('id_task').autoincrement(),
+  id_user: int('id_user').autoincrement(),
+  id_project: int('id_project').autoincrement(),
+  active: int('active').notNull().default(1),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').onUpdateNow(),
+})
+
+/**
+ *
+ */
 export const projects = mySchema.table('projects', {
   id_project: int('id_project').primaryKey().autoincrement(),
   project_name: varchar('project_name', { length: 250 }).notNull(),
@@ -90,6 +106,18 @@ export const projects = mySchema.table('projects', {
   project_company: text('project_company').notNull(),
   project_category: text('project_category').notNull(),
   progress: int('progress').notNull().default(1),
+  active: int('active').notNull().default(1),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').onUpdateNow(),
+})
+
+/**
+ *
+ */
+export const projects_users = mySchema.table('projects_users', {
+  id_project_user: int('id_project_user').primaryKey().autoincrement(),
+  id_project: int('id_project').notNull(),
+  id_user: int('id_user').notNull(),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),

@@ -53,6 +53,7 @@ const onDrop = (event: DragEvent, newStatus: number) => {
       id_task: id_task,
       task_status: newStatus,
       task_name: foundTask[0].task_name,
+      task_description: foundTask[0].task_description,
     })
     .then((res) => {
       console.log(res)
