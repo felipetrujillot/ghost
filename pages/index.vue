@@ -231,4 +231,6 @@ const newLogin = async () => {
       </div>
     </div>
   </div>
+
+  <LandingCarousel />
 </template>

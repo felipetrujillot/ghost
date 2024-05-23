@@ -16,11 +16,28 @@ const { data: project, pending: pendingProject } =
 const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
   id_project,
 })
+
+const {
+  data: projectUsers,
+  pending: pendingUsers,
+  refresh: refreshUsers,
+} = $trpc.projects.getUsersByIdProject.useQuery({
+  id_project,
+})
 </script>
 
 <template>
-  <VueSkeleton v-if="pending || pendingProject" />
-  <template v-if="!pending && data && !pendingProject && project">
+  <VueSkeleton v-if="pending || pendingProject || pendingUsers" />
+  <template
+    v-if="
+      !pending &&
+      data &&
+      !pendingProject &&
+      project &&
+      !pendingUsers &&
+      projectUsers
+    "
+  >
     <div>
       <VueBreadCrumb text="NoName / " />
       <VueBreadCrumb text="Proyectos / " to="/projects" />
@@ -34,16 +51,7 @@ const { data, pending } = $trpc.tasks.getTasksByIdProject.useQuery({
     </div>
 
     <DocumentTitle :title="project.project_name" />
-    <!-- <Tabs default-value="tablero" v-model="tabs">
-      <TabsList>
-        <TabsTrigger value="tablero"> Tablero </TabsTrigger>
-        <TabsTrigger value="chat"> Todas las tareas </TabsTrigger>
-      </TabsList>
 
-      <TabsContent value="tablero"> </TabsContent>
-      <TabsContent value="chat"> </TabsContent>
-    </Tabs> -->
-
-    <TasksDragableGrid :tasks="data" />
+    <TasksDragableGrid :tasks="data" :projectUsers="projectUsers" />
   </template>
 </template>

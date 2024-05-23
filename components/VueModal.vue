@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { LucideX } from 'lucide-vue-next'
 import { onMounted, onUnmounted } from 'vue'
 
 defineProps<{
@@ -40,21 +41,24 @@ onUnmounted(() => {
   <Dialog :open="true">
     <DialogContent
       :class="size"
-      class="top-10 translate-y-0 max-h-[90dvh] z-50 bg-black p-0 rounded-none"
+      class="top-10 translate-y-0 bg-neutral-50 dark:bg-muted/40 max-h-[90dvh] z-50 rounded-xl"
     >
-      <a
-        class="cursor-pointer text-end text-2xl absolute right-0 pr-4 pt-2"
-        @click.prevent="$emit('closeModal')"
-      >
-        X
-      </a>
+      <div class="flex justify-between items-center">
+        <h1 class="text-xl font-bold">{{ title }}</h1>
+
+        <LucideX
+          :size="24"
+          class="cursor-pointer"
+          @click.prevent="$emit('closeModal')"
+        />
+      </div>
 
       <DialogHeader v-show="false">
         <DialogTitle></DialogTitle>
         <DialogDescription> </DialogDescription>
       </DialogHeader>
 
-      <div class="overflow-y-auto max-h-[90dvh]">
+      <div class="overflow-y-auto max-h-[80dvh] space-y-4">
         <slot />
       </div>
     </DialogContent>

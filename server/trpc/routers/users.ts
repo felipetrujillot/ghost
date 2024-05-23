@@ -103,6 +103,7 @@ export const userTrpc = router({
     return await db
       .select({
         name: users.name,
+        lastname: users.lastname,
         email: users.email,
         id_user: users.id_user,
         company_name: companies.company_name,

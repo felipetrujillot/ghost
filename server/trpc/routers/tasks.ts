@@ -1,14 +1,7 @@
 import { db } from '~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import {
-  companies,
-  group_notes,
-  notes,
-  tasks,
-  tasks_users,
-  users,
-} from '~/server/db/db_schema'
-import { desc, eq } from 'drizzle-orm'
+import { tasks } from '~/server/db/db_schema'
+import { eq } from 'drizzle-orm'
 import { RouterOutput } from '.'
 import { z } from 'zod'
 
@@ -33,19 +26,6 @@ export const tasksTrpc = router({
         .from(tasks)
         .where(eq(tasks.id_project, id_project))
 
-      /* const data = []
-
-      const findTaskUsers = await db
-        .select()
-        .from(tasks_users)
-        .innerJoin(users, eq(users.id_user, tasks_users.id_user))
-        .where(eq(tasks_users.id_project, id_project))
-
-      findTasks.forEach((t) => {
-
-
-      }) */
-
       return findTasks
     }),
 
@@ -57,6 +37,7 @@ export const tasksTrpc = router({
       z.object({
         id_task: z.number(),
         task_status: z.number(),
+        active: z.number(),
         task_name: z.string(),
         task_description: z.string(),
       })
@@ -71,6 +52,9 @@ export const tasksTrpc = router({
       }
     }),
 
+  /**
+   *
+   */
   newTask: protectedProcedure
     .input(
       z.object({

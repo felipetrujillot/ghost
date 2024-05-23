@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { useFocus } from '@vueuse/core'
 import Tiptap from '../Tiptap.vue'
-import { SquarePen } from 'lucide-vue-next'
+import { LucideEllipsis } from 'lucide-vue-next'
+import type { GetUsersByIdProject } from '~/server/trpc/routers/projects'
+
 import type { GetTasksByIdProject } from '~/server/trpc/routers/tasks'
 const { $trpc } = useNuxtApp()
-const props = defineProps<{ task: GetTasksByIdProject[0] }>()
-
+const props = defineProps<{
+  task: GetTasksByIdProject[0]
+  projectUsers: GetUsersByIdProject
+}>()
+const taskRef = ref()
 const editTask = ref(false)
 const modelTask = ref(props.task)
-const taskRef = ref()
 const emit = defineEmits(['emitUpdateTask'])
 const overlay = ref(false)
-
 /**
  *
  */
@@ -26,6 +29,18 @@ const formatStatus = computed(() => {
 /**
  *
  */
+const removeTask = () => {
+  modelTask.value.active = 0
+  updateTask()
+}
+
+const backlogTask = () => {
+  modelTask.value.task_status = 5
+  updateTask()
+}
+/**
+ *
+ */
 const updateTask = () => {
   $trpc.tasks.updateTask
     .mutate({
@@ -33,6 +48,7 @@ const updateTask = () => {
       task_status: modelTask.value.task_status,
       task_name: modelTask.value.task_name,
       task_description: modelTask.value.task_description,
+      active: modelTask.value.active,
     })
     .then((res) => {
       console.log(res)
@@ -48,31 +64,21 @@ const updateTask = () => {
 /**
  *
  */
-const saveInput = () => {
-  updateTask()
-  editTask.value = false
-}
-
-/**
- *
- */
-const openSheet = () => {
+const openSheet = async () => {
   if (editTask.value === false) {
     overlay.value = true
+
+    await nextTick()
+
+    focused.value = true
   }
 }
-/**
- *
- */
-const { focused } = useFocus(taskRef)
 
 /**
  *
  */
 const changeEditTask = async () => {
   editTask.value = !editTask.value
-  await nextTick()
-  focused.value = !focused.value
 }
 
 /**
@@ -84,44 +90,62 @@ const saveNote = (text: string) => {
   updateTask()
   toast('ok', 'Se actualizó la información')
 }
+
+/**
+ *
+ */
+const { focused } = useFocus(taskRef)
 </script>
 
 <template>
   <Sheet :open="overlay">
-    <div @click.prevent="openSheet">
+    <div>
       <div class="flex justify-between gap-2">
-        <div class="w-full">
-          <p class="text-sm min-h-6" v-if="!editTask">
+        <div class="w-full py-2" @click.prevent="openSheet">
+          <p class="text-sm min-h-6">
             {{ task.task_name }}
           </p>
-
-          <template v-if="editTask">
-            <div class="min-h-6">
-              <Textarea
-                v-model="modelTask.task_name"
-                ref="taskRef"
-                rows="10"
-                class="focus-visible:ring-offset-0 p-0 m-0 min-h-0 min-h-5 border-none border-0"
-                @keyup.enter="saveInput"
-              />
-            </div>
-          </template>
         </div>
-        <div class="flex">
-          <SquarePen :size="20" @click.prevent="changeEditTask" />
+        <div class="flex py-2">
+          <Popover>
+            <PopoverTrigger as-child>
+              <LucideEllipsis
+                @click.prevent="changeEditTask"
+                :size="20"
+                class="cursor-pointer"
+              />
+            </PopoverTrigger>
+            <PopoverContent class="w-[180px] p-0">
+              <Command>
+                <Button
+                  variant="outline"
+                  @click.prevent="removeTask"
+                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
+                >
+                  Borrar Nota
+                </Button>
+
+                <Button
+                  variant="outline"
+                  @click.prevent="backlogTask"
+                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
+                >
+                  Enviar a Backlog
+                </Button>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
-      <!--  <i class="bi bi-grid"></i>&nbsp; Abrir -->
     </div>
     <SheetContent side="right" v-model:overlay="overlay">
       <SheetHeader>
         <SheetTitle>
           <Textarea
+            ref="taskRef"
             class="text-2xl font-bold m-0 p-0 min-h-1 resize border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
             v-model="modelTask.task_name"
           ></Textarea>
-          <!--  {{ task.task_name }}
-         -->
         </SheetTitle>
         <SheetDescription> </SheetDescription>
       </SheetHeader>
@@ -131,9 +155,37 @@ const saveNote = (text: string) => {
           {{ formatearTimeStamp(task.created_at).nuevaHora }}
         </p>
 
-        <p class="text-md font-medium text-muted-foreground">
-          Responsable: Sin definir
-        </p>
+        <div class="flex justify-between">
+          <p class="text-md font-medium text-muted-foreground">Responsables:</p>
+
+          <div class="cursor-pointer">
+            <p class="text-md font-medium text-muted-foreground">
+              <Popover>
+                <PopoverTrigger class="flex items-center gap-1"
+                  >&nbsp;Asignar
+
+                  <LucideEllipsis
+                    @click.prevent="changeEditTask"
+                    :size="20"
+                    class="cursor-pointer"
+                  />
+                </PopoverTrigger>
+                <PopoverContent class="p-0">
+                  <Button
+                    v-for="u in projectUsers"
+                    :key="u.id_user"
+                    variant="outline"
+                    class="w-full rounded-none justify-start"
+                  >
+                    {{ u.name }} {{ u.lastname }} ({{ u.email }})
+                  </Button>
+                </PopoverContent>
+              </Popover>
+            </p>
+          </div>
+        </div>
+
+        <div>fdsfsd</div>
 
         <p class="text-md font-medium text-muted-foreground">Fecha Límite:</p>
 
@@ -142,7 +194,6 @@ const saveNote = (text: string) => {
         </p>
 
         <Tiptap :text="modelTask.task_description" @saveNote="saveNote" />
-        <p></p>
       </div>
     </SheetContent>
   </Sheet>

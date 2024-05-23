@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { GetUsersByIdProject } from '~/server/trpc/routers/projects'
 import type { GetTasksByIdProject } from '~/server/trpc/routers/tasks'
 const { $trpc } = useNuxtApp()
 const props = defineProps<{
   tasks: GetTasksByIdProject
+  projectUsers: GetUsersByIdProject
 }>()
 
 /**
@@ -16,7 +18,9 @@ const tasksRef = ref(props.tasks)
  *
  */
 const filterTask = (status: number) => {
-  return tasksRef.value.filter((t) => t.task_status === status)
+  return tasksRef.value.filter((t) => {
+    if (t.active === 1 && t.task_status === status) return t
+  })
 }
 
 /**
@@ -54,6 +58,7 @@ const onDrop = (event: DragEvent, newStatus: number) => {
       task_status: newStatus,
       task_name: foundTask[0].task_name,
       task_description: foundTask[0].task_description,
+      active: foundTask[0].active,
     })
     .then((res) => {
       console.log(res)
@@ -87,8 +92,8 @@ const emitUpdateTask = (t: GetTasksByIdProject[0]) => {
 const newTask = async (taskStatus: number) => {
   const { status, data } = await $trpc.tasks.newTask.mutate({
     id_project,
-    task_name: '',
-    task_description: '',
+    task_name: 'Mi nueva tarea...',
+    task_description: '<p></p><p></p><p></p><p></p><p></p><p></p><p>',
     task_status: taskStatus,
   })
 
@@ -117,13 +122,17 @@ const newTask = async (taskStatus: number) => {
       </div>
 
       <Card
-        class="p-2 cursor-pointer bg-muted/40"
+        class="px-2 py-0 cursor-pointer bg-muted/40"
         v-for="t in filterTask(1)"
         :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
+        <TasksDragableCard
+          :projectUsers="projectUsers"
+          :task="t"
+          @emitUpdateTask="emitUpdateTask"
+        />
       </Card>
     </Card>
 
@@ -145,13 +154,17 @@ const newTask = async (taskStatus: number) => {
       </div>
 
       <Card
-        class="p-2 cursor-pointer bg-muted/40"
+        class="px-2 py-0 cursor-pointer bg-muted/40"
         v-for="t in filterTask(2)"
         :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
+        <TasksDragableCard
+          :projectUsers="projectUsers"
+          :task="t"
+          @emitUpdateTask="emitUpdateTask"
+        />
       </Card>
     </Card>
 
@@ -162,7 +175,7 @@ const newTask = async (taskStatus: number) => {
       @dragover.prevent
     >
       <div class="flex justify-between">
-        <Badge class="bg-green-700"> Listo </Badge>
+        <Badge class="bg-green-700 hover:bg-green-600"> Listo </Badge>
         <p
           class="text-sm font-medium transition-colors hover:text-primary cursor-pointer"
           @click.prevent="newTask(3)"
@@ -172,13 +185,17 @@ const newTask = async (taskStatus: number) => {
       </div>
 
       <Card
-        class="p-2 cursor-pointer bg-muted/40"
+        class="px-2 py-0 cursor-pointer bg-muted/40"
         v-for="t in filterTask(3)"
         :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
+        <TasksDragableCard
+          :projectUsers="projectUsers"
+          :task="t"
+          @emitUpdateTask="emitUpdateTask"
+        />
       </Card>
     </Card>
 
@@ -200,13 +217,17 @@ const newTask = async (taskStatus: number) => {
       </div>
 
       <Card
-        class="p-2 cursor-pointer bg-muted/40"
+        class="px-2 py-0 cursor-pointer bg-muted/40"
         v-for="t in filterTask(4)"
         :key="t.id_task"
         draggable="true"
         @dragstart="startDrag($event, t)"
       >
-        <TasksDragableCard :task="t" @emitUpdateTask="emitUpdateTask" />
+        <TasksDragableCard
+          :projectUsers="projectUsers"
+          :task="t"
+          @emitUpdateTask="emitUpdateTask"
+        />
       </Card>
     </Card>
   </div>

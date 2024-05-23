@@ -7,6 +7,7 @@ definePageMeta({
 })
 
 const { data: projects, pending } = $trpc.projects.getProjects.useQuery()
+
 const tabs = ref('resumen')
 </script>
 
@@ -39,7 +40,7 @@ const tabs = ref('resumen')
             {{ p.project_name }}
           </h1>
 
-          <p>1 participante</p>
+          <p>{{ p.total_users }} Colaboradores</p>
 
           <p class="text-sm text-end">Progreso: {{ p.progress }}%</p>
           <Progress :model-value="p.progress" />

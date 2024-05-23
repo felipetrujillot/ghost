@@ -13,10 +13,33 @@ const { data: project, pending } = $trpc.projects.getProjectById.useQuery({
   id_project,
 })
 
+const {
+  data: projectUsers,
+  pending: pendingUsers,
+  refresh: refreshUsers,
+} = $trpc.projects.getUsersByIdProject.useQuery({
+  id_project,
+})
+
 const open = ref(false)
+
+const showModalAddUser = ref(false)
+
+/**
+ *
+ */
+const closeModalAddUser = async () => {
+  showModalAddUser.value = false
+  refreshUsers()
+}
 </script>
 
 <template>
+  <ProjectModalAddUser
+    v-if="showModalAddUser"
+    :id_project="id_project"
+    @closeModal="closeModalAddUser"
+  />
   <div class="w-full container-sm ml-auto mr-auto space-y-4">
     <div>
       <VueBreadCrumb text="NoName / " />
@@ -98,8 +121,14 @@ const open = ref(false)
         </Card>
       </div>
 
-      <Card>
-        <h1 class="text-2xl font-bold">Participantes</h1>
+      <Card v-if="!pendingUsers && projectUsers">
+        <div class="flex justify-between">
+          <h1 class="text-2xl font-bold">Colaboradores</h1>
+
+          <Button @click.prevent="showModalAddUser = true"
+            >Nuevo Colaborador</Button
+          >
+        </div>
 
         <Table>
           <TableHeader>
@@ -112,10 +141,10 @@ const open = ref(false)
           </TableHeader>
 
           <TableBody>
-            <TableRow>
-              <TableCell>Felipe</TableCell>
-              <TableCell>hola@hola.cl</TableCell>
-              <TableCell>Colaborador</TableCell>
+            <TableRow v-for="u in projectUsers" :key="u.id_user">
+              <TableCell>{{ u.name }} {{ u.lastname }}</TableCell>
+              <TableCell>{{ u.email }}</TableCell>
+              <TableCell>{{ u.role }}</TableCell>
               <TableCell>
                 <Popover v-model:open="open">
                   <PopoverTrigger as-child>

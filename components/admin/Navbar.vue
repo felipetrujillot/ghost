@@ -86,41 +86,31 @@ const logout = () => {
             </PopoverTrigger>
             <PopoverContent class="w-[180px] p-0">
               <Command>
-                <div>
-                  <Button
-                    @click.prevent=";(open = false), $router.push('/settings')"
-                    :class="
-                      'profile' === 'profile'
-                        ? 'bg-black text-white'
-                        : 'bg-white text-dark'
-                    "
-                    class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                  >
-                    <a class="text-md font-medium">
-                      <!-- <i class="bi bi-person"></i> -->
-                      Configuraciones</a
-                    >
-                  </Button>
-                </div>
-              </Command>
+                <Button
+                  @click.prevent=";(open = false), $router.push('/settings')"
+                  variant="outline"
+                  :class="
+                    'profile' === 'profile'
+                      ? 'dark:bg-black dark:text-white'
+                      : 'bg-white text-dark'
+                  "
+                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
+                >
+                  Configuraciones
+                </Button>
 
-              <Command>
-                <div>
-                  <Button
-                    @click.prevent="logout"
-                    :class="
-                      'profile' === 'profile'
-                        ? 'bg-black text-white'
-                        : 'bg-white text-dark'
-                    "
-                    class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                  >
-                    <a class="text-md font-medium">
-                      <!-- <i class="bi bi-person"></i> -->
-                      Salir</a
-                    >
-                  </Button>
-                </div>
+                <Button
+                  @click.prevent="logout"
+                  variant="outline"
+                  :class="
+                    'profile' === 'profile'
+                      ? 'dark:bg-black dark:text-white'
+                      : 'bg-white text-dark'
+                  "
+                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
+                >
+                  Salir
+                </Button>
               </Command>
             </PopoverContent>
           </Popover>
