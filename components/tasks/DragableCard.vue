@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useFocus } from '@vueuse/core'
 import Tiptap from '../Tiptap.vue'
-import { LucideEllipsis } from 'lucide-vue-next'
+import { LucideEllipsis, LucideXCircle } from 'lucide-vue-next'
 import type { GetUsersByIdProject } from '~/server/trpc/routers/projects'
 
-import type { GetTasksByIdProject } from '~/server/trpc/routers/tasks'
+import type {
+  GetTasksByIdProject,
+  GetUsersByIdTask,
+} from '~/server/trpc/routers/tasks'
 const { $trpc } = useNuxtApp()
 const props = defineProps<{
   task: GetTasksByIdProject[0]
@@ -65,20 +68,11 @@ const updateTask = () => {
  *
  */
 const openSheet = async () => {
-  if (editTask.value === false) {
-    overlay.value = true
+  overlay.value = true
 
-    await nextTick()
+  await nextTick()
 
-    focused.value = true
-  }
-}
-
-/**
- *
- */
-const changeEditTask = async () => {
-  editTask.value = !editTask.value
+  focused.value = true
 }
 
 /**
@@ -91,6 +85,23 @@ const saveNote = (text: string) => {
   toast('ok', 'Se actualizó la información')
 }
 
+const users = ref<GetUsersByIdTask>([])
+
+const pendingUsers = computed(() => {
+  if (overlay.value) {
+    $trpc.tasks.getUsersByIdTask
+      .query({
+        id_task: props.task.id_task,
+      })
+      .then((res) => {
+        users.value = res
+      })
+
+    return false
+  }
+
+  return true
+})
 /**
  *
  */
@@ -98,46 +109,36 @@ const { focused } = useFocus(taskRef)
 </script>
 
 <template>
-  <Sheet :open="overlay">
-    <div>
-      <div class="flex justify-between gap-2">
-        <div class="w-full py-2" @click.prevent="openSheet">
-          <p class="text-sm min-h-6">
-            {{ task.task_name }}
-          </p>
-        </div>
-        <div class="flex py-2">
-          <Popover>
-            <PopoverTrigger as-child>
-              <LucideEllipsis
-                @click.prevent="changeEditTask"
-                :size="20"
-                class="cursor-pointer"
-              />
-            </PopoverTrigger>
-            <PopoverContent class="w-[180px] p-0">
-              <Command>
-                <Button
-                  variant="outline"
-                  @click.prevent="removeTask"
-                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                >
+  <div>
+    <div class="flex justify-between gap-2">
+      <div class="w-full py-2" @click.prevent="openSheet">
+        <p class="text-sm min-h-6">
+          {{ task.task_name }}
+        </p>
+      </div>
+      <div class="flex py-2">
+        <Popover>
+          <PopoverTrigger as-child>
+            <LucideEllipsis :size="20" class="cursor-pointer" />
+          </PopoverTrigger>
+          <PopoverContent class="w-[180px] p-0">
+            <Command>
+              <CommandGroup heading="Opciones">
+                <CommandItem value="delete" @click.prevent="removeTask">
                   Borrar Nota
-                </Button>
+                </CommandItem>
 
-                <Button
-                  variant="outline"
-                  @click.prevent="backlogTask"
-                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                >
+                <CommandItem value="backlog" @click.prevent="backlogTask">
                   Enviar a Backlog
-                </Button>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
+                </CommandItem>
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
+  </div>
+  <Sheet :open="overlay">
     <SheetContent side="right" v-model:overlay="overlay">
       <SheetHeader>
         <SheetTitle>
@@ -156,7 +157,11 @@ const { focused } = useFocus(taskRef)
         </p>
 
         <div class="flex justify-between">
-          <p class="text-md font-medium text-muted-foreground">Responsables:</p>
+          <div>
+            <p class="text-md font-medium text-muted-foreground">
+              Responsables:
+            </p>
+          </div>
 
           <div class="cursor-pointer">
             <p class="text-md font-medium text-muted-foreground">
@@ -164,28 +169,38 @@ const { focused } = useFocus(taskRef)
                 <PopoverTrigger class="flex items-center gap-1"
                   >&nbsp;Asignar
 
-                  <LucideEllipsis
-                    @click.prevent="changeEditTask"
-                    :size="20"
-                    class="cursor-pointer"
-                  />
+                  <LucideEllipsis :size="20" class="cursor-pointer" />
                 </PopoverTrigger>
                 <PopoverContent class="p-0">
-                  <Button
-                    v-for="u in projectUsers"
-                    :key="u.id_user"
-                    variant="outline"
-                    class="w-full rounded-none justify-start"
-                  >
-                    {{ u.name }} {{ u.lastname }} ({{ u.email }})
-                  </Button>
+                  <Command>
+                    <CommandGroup heading="Colaboradores">
+                      <CommandItem
+                        v-for="u in projectUsers"
+                        :key="u.id_user"
+                        :value="u.id_user.toString()"
+                      >
+                        {{ u.name }} {{ u.lastname }} ({{ u.email }})
+                      </CommandItem>
+                    </CommandGroup>
+                  </Command>
                 </PopoverContent>
               </Popover>
             </p>
           </div>
         </div>
 
-        <div>fdsfsd</div>
+        <template v-if="pendingUsers">
+          <VueSkeleton />
+        </template>
+
+        <template v-if="!pendingUsers && users.length > 0">
+          <div class="flex flex-wrap items-center gap-2">
+            <template v-for="u in users" :key="u.id_user">
+              <LucideXCircle class="w-4 h-4 text-red-500 cursor-pointer" />
+              <p>{{ u.name }} {{ u.lastname }} {{ u.email }}</p>
+            </template>
+          </div>
+        </template>
 
         <p class="text-md font-medium text-muted-foreground">Fecha Límite:</p>
 

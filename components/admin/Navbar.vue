@@ -86,31 +86,18 @@ const logout = () => {
             </PopoverTrigger>
             <PopoverContent class="w-[180px] p-0">
               <Command>
-                <Button
-                  @click.prevent=";(open = false), $router.push('/settings')"
-                  variant="outline"
-                  :class="
-                    'profile' === 'profile'
-                      ? 'dark:bg-black dark:text-white'
-                      : 'bg-white text-dark'
-                  "
-                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                >
-                  Configuraciones
-                </Button>
+                <CommandGroup>
+                  <CommandItem
+                    value="settings"
+                    @click.prevent=";(open = false), $router.push('/settings')"
+                  >
+                    Configuraciones
+                  </CommandItem>
 
-                <Button
-                  @click.prevent="logout"
-                  variant="outline"
-                  :class="
-                    'profile' === 'profile'
-                      ? 'dark:bg-black dark:text-white'
-                      : 'bg-white text-dark'
-                  "
-                  class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                >
-                  Salir
-                </Button>
+                  <CommandItem value="quit" @click.prevent="logout">
+                    Salir
+                  </CommandItem>
+                </CommandGroup>
               </Command>
             </PopoverContent>
           </Popover>

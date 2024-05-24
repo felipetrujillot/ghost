@@ -29,7 +29,7 @@
     "nuxt": "^3.11.1",
     "openai": "^4.44.0",
     "puppeteer": "^22.7.1",
-    "radix-vue": "^1.7.3",
+    "radix-vue": "^1.8.1",
     "shadcn-nuxt": "^0.10.4",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",

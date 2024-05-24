@@ -1,5 +1,21 @@
 <script setup lang="ts">
 documentTitle('Configuraciones')
+const theme = useCookie('theme')
+
+const themeRef = ref(theme.value || 'light')
+
+/**
+ *
+ */
+const changeTheme = (themeVal: 'dark' | 'light') => {
+  if (themeVal === 'light') {
+    document.body.classList.remove('dark')
+  }
+  if (themeVal === 'dark') {
+    document.body.classList.add('dark')
+  }
+  theme.value = themeVal
+}
 </script>
 
 <template>
@@ -49,7 +65,29 @@ documentTitle('Configuraciones')
             </CardHeader>
             <CardContent>
               <form class="flex flex-col gap-4">
-                <Input
+                <div class="space-y-4">
+                  <Label>Tema</Label>
+                  <RadioGroup :default-value="themeRef!">
+                    <div class="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="light"
+                        @click.prevent="changeTheme('light')"
+                      />
+                      <Label class="cursor-pointer text-sm" for="r1">Día</Label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="dark"
+                        @click.prevent="changeTheme('dark')"
+                      />
+                      <Label class="cursor-pointer text-sm" for="r2"
+                        >Noche</Label
+                      >
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                <!-- <Input
                   placeholder="Project Name"
                   default-value="/content/plugins"
                 />
@@ -61,7 +99,7 @@ documentTitle('Configuraciones')
                   >
                     Allow administrators to change the directory.
                   </label>
-                </div>
+                </div> -->
               </form>
             </CardContent>
             <CardFooter class="border-t px-6 py-4">

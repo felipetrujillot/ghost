@@ -141,30 +141,9 @@ const closeModalAddUser = async () => {
           </TableHeader>
 
           <TableBody>
-            <TableRow v-for="u in projectUsers" :key="u.id_user">
-              <TableCell>{{ u.name }} {{ u.lastname }}</TableCell>
-              <TableCell>{{ u.email }}</TableCell>
-              <TableCell>{{ u.role }}</TableCell>
-              <TableCell>
-                <Popover v-model:open="open">
-                  <PopoverTrigger as-child>
-                    <Ellipsis :size="20" class="cursor-pointer" />
-                  </PopoverTrigger>
-                  <PopoverContent class="w-[180px] p-0">
-                    <Command>
-                      <div>
-                        <Button
-                          variant="outline"
-                          class="hover:bg-primary justify-start hover:text-white w-full rounded-none"
-                        >
-                          <a class="text-md font-medium"> Editar</a>
-                        </Button>
-                      </div>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </TableCell>
-            </TableRow>
+            <template v-for="u in projectUsers" :key="u.id_user">
+              <ProjectUserRow :u="u" />
+            </template>
           </TableBody>
         </Table>
       </Card>

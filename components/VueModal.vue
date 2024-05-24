@@ -41,7 +41,7 @@ onUnmounted(() => {
   <Dialog :open="true">
     <DialogContent
       :class="size"
-      class="top-10 translate-y-0 bg-neutral-50 dark:bg-muted/40 max-h-[90dvh] z-50 rounded-xl"
+      class="top-10 translate-y-0 bg-neutral-50 dark:bg-background max-h-[90dvh] z-50 rounded-xl"
     >
       <div class="flex justify-between items-center">
         <h1 class="text-xl font-bold">{{ title }}</h1>
