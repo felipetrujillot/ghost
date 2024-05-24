@@ -9,7 +9,7 @@ import {
   tasks,
   users,
 } from '~/server/db/db_schema'
-import { desc, eq, sql } from 'drizzle-orm'
+import { and, desc, eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { RouterOutput } from '.'
 
@@ -20,10 +20,13 @@ export const projectsTrpc = router({
   /**
    *
    */
-  getProjects: protectedProcedure.query(async () => {
+  getProjects: protectedProcedure.query(async ({ ctx }) => {
+    const { id_company } = ctx.user!
+
     const res = await db
       .select({
         id_project: projects.id_project,
+        id_company: projects.id_company,
         project_name: projects.project_name,
         total_tasks: projects.progress,
         progress: projects.progress,
@@ -35,7 +38,7 @@ export const projectsTrpc = router({
         eq(projects_users.id_project, projects.id_project)
       )
       .groupBy(projects.id_project)
-      .where(eq(projects.active, 1))
+      .where(and(eq(projects.active, 1), eq(projects.id_company, id_company)))
       .orderBy(desc(projects.id_project))
 
     return res
@@ -50,12 +53,22 @@ export const projectsTrpc = router({
         id_project: z.number(),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const { id_company } = ctx.user!
       const { id_project } = input
+
+      /**
+       */
       const res = await db
         .select()
         .from(projects)
-        .where(eq(projects.id_project, id_project))
+        .where(
+          and(
+            eq(projects.id_project, id_project),
+            eq(projects.id_company, id_company)
+          )
+        )
+
       return res[0]
     }),
 
@@ -102,7 +115,8 @@ export const projectsTrpc = router({
         project_category: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const { id_company } = ctx.user!
       const {
         project_name,
         project_description,
@@ -116,6 +130,7 @@ export const projectsTrpc = router({
         project_category,
         project_name,
         progress: 0,
+        id_company,
       })
       return {
         status: 'ok' as const,
@@ -136,12 +151,35 @@ export const projectsTrpc = router({
     .mutation(async ({ input }) => {
       const { id_project, id_user } = input
 
-      const findUserProjects = await db.insert(projects_users).values({
+      //valido que el usuario no se encuentre agregado previamente
+
+      const findUserProjects = await db
+        .select()
+        .from(projects_users)
+        .where(eq(projects_users.id_user, id_user))
+
+      /**
+       *
+       */
+      if (findUserProjects.length > 0) {
+        return {
+          status: 'warning' as const,
+          data: 'El usuario ya se encuentra agregado al proyecto',
+        }
+      }
+
+      /**
+       *
+       */
+      const newProjectUser = await db.insert(projects_users).values({
         id_project,
         id_user,
       })
 
-      if (findUserProjects[0].insertId === 0)
+      /**
+       *
+       */
+      if (newProjectUser[0].insertId === 0)
         return {
           status: 'warning' as const,
           data: 'No se agregó el colaborador',
