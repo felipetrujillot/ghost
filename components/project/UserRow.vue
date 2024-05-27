@@ -13,7 +13,7 @@ const open = ref(false)
   <TableRow>
     <TableCell>{{ u.name }} {{ u.lastname }}</TableCell>
     <TableCell>{{ u.email }}</TableCell>
-    <TableCell>{{ u.role }}</TableCell>
+    <TableCell>{{ u.role_name }}</TableCell>
     <TableCell>
       <Popover v-model:open="open">
         <PopoverTrigger as-child>
@@ -22,7 +22,7 @@ const open = ref(false)
         <PopoverContent class="w-[180px] p-0">
           <Command>
             <CommandGroup>
-              <CommandItem value="Editar"> Editar </CommandItem>
+              <CommandItem value="Editar" disabled> Editar </CommandItem>
             </CommandGroup>
           </Command>
         </PopoverContent>

@@ -29,6 +29,9 @@ const tabs = ref('resumen')
     <VueSkeleton v-if="pending" />
 
     <template v-if="!pending && projects">
+      <Card v-if="projects.length === 0">
+        <p>No hay ningún proyecto disponible</p>
+      </Card>
       <div class="grid grid-cols-1 md:grid-cols-3 align-stretch gap-4">
         <Card
           @click.prevent="$router.push(`/project/${p.id_project}`)"
@@ -40,7 +43,10 @@ const tabs = ref('resumen')
             {{ p.project_name }}
           </h1>
 
-          <p>{{ p.total_users }} Colaboradores</p>
+          <p class="text-muted-foreground">
+            {{ p.total_users }}
+            {{ p.total_users === 1 ? 'Colaborador' : 'Colaboradores' }}
+          </p>
 
           <p class="text-sm text-end">Progreso: {{ p.progress }}%</p>
           <Progress :model-value="p.progress" />

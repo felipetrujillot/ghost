@@ -102,6 +102,7 @@ export const tasks_users = mySchema.table('tasks_users', {
 export const projects = mySchema.table('projects', {
   id_project: int('id_project').primaryKey().autoincrement(),
   id_company: int('id_company').notNull(),
+  project_status: int('id_company').notNull(),
   project_name: varchar('project_name', { length: 250 }).notNull(),
   project_description: text('project_description').notNull(),
   project_company: text('project_company').notNull(),

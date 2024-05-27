@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { Ellipsis } from 'lucide-vue-next'
-
 const { $trpc, $router } = useNuxtApp()
+/**
+ *
+ */
 documentTitle('Proyecto')
 definePageMeta({
   layout: 'admin-layout',
 })
 
+/**
+ *
+ */
 const route = useRoute()
 const id_project = parseInt(route.params.id_project as string)
 const { data: project, pending } = $trpc.projects.getProjectById.useQuery({
   id_project,
 })
 
+/**
+ *
+ */
 const {
   data: projectUsers,
   pending: pendingUsers,
@@ -21,8 +28,9 @@ const {
   id_project,
 })
 
-const open = ref(false)
-
+/**
+ *
+ */
 const showModalAddUser = ref(false)
 
 /**
@@ -78,8 +86,10 @@ const closeModalAddUser = async () => {
 
       <div class="grid grid-cols-3 gap-4 items-stretch">
         <Card>
-          <p class="text-end">Progreso: {{ project.progress }}%</p>
-          <Progress :model-value="project.progress" />
+          <p class="text-end">Estado Proyecto: {{ project.progress }}%</p>
+
+          <h1 class="text-2xl font-semibold">Borrador</h1>
+          <!--  <Progress :model-value="project.progress" /> -->
         </Card>
 
         <Card>

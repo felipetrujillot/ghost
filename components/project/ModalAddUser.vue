@@ -10,7 +10,12 @@ const { data, pending } = $trpc.user.getUsers.useQuery()
 
 const selectedUser = ref()
 
+/**
+ *
+ */
 const addUser = async () => {
+  if (!selectedUser.value)
+    return toast('warning', 'Debes seleccionar un usuario')
   /**
    *
    */
@@ -41,7 +46,8 @@ const addUser = async () => {
                 :key="c.id_user"
                 :value="`${c.id_user}`"
               >
-                {{ c.name }} {{ c.lastname }} - {{ c.email }}
+                {{ c.name }} {{ c.lastname }} - {{ c.email }} -
+                {{ c.role_name }}
               </SelectItem>
             </SelectGroup>
           </SelectContent>

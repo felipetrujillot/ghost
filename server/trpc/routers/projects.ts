@@ -21,14 +21,21 @@ export const projectsTrpc = router({
    *
    */
   getProjects: protectedProcedure.query(async ({ ctx }) => {
-    const { id_company } = ctx.user!
+    const { id_company, id_user } = ctx.user!
 
     const res = await db
       .select({
         id_project: projects.id_project,
         id_company: projects.id_company,
         project_name: projects.project_name,
-        total_tasks: projects.progress,
+        project_status: projects.project_status,
+        status_name: sql<string>`
+        CASE 
+          WHEN projects.project_status = 0 THEN 'Borrador'
+          WHEN projects.project_status = 1 THEN 'En Proceso'
+          WHEN projects.project_status = 2 THEN 'Completado'
+          ELSE 'unknown'
+        END`,
         progress: projects.progress,
         total_users: sql<number>`COUNT(projects_users.id_user) AS total_users `,
       })
@@ -38,7 +45,13 @@ export const projectsTrpc = router({
         eq(projects_users.id_project, projects.id_project)
       )
       .groupBy(projects.id_project)
-      .where(and(eq(projects.active, 1), eq(projects.id_company, id_company)))
+      .where(
+        and(
+          eq(projects.active, 1),
+          eq(projects.id_company, id_company),
+          eq(projects_users.id_user, id_user)
+        )
+      )
       .orderBy(desc(projects.id_project))
 
     return res
@@ -60,7 +73,25 @@ export const projectsTrpc = router({
       /**
        */
       const res = await db
-        .select()
+        .select({
+          id_project: projects.id_project,
+          id_company: projects.id_company,
+          project_name: projects.project_name,
+          project_company: projects.project_company,
+          project_description: projects.project_description,
+          project_category: projects.project_category,
+          project_status: projects.project_status,
+          created_at: projects.created_at,
+          updated_at: projects.updated_at,
+          status_name: sql<string>`
+          CASE 
+            WHEN project_status = 0 THEN 'Borrador'
+            WHEN project_status = 1 THEN 'En Proceso'
+            WHEN project_status = 2 THEN 'Completado'
+            ELSE 'unknown'
+          END`,
+          progress: projects.progress,
+        })
         .from(projects)
         .where(
           and(
@@ -68,6 +99,9 @@ export const projectsTrpc = router({
             eq(projects.id_company, id_company)
           )
         )
+        .catch((err) => {
+          throw err
+        })
 
       return res[0]
     }),
@@ -95,6 +129,13 @@ export const projectsTrpc = router({
           id_user: users.id_user,
           email: users.email,
           role: users.role,
+          role_name: sql<string>`
+          CASE 
+            WHEN role = 0 THEN 'Admin'
+            WHEN role = 10 THEN 'Gerente Comercial'
+            WHEN role = 20 THEN 'Preventa'
+            ELSE 'unknown'
+          END`,
           id_project: projects_users.id_project,
         })
         .from(projects_users)
@@ -116,7 +157,7 @@ export const projectsTrpc = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { id_company } = ctx.user!
+      const { id_company, id_user } = ctx.user!
       const {
         project_name,
         project_description,
@@ -130,7 +171,13 @@ export const projectsTrpc = router({
         project_category,
         project_name,
         progress: 0,
+        project_status: 0,
         id_company,
+      })
+
+      const insertProjectUser = await db.insert(projects_users).values({
+        id_project: insertProject[0].insertId,
+        id_user: id_user,
       })
       return {
         status: 'ok' as const,
@@ -153,10 +200,18 @@ export const projectsTrpc = router({
 
       //valido que el usuario no se encuentre agregado previamente
 
+      /**
+       *
+       */
       const findUserProjects = await db
         .select()
         .from(projects_users)
-        .where(eq(projects_users.id_user, id_user))
+        .where(
+          and(
+            eq(projects_users.id_user, id_user),
+            eq(projects_users.id_project, id_project)
+          )
+        )
 
       /**
        *

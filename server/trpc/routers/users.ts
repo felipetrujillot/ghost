@@ -4,7 +4,7 @@ import { Users, companies, users } from '~/server/db/db_schema'
 import { protectedProcedure, publicProcedure, router } from '../trpc'
 import { db } from '~/server/db/db'
 import { z } from 'zod'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, sql } from 'drizzle-orm'
 import { RouterOutput } from '.'
 
 /**
@@ -106,6 +106,14 @@ export const userTrpc = router({
         lastname: users.lastname,
         email: users.email,
         id_user: users.id_user,
+        role: users.role,
+        role_name: sql<string>`
+        CASE 
+          WHEN role = 0 THEN 'Admin'
+          WHEN role = 10 THEN 'Gerente Comercial'
+          WHEN role = 20 THEN 'Preventa'
+          ELSE 'unknown'
+        END`,
         company_name: companies.company_name,
       })
       .from(users)

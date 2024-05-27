@@ -6,13 +6,20 @@ definePageMeta({
   layout: 'admin-layout',
 })
 
+/**
+ *
+ */
 const isLoading = ref(false)
+/**
+ *
+ */
 const addForm = ref({
   project_name: '',
   project_company: '',
   project_category: '',
   project_description: '',
 })
+
 /**
  *
  */
@@ -20,12 +27,12 @@ const newProject = async () => {
   isLoading.value = true
 
   toast('ok', 'Estamos creando tu proyecto')
-  /* 
-  const res = await newQuestionPython(
+
+  /* const res = await newQuestion(
     `Escríbeme una lista de tareas para poder realizar un proyecto llamado ${addForm.value.project_name} para la empresa ${addForm.value.project_company}, que es del rubro o categoría del área de ${addForm.value.project_category}, este proyecto requiere completarse a través del tiempo y se trata de ${addForm.value.project_description}, cada ítem de la lista deberá tener un titular breve, y una descripción prolongada detallando qué se trata cada punto, la lista debe ser enumerada y el titular debe separarse del contenido con un ":"`
   )
 
-  const arrayTasks = convertTextToList(res)
+  const arrayTasks = convertTextToList(res) */
 
   const { status, data } = await $trpc.projects.newProject.mutate({
     project_name: addForm.value.project_name,
@@ -33,7 +40,7 @@ const newProject = async () => {
     project_company: addForm.value.project_company,
     project_category: addForm.value.project_category,
   })
-
+  /*
   toast('ok', 'Estamos Añadiendo las tareas a tu proyecto')
 
   if (status === 'ok') {
@@ -54,13 +61,6 @@ const newProject = async () => {
 
     isLoading.value = false
   } */
-
-  const { data } = await $trpc.projects.newProject.mutate({
-    project_name: addForm.value.project_name,
-    project_description: addForm.value.project_description,
-    project_company: addForm.value.project_company,
-    project_category: addForm.value.project_category,
-  })
 
   $router.push(`/project/${data}`)
 }

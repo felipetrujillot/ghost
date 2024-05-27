@@ -18,7 +18,7 @@ const logout = () => {
       <div class="flex container">
         <nav class="flex items-center space-x-4 lg:space-x-6">
           <img src="/icon.svg" width="20" height="20" />
-          <NuxtLink
+          <!-- <NuxtLink
             to="/admin/users"
             class="text-sm font-medium transition-colors hover:text-primary"
             :class="
@@ -44,7 +44,7 @@ const logout = () => {
             class="text-sm font-medium transition-colors hover:text-primary"
           >
             Notas
-          </NuxtLink>
+          </NuxtLink> -->
 
           <NuxtLink
             to="/projects"

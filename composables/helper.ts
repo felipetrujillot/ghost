@@ -555,6 +555,11 @@ export const newQuestionPython = async (newQuestion: string) => {
   return r.Answer
 }
 
+/**
+ *
+ * @param inputQuestion
+ * @returns
+ */
 export const newQuestion = async (inputQuestion: string) => {
   const response = await fetch('http://localhost:1234/v1/chat/completions', {
     method: 'POST',

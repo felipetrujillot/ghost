@@ -48,6 +48,11 @@ const newLogin = async () => {
       $router.push('/admin')
       return
     }
+
+    if (res.usuario_db.role === 10) {
+      $router.push('/projects')
+      return
+    }
   }
   return toast('warning', res.data)
 }
