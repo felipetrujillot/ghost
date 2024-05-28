@@ -15,6 +15,29 @@ const { data: project, pending } = $trpc.projects.getProjectById.useQuery({
   id_project,
 })
 
+const text = `
+<body>
+    <h1>Carta de Presentación</h1>
+    <p>Nombre:</p>
+    <input type="text" id="nombre">
+    <p>Apellidos:</p>
+    <input type="text" id="apellidos">
+    <p>Dirección:</p>
+    <input type="text" id="direccion">
+    <p>Ciudad:</p>
+    <input type="text" id="ciudad">
+    <p>Fecha:</p>
+    <input type="date" id="fecha">
+    <button onclick="generarCarta()">Generar Carta</button>
+</body>
+`
+/**
+ *
+ * @param textSaved
+ */
+const saveNote = (textSaved: string) => {
+  console.log('here')
+}
 const tabs = ref('resumen')
 </script>
 
@@ -35,7 +58,9 @@ const tabs = ref('resumen')
     <VueSkeleton v-if="pending" />
 
     <div class="space-y-4" v-if="!pending && project">
-      <Card> Detalle </Card>
+      <Card>
+        <Tiptap :text="text" @saveNote="saveNote" />
+      </Card>
     </div>
   </div>
 </template>
