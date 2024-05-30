@@ -2,6 +2,9 @@
 documentTitle('Configuraciones')
 const theme = useCookie('theme')
 
+/**
+ *
+ */
 const themeRef = ref(theme.value || 'light')
 
 /**
