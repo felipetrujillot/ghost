@@ -29,6 +29,7 @@ const text = `
     <p>Fecha:</p>
     <input type="date" id="fecha">
     <button onclick="generarCarta()">Generar Carta</button>
+    <img src="https://source.unsplash.com/8xznAGy4HcY/800x400" />
 </body>
 `
 /**

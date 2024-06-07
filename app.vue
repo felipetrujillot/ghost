@@ -2,7 +2,7 @@
 const theme = useCookie('theme')
 useHead({
   bodyAttrs: {
-    class: theme.value || 'light',
+    class: theme.value ?? 'light',
   },
 })
 </script>
