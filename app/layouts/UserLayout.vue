@@ -18,10 +18,13 @@ const preguntas = [
 
 const clases = [
   {
+    name: 'Profesores',
+    to: '/profesores',
+  },
+  {
     name: 'Cursos',
     to: '/cursos',
   },
-
   {
     name: 'Alumnos',
     to: '/alumnos',

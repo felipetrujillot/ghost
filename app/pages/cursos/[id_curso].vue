@@ -14,6 +14,7 @@ const { $trpc, $router } = useNuxtApp()
 
 const { categoriaSeleccionada, categorias } = useCategorias([
   'Detalle curso',
+  'Profesores',
   'Alumnos',
 ] as const)
 </script>

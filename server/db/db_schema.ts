@@ -13,7 +13,7 @@ import {
 } from 'drizzle-orm/mysql-core'
 
 const config = useRuntimeConfig()
-export const mySchema = mysqlSchema(config.dbName)
+export const mySchema = mysqlSchema('tueducas')
 
 /**
  *
