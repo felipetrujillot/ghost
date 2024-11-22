@@ -1,11 +1,11 @@
 import { db } from '~~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import { alumnos, cursos } from '~~/server/db/db_schema'
+import { profesores } from '~~/server/db/db_schema'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { RouterOutput } from '.'
 
-export const alumnosTrpc = router({
+export const profesoresTrpc = router({
   /**
    *
    */
@@ -14,27 +14,27 @@ export const alumnosTrpc = router({
 
     return await db
       .select()
-      .from(alumnos)
-      .where(eq(alumnos.id_empresa, id_empresa))
+      .from(profesores)
+      .where(eq(profesores.id_empresa, id_empresa))
   }),
 
   getProfesorId: protectedProcedure
     .input(
       z.object({
-        id_alumno: z.number(),
+        id_profesor: z.number(),
       })
     )
     .query(async ({ ctx, input }) => {
       const { id_empresa } = ctx.user!
 
-      const { id_alumno } = input
+      const { id_profesor } = input
       return await db
         .select()
-        .from(alumnos)
+        .from(profesores)
         .where(
           and(
-            eq(alumnos.id_empresa, id_empresa),
-            eq(alumnos.id_alumno, id_alumno)
+            eq(profesores.id_empresa, id_empresa),
+            eq(profesores.id_profesor, id_profesor)
           )
         )
     }),
@@ -56,7 +56,7 @@ export const alumnosTrpc = router({
     .mutation(async ({ input, ctx }) => {
       const { id_empresa } = ctx.user!
 
-      const insertCurso = await db.insert(alumnos).values({
+      const insertCurso = await db.insert(profesores).values({
         ...input,
         id_empresa: id_empresa,
       })
@@ -76,4 +76,4 @@ export const alumnosTrpc = router({
     }),
 })
 
-export type GetAlumnos = RouterOutput['alumnos']['getAlumnos']
+export type GetProfesores = RouterOutput['profes']['getProfesores']

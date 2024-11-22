@@ -13,23 +13,21 @@ definePageMeta({
 const { $trpc, $router } = useNuxtApp()
 
 const route = useRoute()
-const id_alumno = parseInt(route.params.id_alumno as string)
+const id_profesor = parseInt(route.params.id_profesor as string)
 const { categoriaSeleccionada, categorias } = useCategorias([
-  'Detalle alumno',
-  'Apoderado',
-  'Antecedentes',
+  'Detalle profesor',
 ] as const)
 
-const { status, data } = $trpc.alumnos.getAlumnoId.useQuery({ id_alumno })
+const { status, data } = $trpc.profes.getProfesorId.useQuery({ id_profesor })
 </script>
 
 <template>
   <div class="flex flex-wrap justify-between">
     <div>
       <VueBreadCrumb text="Tueducas / " />
-      <VueBreadCrumb to="/alumnos" text="Alumnos / " />
-      <VueBreadCrumb text="Detalle alumno" />
-      <h1 class="text-primary font-bold text-2xl">Detalle alumno</h1>
+      <VueBreadCrumb to="/profesores" text="Profesores / " />
+      <VueBreadCrumb text="Detalle profesor" />
+      <h1 class="text-primary font-bold text-2xl">Detalle profesor</h1>
       <h2 class="text-muted-foreground">Información sobre el alumno</h2>
     </div>
   </div>

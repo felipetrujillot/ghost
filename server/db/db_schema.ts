@@ -127,6 +127,23 @@ export const alumnos = mySchema.table('alumnos', {
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at'),
 })
+
+/**
+ *
+ */
+export const profesores = mySchema.table('profesores', {
+  id_profesor: int('id_profesor').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').primaryKey().autoincrement(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  nombre_segundo: varchar('nombre_segundo', { length: 255 }).notNull(),
+  apellido_paterno: varchar('apellido_paterno', { length: 255 }).notNull(),
+  apellido_materno: varchar('apellido_materno', { length: 255 }).notNull(),
+  rut: varchar('rut', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
+
 /**
  *
  */

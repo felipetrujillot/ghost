@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { GetAlumnos } from '~~/server/trpc/routers/alumnos'
+import type { GetProfesores } from '~~/server/trpc/routers/profes'
 
 const props = defineProps<{
-  alumnos: GetAlumnos
+  profes: GetProfesores
 }>()
 
-const alumnos = ref(props.alumnos)
+const profes = ref(props.profes)
 const { totalPages, filtered, busqueda, page } = useDynamicTableRef({
-  data: alumnos,
+  data: profes,
   limit: 6,
   varColumn: [
     'nombre',
@@ -47,7 +47,7 @@ watch(nivelSelect, () => {
       v-model:page="page"
       :total-pages="totalPages"
       :filtered="filtered"
-      placeholder="Busca un curso"
+      placeholder="Busca un profesor"
     >
       <!--  <template #header>
         <div class="flex flex-wrap gap-4">
@@ -82,7 +82,7 @@ watch(nivelSelect, () => {
           v-for="(c, k) in filtered"
           :key="k"
           class="cursor-pointer"
-          @click.prevent="$router.push(`/alumnos/${c.id_alumno}`)"
+          @click.prevent="$router.push(`/profesores/${c.id_profesor}`)"
         >
           <TableCell>{{ c.nombre }}</TableCell>
           <TableCell>

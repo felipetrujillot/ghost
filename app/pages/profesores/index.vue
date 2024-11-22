@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TableAlumnos from './_components/TableAlumnos.vue'
+import TableProfesores from './_components/TableProfesores.vue'
 /**
  * Tabla de cursos
  */
@@ -11,7 +11,7 @@ definePageMeta({
 
 const { $trpc } = useNuxtApp()
 
-const { data, status } = $trpc.alumnos.getAlumnos.useQuery()
+const { data, status } = $trpc.profes.getProfesores.useQuery()
 </script>
 
 <template>
@@ -24,13 +24,13 @@ const { data, status } = $trpc.alumnos.getAlumnos.useQuery()
       <h2 class="text-muted-foreground">Listado de profesores</h2>
     </div>
     <Button @click.prevent="$router.push('/profesores/crear')"
-      >Nuevo alumno</Button
+      >Nuevo profesor</Button
     >
   </div>
 
   <VueSkeleton v-if="status === 'pending'" />
 
   <template v-if="status === 'success' && data">
-    <TableAlumnos :alumnos="data" />
+    <TableProfesores :profes="data" />
   </template>
 </template>

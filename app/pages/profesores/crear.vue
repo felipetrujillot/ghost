@@ -4,7 +4,7 @@ import { z } from 'zod'
 /**
  * Tabla de cursos
  */
-documentTitle('Crear curso')
+documentTitle('Crear Profesor')
 
 definePageMeta({
   layout: 'user-layout',
@@ -83,15 +83,15 @@ const crearCurso = async () => {
 
   const params = simplifyForm(form.value)
 
-  const { status, data, id_curso } = await $trpc.alumnos.addAlumno.mutate(
+  const { status, data, id_curso } = await $trpc.profes.addProfesor.mutate(
     params
   )
 
   if (status !== 'ok')
-    return toast('err', 'Hubo un error al intentar crear el alumno')
+    return toast('err', 'Hubo un error al intentar crear el profesor')
 
-  toast('ok', 'El alumno se creó correctamente')
-  $router.push(`/alumnos/${id_curso}`)
+  toast('ok', 'El profesor se creó correctamente')
+  $router.push(`/profesores/${id_curso}`)
 }
 </script>
 
@@ -99,10 +99,10 @@ const crearCurso = async () => {
   <div class="flex justify-between">
     <div>
       <VueBreadCrumb text="Tueducas / " />
-      <VueBreadCrumb to="/alumnos" text="Alumnos / " />
+      <VueBreadCrumb to="/profesores" text="Profesores / " />
       <VueBreadCrumb text="Crear" />
-      <h1 class="text-primary font-bold text-2xl">Crear alumno</h1>
-      <h2 class="text-muted-foreground">Formulario de creación de alumnos</h2>
+      <h1 class="text-primary font-bold text-2xl">Crear profesor</h1>
+      <h2 class="text-muted-foreground">Formulario de creación de profesor</h2>
     </div>
   </div>
 

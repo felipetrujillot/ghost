@@ -1,5 +1,5 @@
 <script setup lang="ts">
-documentTitle('Banco de preguntas')
+documentTitle('Evaluaciones')
 
 definePageMeta({
   layout: 'user-layout',
