@@ -12,26 +12,28 @@ import {
   text,
 } from 'drizzle-orm/mysql-core'
 
-export const mySchema = mysqlSchema('ghost')
+const config = useRuntimeConfig()
+export const mySchema = mysqlSchema(config.dbName)
 
 /**
  *
  */
-export const users = mySchema.table('users', {
-  id_user: int('id_user').autoincrement().notNull(),
-  id_company: int('id_company').notNull(),
-  name: varchar('name', { length: 255 }).notNull(),
-  lastname: varchar('lastname', { length: 255 }).notNull(),
+export const usuarios = mySchema.table('usuarios', {
+  id_usuario: int('id_usuario').autoincrement().notNull(),
+  id_empresa: int('id_empresa').notNull(),
+  microsoft_id: varchar('microsoft_id', { length: 255 }).notNull(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  apellido: varchar('apellido', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
-  birthdate: varchar('birthdate', { length: 255 }).notNull(),
+  fecha_nacimiento: varchar('fecha_nacimiento', { length: 255 }).notNull(),
   password: varchar('password', { length: 255 }).notNull(),
-  phone: varchar('phone', { length: 255 }).notNull(),
-  healthcare: varchar('healthcare', { length: 255 }).notNull(),
+  rut: varchar('rut', { length: 255 }).notNull(),
+  celular: int('celular').notNull(),
   role: int('role').notNull(),
   area: int('area').notNull(),
   gender: int('gender').notNull(),
   logged_in: int('logged_in').notNull(),
-  active: int('active').notNull().default(1),
+  activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
@@ -39,19 +41,11 @@ export const users = mySchema.table('users', {
 /**
  *
  */
-export const companies = mySchema.table('companies', {
-  id_company: int('id_company').autoincrement().notNull(),
-  company_name: varchar('company_name', { length: 255 }).notNull(),
-  company_rut: varchar('company_rut', { length: 255 }).notNull(),
-  company_giro: varchar('company_giro', { length: 255 }).notNull(),
-  company_address: varchar('company_address', { length: 255 }).notNull(),
-  company_razon_social: varchar('company_razon_social', {
-    length: 255,
-  }).notNull(),
-  company_comuna: varchar('company_comuna', { length: 255 }).notNull(),
-  company_region: varchar('company_region', { length: 255 }).notNull(),
-  company_phone: varchar('company_phone', { length: 255 }).notNull(),
-  active: int('active').notNull().default(1),
+export const empresas = mySchema.table('empresas', {
+  id_empresa: int('id_empresa').autoincrement().notNull(),
+  nombre_empresa: varchar('nombre_empresa', { length: 255 }).notNull(),
+  project_id: varchar('project_id', { length: 255 }).notNull(),
+  activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
@@ -61,7 +55,6 @@ export const companies = mySchema.table('companies', {
  */
 export const notes = mySchema.table('notes', {
   id_note: int('id_note').primaryKey().autoincrement(),
-  id_group_note: int('id_group_note').notNull(),
   note_name: varchar('note_name', { length: 250 }).notNull(),
   note_text: text('note_text').notNull(),
   active: int('active').notNull().default(1),
@@ -89,37 +82,8 @@ export const tasks = mySchema.table('tasks', {
 export const tasks_users = mySchema.table('tasks_users', {
   id_task_user: int('id_task_user').primaryKey().autoincrement(),
   id_task: int('id_task').autoincrement(),
-  id_user: int('id_user').autoincrement(),
+  id_usuario: int('id_usuario').autoincrement(),
   id_project: int('id_project').autoincrement(),
-  active: int('active').notNull().default(1),
-  created_at: timestamp('created_at').notNull().defaultNow(),
-  updated_at: timestamp('updated_at').onUpdateNow(),
-})
-
-/**
- *
- */
-export const projects = mySchema.table('projects', {
-  id_project: int('id_project').primaryKey().autoincrement(),
-  id_company: int('id_company').notNull(),
-  project_status: int('id_company').notNull(),
-  project_name: varchar('project_name', { length: 250 }).notNull(),
-  project_description: text('project_description').notNull(),
-  project_company: text('project_company').notNull(),
-  project_category: text('project_category').notNull(),
-  progress: int('progress').notNull().default(1),
-  active: int('active').notNull().default(1),
-  created_at: timestamp('created_at').notNull().defaultNow(),
-  updated_at: timestamp('updated_at').onUpdateNow(),
-})
-
-/**
- *
- */
-export const projects_users = mySchema.table('projects_users', {
-  id_project_user: int('id_project_user').primaryKey().autoincrement(),
-  id_project: int('id_project').notNull(),
-  id_user: int('id_user').notNull(),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
@@ -136,6 +100,33 @@ export const group_notes = mySchema.table('group_notes', {
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
 
+/**
+ *
+ */
+export const cursos = mySchema.table('cursos', {
+  id_curso: int('id_curso').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').primaryKey().autoincrement(),
+  nombre_curso: varchar('nombre_curso', { length: 255 }).notNull(),
+  nivel_curso: varchar('nivel_curso', { length: 255 }).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
+
+/**
+ *
+ */
+export const alumnos = mySchema.table('alumnos', {
+  id_alumno: int('id_alumno').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').primaryKey().autoincrement(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  nombre_segundo: varchar('nombre_segundo', { length: 255 }).notNull(),
+  apellido_paterno: varchar('apellido_paterno', { length: 255 }).notNull(),
+  apellido_materno: varchar('apellido_materno', { length: 255 }).notNull(),
+  rut: varchar('rut', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
 /**
  *
  */
@@ -161,5 +152,5 @@ export const passwords_reset = mySchema.table('passwords_reset', {
   updated_at: timestamp('updated_at'),
 }) */
 
-export type Users = typeof users.$inferSelect
+export type Usuarios = typeof usuarios.$inferSelect
 export type PasswordsReset = typeof passwords_reset.$inferSelect

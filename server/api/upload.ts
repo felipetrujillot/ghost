@@ -1,4 +1,4 @@
-import { gcpBucket } from '~/server/db/gcp'
+import { gcpBucket } from '~~/server/db/gcp'
 import { IncomingForm } from 'formidable'
 import fs from 'fs'
 import { generateRandom13Digits } from '~/composables/helper'

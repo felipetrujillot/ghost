@@ -1,6 +1,6 @@
-import { db } from '~/server/db/db'
+import { db } from '~~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import { tasks, tasks_users, users } from '~/server/db/db_schema'
+import { tasks, tasks_users, usuarios } from '~~/server/db/db_schema'
 import { eq } from 'drizzle-orm'
 import { RouterOutput } from '.'
 import { z } from 'zod'
@@ -32,7 +32,7 @@ export const tasksTrpc = router({
   /**
    *
    */
-  getUsersByIdTask: protectedProcedure
+  getusuariosByIdTask: protectedProcedure
     .input(
       z.object({
         id_task: z.number(),
@@ -43,16 +43,16 @@ export const tasksTrpc = router({
 
       const findTasks = await db
         .select({
-          name: users.name,
-          lastname: users.name,
-          id_user: users.id_user,
+          nombre: usuarios.nombre,
+          apellido: usuarios.apellido,
+          id_usuario: usuarios.id_usuario,
           id_task: tasks_users.id_task,
           id_task_user: tasks_users.id_task_user,
-          email: users.email,
+          email: usuarios.email,
           active: tasks_users.active,
         })
         .from(tasks_users)
-        .innerJoin(users, eq(users.id_user, tasks_users.id_user))
+        .innerJoin(usuarios, eq(usuarios.id_usuario, tasks_users.id_usuario))
         .where(eq(tasks_users.id_task, id_task))
 
       return findTasks
@@ -119,4 +119,4 @@ export const tasksTrpc = router({
 })
 
 export type GetTasksByIdProject = RouterOutput['tasks']['getTasksByIdProject']
-export type GetUsersByIdTask = RouterOutput['tasks']['getUsersByIdTask']
+export type GetusuariosByIdTask = RouterOutput['tasks']['getusuariosByIdTask']

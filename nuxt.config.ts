@@ -1,7 +1,21 @@
+import type { NuxtPage } from '@nuxt/schema'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt'],
   devtools: { enabled: false },
+
+  /* css: [
+    'mathlive/dist/mathlive-static.css',
+    'mathlive/dist/mathlive-fonts.css',
+  ], */
+
+  future: {
+    compatibilityVersion: 4,
+  },
+  tailwindcss: {
+    viewer: false,
+  },
 
   build: {
     transpile: ['trpc-nuxt'],
@@ -16,9 +30,8 @@ export default defineNuxtConfig({
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: './components/ui',
+    componentDir: './app/components/ui',
   },
-
   app: {
     head: {
       meta: [
@@ -39,15 +52,40 @@ export default defineNuxtConfig({
     },
   },
 
+  hooks: {
+    'pages:extend'(pages) {
+      /**
+       *
+       * @param pattern
+       * @param pages
+       */
+      function removePagesMatching(pattern: RegExp, pages: NuxtPage[] = []) {
+        const pagesToRemove: NuxtPage[] = []
+        for (const page of pages) {
+          if (page.file && pattern.test(page.file)) {
+            pagesToRemove.push(page)
+          } else {
+            removePagesMatching(pattern, page.children)
+          }
+        }
+        for (const page of pagesToRemove) {
+          pages.splice(pages.indexOf(page), 1)
+        }
+      }
+      removePagesMatching(/_components/, pages)
+    },
+  },
+
   runtimeConfig: {
     jwtSecret: process.env.NUXT_JWT_SECRET,
     dbPassword: process.env.NUXT_DB_PASSWORD || '',
     dbHost: process.env.NUXT_DB_HOST || '',
     dbUser: process.env.NUXT_DB_USER || 'root',
-    dbName: process.env.NUXT_DB_NAME || 'ghost',
+    dbName: process.env.NUXT_DB_NAME,
 
     public: {
       projectName: process.env.NUXT_PROJECT_NAME || 'NUXT',
     },
   },
+  compatibilityDate: '2024-07-18',
 })
