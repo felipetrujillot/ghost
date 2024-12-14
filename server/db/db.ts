@@ -27,13 +27,13 @@ const sslConfig = {
 const params =
   process.dev === true
     ? {
-        database: 'tueducas',
+        database: config.dbName,
         host: config.dbHost,
         user: config.dbUser,
         password: config.dbPassword,
       }
     : {
-        database: 'tueducas',
+        database: config.dbName,
         host: config.dbHost,
         user: config.dbUser,
         password: config.dbPassword,

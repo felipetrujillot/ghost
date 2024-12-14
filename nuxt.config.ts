@@ -84,7 +84,7 @@ export default defineNuxtConfig({
     dbName: process.env.NUXT_DB_NAME,
 
     public: {
-      projectName: process.env.NUXT_PROJECT_NAME || 'NUXT',
+      projectName: process.env.NUXT_PROJECT_NAME,
     },
   },
   compatibilityDate: '2024-07-18',

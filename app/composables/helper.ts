@@ -1,24 +1,4 @@
 /**
- * Conecta directamente con el DOM para hacer visible una modal
- * esconde el scrollbar
- * @param id_content
- */
-export const showModal = (id_content: string) => {
-  const modal = document.getElementById(id_content)
-  modal?.classList.add('show')
-  modal?.classList.add('d-block')
-  //const body = document.querySelector('body')
-  //if (body != null) body.style.overflowY = 'hidden'
-}
-
-/**
- * Vuelve a mostrar el scrollbar
- */
-export const closeModal = () => {
-  const body = document.querySelector('body')
-  if (body != null) body.style.overflowY = 'auto'
-}
-/**
  *
  * @param numero
  */
@@ -94,9 +74,9 @@ export const getCurrentDate = () => {
   const [day, month, year] = formattedDate.split('-')
 
   const newDat = new Date(
-    parseInt(year),
-    parseInt(month) - 1,
-    parseInt(day),
+    parseInt(year!),
+    parseInt(month!) - 1,
+    parseInt(day!),
     0,
     0,
     0,
@@ -148,60 +128,6 @@ export const toast = async (
   return toast({
     description: msg,
   })
-
-  return
-  /* const { useToast } = await import('@/components/ui/toast/use-toast')
-      const { toast } = useToast()
-    
-      toast({
-        description: msg,
-        variant: 'default',
-      })
-    
-      return
-      */
-  /* const Toastify = await import('toastify-js')
-  if (status == 'success' || status == 'ok')
-    Toastify.default({
-      text: msg,
-      duration: 2000,
-      newWindow: true,
-      close: true,
-      gravity: 'bottom',
-      position: 'right',
-      stopOnFocus: true,
-      style: {
-        background: '#3AC0A0',
-      },
-    }).showToast()
-
-  if (status == 'warning' || status == 'wrn')
-    Toastify.default({
-      text: msg,
-      duration: 6000,
-      newWindow: true,
-      close: true,
-      gravity: 'bottom',
-      position: 'right',
-      stopOnFocus: true,
-      style: {
-        background: '#FFB37C',
-      },
-    }).showToast()
-
-  if (status == 'error' || status == 'err')
-    Toastify.default({
-      text: msg,
-      duration: 6000,
-      newWindow: true,
-      close: true,
-      gravity: 'bottom',
-      position: 'right',
-      stopOnFocus: true,
-      style: {
-        background: '#FF616D',
-      },
-    }).showToast() */
 }
 
 export const generateRandom13Digits = () => {
@@ -233,43 +159,6 @@ export const generateRandomHex = () => {
 
   // Ensure the color has six digits (add leading zeros if needed)
   return '#' + '0'.repeat(6 - randomColor.length) + randomColor
-}
-
-/**
- * Manipulador de strings, util para validator
- * recibe string y puede retornar number
- */
-export class StringManipulator {
-  private inputString: string
-
-  constructor(inputString: string) {
-    this.inputString = inputString
-  }
-
-  public appendString(newString: string): StringManipulator {
-    this.inputString += newString
-    return this
-  }
-
-  public restrictToMaxCharacters(maxCharacters: number): StringManipulator {
-    if (this.inputString.length > maxCharacters) {
-      this.inputString = this.inputString.substring(0, maxCharacters)
-    }
-    return this
-  }
-
-  public extractNumbers(): StringManipulator {
-    this.inputString = this.inputString.replace(/[^0-9]/g, '')
-    return this
-  }
-
-  public getString(): string {
-    return this.inputString
-  }
-
-  public getNumber(): number {
-    return parseInt(this.inputString)
-  }
 }
 
 /**
@@ -529,67 +418,4 @@ export const documentTitle = (title: string) => {
     title: `${title} - ${projectName}`,
     meta: [{ name: 'description', content: projectName }],
   })
-}
-
-/**
- *
- */
-export const newQuestionPython = async (newQuestion: string) => {
-  const data = new URLSearchParams()
-  data.append('user_prompt', newQuestion)
-
-  const response = await fetch('http://127.0.0.1:5110/api/prompt_route', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: data,
-  })
-
-  if (!response.ok) {
-    throw new Error(`HTTP Error! Status: ${response.status}`)
-  }
-
-  const r = await response.json()
-
-  return r.Answer
-}
-
-/**
- *
- * @param inputQuestion
- * @returns
- */
-export const newQuestion = async (inputQuestion: string) => {
-  const response = await fetch('http://localhost:1234/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      messages: [
-        {
-          role: 'assistant',
-          content: `### Instruction: 
-          Eres una asistente útil llamada Diana, tu función es ser un planificador experto de proyectos en la categoría designada. Tu función será ser extremadamente riguroso y ser capaz de adelantarse a posibles problemas. Proporciona una respuesta detallada a la pregunta. Tus respuestas deben ser siempre directamente a la pregunta realizada. Responde siempre en el idioma español. ${inputQuestion}\n###Response: `,
-        },
-      ],
-      stop: ['### Instruction:'],
-      //prePrompt: `
-      //Eres una asistente útil llamada dayana, utilizarás el contexto proporcionado para responder las preguntas del usuario.
-      //todas tus respuestas seran en español, Lee el contexto proporcionado antes de responder preguntas y piensa paso a paso. Si no puedes responder una pregunta del usuario
-      //basándote en el contexto proporcionado, informa al usuario.
-      //No utilices ninguna otra información para responder al usuario. Proporciona una respuesta detallada a la pregunta. Responde siempre en el idioma español.`,
-      temperature: 0.7,
-      max_tokens: -1,
-      stream: false,
-    }),
-  })
-  if (!response.ok) {
-    throw new Error(`HTTP Error! Status: ${response.status}`)
-  }
-
-  const data = await response.json()
-
-  return data.choices[0].message.content
 }

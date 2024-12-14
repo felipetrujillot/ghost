@@ -18,12 +18,14 @@ const logout = () => {
       <div class="flex container">
         <nav class="flex items-center space-x-4 lg:space-x-6">
           <!--   <img src="/icon.svg" width="20" height="20" /> -->
-          <img
-            width="20"
-            height="20"
-            src="https://colegiosandamian.cl/wp-content/uploads/2024/06/LOGO-CSD2-512x512-1.png"
-          />
-          <h1 class="text-primary font-bold">Colegio San Damián</h1>
+          <NuxtLink to="/dashboard">
+            <img
+              width="20"
+              height="20"
+              src="/icon.svg"
+              class="cursor-pointer"
+            />
+          </NuxtLink>
           <!-- <NuxtLink
             to="/admin/users"
             class="text-sm font-medium transition-colors hover:text-primary"

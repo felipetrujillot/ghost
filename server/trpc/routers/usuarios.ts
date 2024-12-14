@@ -34,7 +34,6 @@ export const usuariosTrpc = router({
       const usuario = await db
         .select({
           activo: empresas.activo,
-          project_id: empresas.project_id,
           id_usuario: usuarios.id_usuario,
           id_empresa: usuarios.id_empresa,
           nombre: usuarios.nombre,
@@ -231,7 +230,6 @@ type LoginResponse =
 
 type BcryptUsuario = {
   activo: number
-  project_id: string
   id_usuario: number
   id_empresa: number
   nombre: string
