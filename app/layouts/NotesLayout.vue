@@ -6,22 +6,8 @@ const { $trpc, $router } = useNuxtApp()
 /**
  *
  */
-const { data, pending } = $trpc.notes.getNotes.useQuery()
+const { data, status, refresh: refreshNotes } = $trpc.notes.getNotes.useQuery()
 const route = useRoute()
-
-/**
- *
- */
-const newNote = async () => {
-  return
-  const { status, data } = await $trpc.notes.newNote.mutate({
-    note_text: '',
-    note_name: 'Nueva Nota',
-    id_group_note: 0,
-  })
-
-  $router.push(`/note/${data}`)
-}
 
 const open = ref(false)
 </script>
@@ -38,9 +24,9 @@ const open = ref(false)
             style="width: 280px"
           >
             <nav class="grid items-start px-2 text-sm font-medium lg:px-4">
-              <template v-if="!pending">
+              <template v-if="status === 'success' && data">
                 <template v-for="item in data" :key="item.id_group_note">
-                  <NotesGroupMenu :item="item" />
+                  <NotesGroupMenu :item="item" @refreshNotes="refreshNotes" />
                 </template>
               </template>
             </nav>

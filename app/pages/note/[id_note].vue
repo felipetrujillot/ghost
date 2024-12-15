@@ -7,6 +7,9 @@ const { $trpc } = useNuxtApp()
 const route = useRoute()
 const id_note = parseInt(route.params.id_note as string)
 
+/**
+ *
+ */
 const { data: note, status } = $trpc.notes.getNoteById.useQuery({
   id_note,
 })

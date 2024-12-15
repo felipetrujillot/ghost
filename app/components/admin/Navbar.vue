@@ -10,10 +10,10 @@ const logout = () => {
 </script>
 
 <template>
-  <header class="h-16">
+  <header class="h-10">
     <div
       style="z-index: 1"
-      class="flex fixed h-16 bg-background border-b items-center w-screen min-w-screen"
+      class="flex fixed h-10 bg-background border-b items-center w-screen min-w-screen"
     >
       <div class="flex container">
         <nav class="flex items-center space-x-4 lg:space-x-6">
@@ -46,15 +46,15 @@ const logout = () => {
             Empresas
           </NuxtLink>
 -->
-          <!-- <NuxtLink
+          <NuxtLink
             to="/notes"
             :class="route.path === `/notes` ? '' : 'text-muted-foreground'"
             class="text-sm font-medium transition-colors hover:text-primary"
           >
             Notas
-          </NuxtLink> -->
+          </NuxtLink>
 
-          <!--   <NuxtLink
+          <!--  <NuxtLink
             to="/projects"
             :class="route.path === `/projects` ? '' : 'text-muted-foreground'"
             class="text-sm font-medium transition-colors hover:text-primary"
@@ -67,7 +67,7 @@ const logout = () => {
           <Popover v-model:open="open">
             <PopoverTrigger as-child>
               <div class="flex gap-2 items-center">
-                <h1 class="cursor-pointer">Bienvenido, Invitado</h1>
+                <h1 class="cursor-pointer text-sm">Bienvenido, Invitado</h1>
 
                 <Button
                   class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground px-4 py-2 outline-none relative h-8 w-8 rounded-full"

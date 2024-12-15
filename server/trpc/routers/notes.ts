@@ -1,6 +1,6 @@
 import { db } from '~~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import { group_notes, notes } from '~~/server/db/db_schema'
+import { group, notes } from '~~/server/db/db_schema'
 import { desc, eq } from 'drizzle-orm'
 import { RouterOutput } from '.'
 import { z } from 'zod'
@@ -14,16 +14,20 @@ export const notesTrpc = router({
    */
   getNotes: protectedProcedure.query(async () => {
     const findNotes = await db
-      .select()
+      .select({
+        id_note: notes.id_note,
+        id_group: notes.id_group,
+        note_name: notes.note_name,
+      })
       .from(notes)
       .orderBy(desc(notes.id_note))
       .where(eq(notes.active, 1))
 
     const findGroups = await db
       .select()
-      .from(group_notes)
-      .orderBy(desc(group_notes.id_group_note))
-      .where(eq(group_notes.active, 1))
+      .from(group)
+      .orderBy(desc(group.id_group))
+      .where(eq(group.active, 1))
 
     type ArrayOfGroups = (typeof findGroups)[0] & { notes: typeof findNotes }
     const newArr: ArrayOfGroups[] = []
@@ -31,7 +35,7 @@ export const notesTrpc = router({
     findGroups.forEach((g) => {
       const foundedArray: typeof findNotes = []
       findNotes.forEach((n) => {
-        if (g.id_group_note === n.id_group_note) {
+        if (g.id_group === n.id_group) {
           foundedArray.push(n)
         }
       })
@@ -98,11 +102,13 @@ export const notesTrpc = router({
       z.object({
         note_text: z.string(),
         note_name: z.string(),
+        id_group: z.number(),
       })
     )
     .mutation(async ({ input }) => {
-      const { note_text, note_name } = input
+      const { note_text, note_name, id_group } = input
       const insertNote = await db.insert(notes).values({
+        id_group,
         note_text,
         note_name,
       })

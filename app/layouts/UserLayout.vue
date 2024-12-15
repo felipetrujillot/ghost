@@ -85,11 +85,6 @@ const route = useRoute()
                   {{ item.name }}
                 </NuxtLink>
               </template>
-              <!--  <template v-if="!pending">
-                <template v-for="item in data" :key="item.id_group_note">
-                  <NotesGroupMenu :item="item" />
-                </template>
-              </template> -->
             </nav>
           </div>
         </div>
