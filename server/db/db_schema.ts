@@ -21,13 +21,11 @@ export const mySchema = mysqlSchema(config.dbName)
 export const usuarios = mySchema.table('usuarios', {
   id_usuario: int('id_usuario').autoincrement().notNull(),
   id_empresa: int('id_empresa').notNull(),
-  microsoft_id: varchar('microsoft_id', { length: 255 }).notNull(),
   nombre: varchar('nombre', { length: 255 }).notNull(),
   apellido: varchar('apellido', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   fecha_nacimiento: varchar('fecha_nacimiento', { length: 255 }).notNull(),
   password: varchar('password', { length: 255 }).notNull(),
-  rut: varchar('rut', { length: 255 }).notNull(),
   celular: int('celular').notNull(),
   role: int('role').notNull(),
   area: int('area').notNull(),

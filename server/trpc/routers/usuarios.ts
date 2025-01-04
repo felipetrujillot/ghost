@@ -228,7 +228,7 @@ type LoginResponse =
       data: string
     }
 
-type BcryptUsuario = {
+export type BcryptUsuario = {
   activo: number
   id_usuario: number
   id_empresa: number

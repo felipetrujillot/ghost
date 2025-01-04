@@ -3,12 +3,13 @@ import type { NuxtPage } from '@nuxt/schema'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt'],
+
   devtools: { enabled: false },
 
-  /* css: [
-    'mathlive/dist/mathlive-static.css',
-    'mathlive/dist/mathlive-fonts.css',
-  ], */
+  css: [
+    './node_modules/mathlive/dist/mathlive-static.css',
+    './node_modules/mathlive/dist/mathlive-fonts.css',
+  ],
 
   future: {
     compatibilityVersion: 4,

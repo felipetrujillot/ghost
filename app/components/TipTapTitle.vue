@@ -75,6 +75,12 @@ const save = async () => {
 useMetaKey('s', () => {
   save()
 })
+
+const addComp = () => {
+  editor.value?.commands.insertContent(
+    `<vue-component count="0"></vue-component>`
+  )
+}
 </script>
 
 <template>
@@ -87,8 +93,9 @@ useMetaKey('s', () => {
         ></Input>
       </div>
 
-      <!--  <div class="flex flex-wrap flex-row-reverse gap-2">
-        <Button
+      <div class="flex flex-wrap flex-row-reverse gap-2">
+        <Button @click.prevent="addComp"> eee </Button>
+        <!--  <Button
           @click="editor.chain().focus().toggleBold().run()"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
           :variant="editor.isActive('bold') ? 'default' : 'outline'"
@@ -118,8 +125,8 @@ useMetaKey('s', () => {
           "
         >
           h3
-        </Button>
-      </div> -->
+        </Button> -->
+      </div>
     </div>
 
     <div class="p-0 min-h-72">
