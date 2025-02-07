@@ -44,7 +44,6 @@ export const tasksTrpc = router({
       const findTasks = await db
         .select({
           nombre: usuarios.nombre,
-          apellido: usuarios.apellido,
           id_usuario: usuarios.id_usuario,
           id_task: tasks_users.id_task,
           id_task_user: tasks_users.id_task_user,

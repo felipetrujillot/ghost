@@ -1,7 +1,7 @@
 <script setup lang="ts">
 documentTitle('Nota')
 definePageMeta({
-  layout: 'notes-layout',
+  layout: 'user-layout',
 })
 const { $trpc, $router } = useNuxtApp()
 

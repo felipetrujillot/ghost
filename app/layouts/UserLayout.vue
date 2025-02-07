@@ -45,7 +45,7 @@ const route = useRoute()
               </h1> -->
               <div class="border-b pb-4">
                 <div class="px-2 lg:px-4">
-                  <template v-for="(item, k) in preguntas" :key="k">
+                  <!-- <template v-for="(item, k) in preguntas" :key="k">
                     <NuxtLink
                       :to="`${item.to}`"
                       :class="
@@ -57,7 +57,8 @@ const route = useRoute()
                     >
                       {{ item.name }}
                     </NuxtLink>
-                  </template>
+                  </template> -->
+                  <CommandModal />
                 </div>
               </div>
             </nav>
