@@ -2,9 +2,19 @@ import type { NuxtPage } from '@nuxt/schema'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt'],
+  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', 'nuxt-electron'],
 
   devtools: { enabled: false },
+
+  electron: {
+    disableDefaultOptions: true,
+    build: [
+      {
+        // Main-Process entry file of the Electron App.
+        entry: 'electron/main.ts',
+      },
+    ],
+  },
 
   future: {
     compatibilityVersion: 4,
