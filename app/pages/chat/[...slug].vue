@@ -15,44 +15,10 @@ const { $trpc, $router } = useNuxtApp()
 
 const textoMd = `
 ## Admin
+It's hard to overstate how powerful large language models have become. Sadly, the apps we use to talk to them keep getting worse.
 
-- [ ] Arreglar bienvenida
-- [ ] Multipartner
-	- CRUD Multipartner
-	- Preguntas análisis x partner
-	- Usuarios x partner
-## IA
+That's why we built T3 Chat.
 
-- [ ] Restaurar módulos de IA
-## Panel supervisor
-
-- [ ] Listado licitaciones
-- [ ] Filtros
-	- [ ] Poder flitrar múltiples
-
-
-  - [ ] Restaurar módulos de IA
-## Panel supervisor
-
-- [ ] Listado licitaciones
-- [ ] Filtros
-	- [ ] Poder flitrar múltiples
-
-
-  - [ ] Restaurar módulos de IA
-## Panel supervisor
-
-- [ ] Listado licitaciones
-- [ ] Filtros
-	- [ ] Poder flitrar múltiples
-
-
-  - [ ] Restaurar módulos de IA
-## Panel supervisor
-
-- [ ] Listado licitaciones
-- [ ] Filtros
-	- [ ] Poder flitrar múltiples
 `
 
 type ChatAI = {
@@ -112,7 +78,11 @@ const chatContainer = ref<HTMLElement | null>(null)
 onMounted(async () => {
   await nextTick()
   scrollToBottom()
+
+  textArea.value.focus()
 })
+
+const textArea = ref()
 const inputChat = ref('')
 </script>
 <template>
@@ -125,7 +95,7 @@ const inputChat = ref('')
           <div class="space-y-4">
             <ClientOnly>
               <template v-for="(c, k) in chatAI" :key="k">
-                <div v-if="c.origen === 'llm'">
+                <div v-if="c.origen === 'llm'" class="fadeInFast">
                   <p
                     class="prose prose-md dark:prose-invert"
                     v-html="md.render(c.chat)"
@@ -134,9 +104,12 @@ const inputChat = ref('')
 
                 <div
                   v-if="c.origen === 'user'"
-                  class="max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
+                  class="fadeInFast max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
                 >
-                  <div v-html="md.render(c.chat)"></div>
+                  <div
+                    class="prose prose-md dark:prose-invert"
+                    v-html="md.render(c.chat)"
+                  ></div>
                 </div>
               </template>
             </ClientOnly>
@@ -146,9 +119,10 @@ const inputChat = ref('')
 
       <div class="flex-[1]">
         <div class="max-w-3xl mx-auto min-h-full flex-1">
-          <Textarea
+          <textarea
             @keydown.enter.prevent="handleEnter"
-            class="text-md"
+            ref="textArea"
+            class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             style="field-sizing: content; max-height: 20vh; min-height: 20vh"
             placeholder="Escribe un mensaje..."
             v-model="inputChat"
