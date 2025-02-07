@@ -91,11 +91,11 @@ const inputChat = ref('')
   >
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
-        <div class="max-w-3xl mx-auto py-4">
+        <div class="max-w-3xl mx-auto py-4 border-r border-l h-full">
           <div class="space-y-4">
             <ClientOnly>
               <template v-for="(c, k) in chatAI" :key="k">
-                <div v-if="c.origen === 'llm'" class="fadeInFast">
+                <div v-if="c.origen === 'llm'" class="fadeInFast px-4">
                   <p
                     class="prose prose-md dark:prose-invert"
                     v-html="md.render(c.chat)"
@@ -122,7 +122,7 @@ const inputChat = ref('')
           <textarea
             @keydown.enter.prevent="handleEnter"
             ref="textArea"
-            class="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            class="flex min-h-20 w-full rounded-md border border-input bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             style="field-sizing: content; max-height: 20vh; min-height: 20vh"
             placeholder="Escribe un mensaje..."
             v-model="inputChat"

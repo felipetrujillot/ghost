@@ -5,10 +5,6 @@ const preguntas = [
     to: '/',
   },
   {
-    name: 'Notas',
-    to: '/notas',
-  },
-  {
     name: 'Chat',
     to: '/chat',
   },
@@ -16,6 +12,11 @@ const preguntas = [
     name: 'Tareas',
     to: '/tareas',
   },
+  {
+    name: 'Notas',
+    to: '/notas',
+  },
+
   {
     name: 'Gastos',
     to: '/gastos',
