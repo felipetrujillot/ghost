@@ -3,6 +3,7 @@ import { notesTrpc } from './notes'
 import { tasksTrpc } from './tasks'
 import type { inferRouterOutputs } from '@trpc/server'
 import { usuariosTrpc } from './usuarios'
+import { chatTrpc } from './chat'
 /**
  *
  */
@@ -12,6 +13,8 @@ export const appRouter = router({
   notes: notesTrpc,
 
   tasks: tasksTrpc,
+
+  chat: chatTrpc,
 })
 
 // export type definition of API

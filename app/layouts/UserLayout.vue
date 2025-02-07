@@ -1,27 +1,8 @@
 <script setup lang="ts">
-const preguntas = [
-  {
-    name: 'Inicio',
-    to: '/',
-  },
-  {
-    name: 'Chat',
-    to: '/chat',
-  },
-  {
-    name: 'Tareas',
-    to: '/tareas',
-  },
-  {
-    name: 'Notas',
-    to: '/notas',
-  },
+import { LucidePencil, LucideSquarePen } from 'lucide-vue-next'
 
-  {
-    name: 'Gastos',
-    to: '/gastos',
-  },
-]
+const { $trpc } = useNuxtApp()
+const { status, data } = $trpc.chat.getChatSessions.useQuery()
 
 const route = useRoute()
 </script>
@@ -43,22 +24,31 @@ const route = useRoute()
               >
                 Menús
               </h1> -->
-              <div class="border-b pb-4">
-                <div class="px-2 lg:px-4">
-                  <!-- <template v-for="(item, k) in preguntas" :key="k">
+              <div class="border-b pb-4 px-4">
+                <div class="flex justify-between items-center">
+                  <CommandModal />
+                  <LucideSquarePen
+                    :size="16"
+                    @click.prevent="$router.push('/chat')"
+                    class="hover:text-primary cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div class="px-2 lg:px-4 py-4 overflow-y-auto max-h-screen">
+                <div class="flex flex-col gap-4">
+                  <template v-for="(item, k) in data" :key="k">
                     <NuxtLink
-                      :to="`${item.to}`"
+                      :to="`/chat?id=${item.uuid}`"
                       :class="
-                        route.path === item.to
+                        route.query.id === item.uuid
                           ? 'text-primary'
                           : 'text-muted-foreground'
                       "
-                      class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
                     >
-                      {{ item.name }}
+                      {{ item.titulo }}
                     </NuxtLink>
-                  </template> -->
-                  <CommandModal />
+                  </template>
                 </div>
               </div>
             </nav>

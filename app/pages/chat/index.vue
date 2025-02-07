@@ -11,7 +11,12 @@ documentTitle('Nota')
 definePageMeta({
   layout: 'user-layout',
 })
-const { $trpc, $router } = useNuxtApp()
+const { $trpc, $router, $trpc_stream } = useNuxtApp()
+
+const route = useRoute()
+
+const chatLLM = ref('')
+const status = ref<'idle' | 'pending' | 'generating'>('idle')
 
 const textoMd = `
 ## Admin
@@ -20,35 +25,86 @@ It's hard to overstate how powerful large language models have become. Sadly, th
 That's why we built T3 Chat.
 
 `
-
 type ChatAI = {
   origen: 'llm' | 'user'
   chat: string
 }
 
-const chatAI = ref<ChatAI[]>([
+const DEFAULT_CHAT = [
   {
-    origen: 'llm',
+    origen: 'llm' as const,
     chat: textoMd,
   },
   {
-    origen: 'user',
+    origen: 'user' as const,
     chat: 'Hola',
   },
-])
+]
 
+const chatAI = ref<ChatAI[]>(DEFAULT_CHAT)
+
+/**
+ *
+ */
 const nuevoMensaje = async () => {
   if (inputChat.value.length === 0) return
+  status.value = 'pending'
+  let requestId = ''
 
-  chatAI.value.push({
-    origen: 'user',
-    chat: inputChat.value,
-  })
+  const chatPersistent = inputChat.value
 
   inputChat.value = ''
 
+  if (route.query.id) {
+    chatAI.value.push({
+      origen: 'user',
+      chat: chatPersistent,
+    })
+  } else {
+    chatAI.value = [
+      {
+        origen: 'user',
+        chat: chatPersistent,
+      },
+    ]
+  }
+
   await nextTick()
   scrollToBottom()
+
+  if (route.query.id) {
+    requestId = route.query.id as string
+  } else {
+    const { uuid } = await $trpc.chat.addChatSession.query()
+    $router.push({ query: { id: uuid } })
+    requestId = uuid
+  }
+
+  const res = await $trpc_stream.chat.addPrompt.mutate({
+    prompt: chatPersistent,
+    requestId: requestId,
+  })
+
+  status.value = 'generating'
+
+  for await (const line of res) {
+    try {
+      chatLLM.value += line
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  status.value = 'idle'
+
+  const fullChatLLM = chatLLM.value
+
+  chatAI.value.push({
+    origen: 'llm',
+    chat: fullChatLLM,
+  })
+
+  chatLLM.value = ''
 }
 
 /**
@@ -75,15 +131,64 @@ const textoFormateado = (text: string) => {
 }
 const chatContainer = ref<HTMLElement | null>(null)
 
-onMounted(async () => {
+const textArea = ref()
+const inputChat = ref('')
+
+watch(route, async () => {
+  if ('id' in route.query) {
+    if (status.value !== 'pending') getRequestId(route.query.id as string)
+  } else {
+    chatAI.value = [
+      {
+        origen: 'llm',
+        chat: textoMd,
+      },
+      {
+        origen: 'user',
+        chat: 'Hola',
+      },
+    ]
+  }
   await nextTick()
   scrollToBottom()
 
   textArea.value.focus()
 })
 
-const textArea = ref()
-const inputChat = ref('')
+const getRequestId = async (idRequest: string) => {
+  const res = await $trpc.chat.getChatId.query({
+    requestId: idRequest,
+  })
+
+  const mapRes = res.map((r) => {
+    return {
+      origen: r.origen as 'user' | 'llm',
+      chat: r.chat,
+    }
+  })
+
+  chatAI.value = mapRes
+}
+/**
+ *
+ *
+ *
+ */
+onMounted(async () => {
+  let requestId = ''
+  if (route.query.id) {
+    requestId = route.query.id as string
+  }
+
+  if (requestId.length > 0) {
+    getRequestId(requestId)
+  }
+
+  await nextTick()
+  scrollToBottom()
+
+  textArea.value.focus()
+})
 </script>
 <template>
   <div
@@ -92,10 +197,10 @@ const inputChat = ref('')
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto py-4 border-r border-l h-full">
-          <div class="space-y-4">
+          <div class="space-y-4 pb-4">
             <ClientOnly>
               <template v-for="(c, k) in chatAI" :key="k">
-                <div v-if="c.origen === 'llm'" class="fadeInFast px-4">
+                <div v-if="c.origen === 'llm'" class="px-4">
                   <p
                     class="prose prose-md dark:prose-invert"
                     v-html="md.render(c.chat)"
@@ -110,6 +215,15 @@ const inputChat = ref('')
                     class="prose prose-md dark:prose-invert"
                     v-html="md.render(c.chat)"
                   ></div>
+                </div>
+              </template>
+
+              <template v-if="status === 'generating'">
+                <div class="fadeInFast px-4">
+                  <p
+                    class="prose prose-md dark:prose-invert"
+                    v-html="md.render(chatLLM)"
+                  ></p>
                 </div>
               </template>
             </ClientOnly>

@@ -37,6 +37,7 @@ export const usuariosTrpc = router({
           id_usuario: usuarios.id_usuario,
           id_empresa: usuarios.id_empresa,
           nombre: usuarios.nombre,
+          role: usuarios.role,
           email: usuarios.email,
           password: usuarios.password,
           created_at: usuarios.created_at,
@@ -161,6 +162,7 @@ type LoginResponse =
 export type BcryptUsuario = {
   activo: number
   id_usuario: number
+  role: number
   id_empresa: number
   nombre: string
   password: string

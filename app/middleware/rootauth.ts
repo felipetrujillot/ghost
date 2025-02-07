@@ -7,11 +7,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (authVal === false) {
     const token = useCookie('token')
     const nombre = useCookie('nombre')
-    const role = useCookie('role')
 
     token.value = null
     nombre.value = null
-    role.value = null
     return
   }
   if (typeof authVal === 'number') {

@@ -36,6 +36,7 @@ const newLogin = async () => {
     const token = useCookie('token', {
       maxAge,
     })
+
     token.value = res.token
 
     const name = useCookie('name', {
@@ -44,7 +45,7 @@ const newLogin = async () => {
 
     name.value = res.usuario_db.nombre
 
-    $router.push('/dashboard')
+    $router.push('/')
     return
   }
   return toast('warning', res.data)

@@ -190,7 +190,6 @@ export const isAuthenticated = async () => {
   const { $trpc } = useNuxtApp()
   const token = useCookie('token')
   const nombre = useCookie('nombre')
-  const role = useCookie('role')
 
   if (!token.value || !nombre.value) {
     return false
@@ -199,13 +198,12 @@ export const isAuthenticated = async () => {
   try {
     const res = await $trpc.usuarios.validaToken.query({ token: token.value! })
 
-    if ('id_empresa' in res && 'id_usuario' in res && 'role' in res) {
+    if ('id_empresa' in res && 'id_usuario' in res) {
       return res.role
     }
   } catch (error) {
     token.value = null
     nombre.value = null
-    role.value = null
     return false
   }
   return false

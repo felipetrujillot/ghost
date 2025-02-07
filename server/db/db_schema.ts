@@ -24,6 +24,7 @@ export const usuarios = mySchema.table('usuarios', {
   nombre: varchar('nombre', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   password: varchar('password', { length: 255 }).notNull(),
+  role: int('role').notNull(),
   activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
@@ -89,6 +90,30 @@ export const group = mySchema.table('group', {
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
+})
+
+/**
+ *
+ */
+export const chat_sessions = mySchema.table('chat_sessions', {
+  id_chat_session: int('id_chat_session').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').notNull(),
+  id_usuario: int('id_usuario').notNull(),
+  uuid: varchar('uuid', { length: 255 }).notNull(),
+  titulo: varchar('titulo', { length: 255 }).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').onUpdateNow(),
+})
+/**
+ *
+ */
+export const chat = mySchema.table('chat', {
+  id_chat: int('id_chat').primaryKey().autoincrement(),
+  id_chat_session: int('id_chat_session').notNull(),
+  chat: text('chat').notNull(),
+  origen: varchar('origen', { length: 100 }).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
 })
 
 /**
