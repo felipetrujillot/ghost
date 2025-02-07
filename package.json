@@ -2,6 +2,7 @@
   "name": "ghost",
   "private": true,
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --port 9999",
