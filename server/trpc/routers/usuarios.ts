@@ -37,15 +37,8 @@ export const usuariosTrpc = router({
           id_usuario: usuarios.id_usuario,
           id_empresa: usuarios.id_empresa,
           nombre: usuarios.nombre,
-          apellido: usuarios.apellido,
-          password: usuarios.password,
           email: usuarios.email,
-          fecha_nacimiento: usuarios.fecha_nacimiento,
-          area: usuarios.area,
-          gender: usuarios.gender,
-          celular: usuarios.celular,
-          logged_in: usuarios.logged_in,
-          role: usuarios.role,
+          password: usuarios.password,
           created_at: usuarios.created_at,
           updated_at: usuarios.updated_at,
         })
@@ -95,65 +88,6 @@ export const usuariosTrpc = router({
   /**
    *
    */
-  welcomeUser: protectedProcedure
-    .input(
-      z.object({
-        nombre: z.string().min(1),
-        apellido: z.string().min(1),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const { id_usuario } = ctx.user
-
-      const findUser = await db
-        .select({
-          id_usuario: usuarios.id_usuario,
-          email: usuarios.email,
-          activo: usuarios.activo,
-          logged_in: usuarios.logged_in,
-        })
-        .from(usuarios)
-        .where(eq(usuarios.id_usuario, id_usuario))
-
-      if (findUser[0].activo === 0) {
-        return {
-          status: 'error' as const,
-          data: 'El usuario no se encuentra activo en la plataforma',
-        }
-      }
-
-      if (findUser[0].logged_in === 1) {
-        return {
-          status: 'error' as const,
-          data: 'El usuario ya ha actualizado estos datos',
-        }
-      }
-
-      const { nombre, apellido } = input
-
-      await db
-        .update(usuarios)
-        .set({
-          nombre: nombre,
-          apellido: apellido,
-        })
-        .where(eq(usuarios.id_usuario, id_usuario))
-
-      await db
-        .update(usuarios)
-        .set({ logged_in: 1 })
-
-        .where(eq(usuarios.id_usuario, id_usuario))
-
-      return {
-        status: 'ok' as const,
-        data: 'Bienvenido a amalia',
-      }
-    }),
-
-  /**
-   *
-   */
   getUserById: protectedProcedure
     .input(
       z.object({
@@ -165,11 +99,7 @@ export const usuariosTrpc = router({
       const findUser = await db
         .select({
           nombre: usuarios.nombre,
-          apellido: usuarios.apellido,
           email: usuarios.email,
-          role: usuarios.role,
-          rut: usuarios.rut,
-          fecha_nacimiento: usuarios.fecha_nacimiento,
           id_usuario: usuarios.id_usuario,
           activo: usuarios.activo,
           nombre_empresa: empresas.nombre_empresa,
@@ -233,15 +163,8 @@ export type BcryptUsuario = {
   id_usuario: number
   id_empresa: number
   nombre: string
-  apellido: string
   password: string
   email: string
-  fecha_nacimiento: string
-  area: number
-  gender: number
-  celular: number
-  logged_in: number
-  role: number
   created_at: Date
   updated_at: Date | null
 }

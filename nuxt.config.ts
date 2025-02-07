@@ -6,11 +6,6 @@ export default defineNuxtConfig({
 
   devtools: { enabled: false },
 
-  css: [
-    './node_modules/mathlive/dist/mathlive-static.css',
-    './node_modules/mathlive/dist/mathlive-fonts.css',
-  ],
-
   future: {
     compatibilityVersion: 4,
   },
