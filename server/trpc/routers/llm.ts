@@ -7,7 +7,7 @@ import {
 
 const project = 'linebox-412716'
 const location = 'us-central1'
-const textModel = 'gemini-1.5-flash-001'
+const textModel = 'gemini-2-flash-lite'
 
 const vertexAI = new VertexAI({
   project: project,

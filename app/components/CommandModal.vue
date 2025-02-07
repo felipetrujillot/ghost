@@ -32,6 +32,11 @@ function handleOpenChange() {
 const { $router } = useNuxtApp()
 
 const selectItem = (to: string) => {
+  if (to === '/logout') {
+    logoutToIndex()
+    return
+  }
+
   $router.push(to)
   open.value = false
 }
@@ -69,6 +74,14 @@ const selectItem = (to: string) => {
             </CommandItem>
             <CommandItem @select="selectItem('/gastos')" value="gastos">
               Gastos
+            </CommandItem>
+
+            <CommandItem @select="selectItem('/login')" value="login">
+              Login
+            </CommandItem>
+
+            <CommandItem @select="selectItem('/logout')" value="cerrar sesión">
+              Cerrar sesión
             </CommandItem>
           </CommandGroup>
           <!--  <CommandSeparator /> -->

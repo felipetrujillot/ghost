@@ -181,7 +181,7 @@ onMounted(async () => {
   }
 
   if (requestId.length > 0) {
-    getRequestId(requestId)
+    await getRequestId(requestId)
   }
 
   await nextTick()
@@ -191,13 +191,11 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div
-    class="relative overflow-y-scroll flex-1 w-full min-h-full justify-between"
-  >
+  <div class="relative flex-1 w-full min-h-full justify-between">
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
-        <div class="max-w-3xl mx-auto py-4 border-r border-l h-full">
-          <div class="space-y-4 pb-4">
+        <div class="max-w-3xl mx-auto h-full">
+          <div class="space-y-4 pb-4 py-4 border-r border-l">
             <ClientOnly>
               <template v-for="(c, k) in chatAI" :key="k">
                 <div v-if="c.origen === 'llm'" class="px-4">

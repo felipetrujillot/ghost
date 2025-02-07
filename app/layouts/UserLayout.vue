@@ -29,13 +29,17 @@ const route = useRoute()
                   <CommandModal />
                   <LucideSquarePen
                     :size="16"
+                    v-if="route.path === '/chat'"
                     @click.prevent="$router.push('/chat')"
                     class="hover:text-primary cursor-pointer"
                   />
                 </div>
               </div>
 
-              <div class="px-2 lg:px-4 py-4 overflow-y-auto max-h-screen">
+              <div
+                class="px-2 lg:px-4 py-4 overflow-y-auto max-h-screen"
+                v-if="route.path === '/chat'"
+              >
                 <div class="flex flex-col gap-4">
                   <template v-for="(item, k) in data" :key="k">
                     <NuxtLink

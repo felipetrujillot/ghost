@@ -8,7 +8,7 @@ const { $trpc, $router } = useNuxtApp()
 /**
  *
  */
-const saveNote = async (res: {
+/* const saveNote = async (res: {
   id_note: number
   note_text: string
   note_name: string
@@ -20,7 +20,7 @@ const saveNote = async (res: {
 
   $router.push(`/note/${data}`)
 }
-
+ */
 const content = `
 <div data-type="draggable-item">
 <vue-component count="0"></vue-component>
