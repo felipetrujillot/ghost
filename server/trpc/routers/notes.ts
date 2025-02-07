@@ -1,7 +1,7 @@
 import { db } from '~~/server/db/db'
 import { protectedProcedure, router } from '../trpc'
-import { group, notes } from '~~/server/db/db_schema'
-import { desc, eq } from 'drizzle-orm'
+import { notes_group, notes } from '~~/server/db/db_schema'
+import { and, desc, eq } from 'drizzle-orm'
 import { RouterOutput } from '.'
 import { z } from 'zod'
 
@@ -13,10 +13,13 @@ export const notesTrpc = router({
    *
    */
   getNotes: protectedProcedure.query(async () => {
+    /**
+     *
+     */
     const findNotes = await db
       .select({
         id_note: notes.id_note,
-        id_group: notes.id_group,
+        id_note_group: notes.id_note_group,
         note_name: notes.note_name,
       })
       .from(notes)
@@ -25,9 +28,9 @@ export const notesTrpc = router({
 
     const findGroups = await db
       .select()
-      .from(group)
-      .orderBy(desc(group.id_group))
-      .where(eq(group.active, 1))
+      .from(notes_group)
+      .orderBy(desc(notes_group.id_note_group))
+      .where(eq(notes_group.active, 1))
 
     type ArrayOfGroups = (typeof findGroups)[0] & { notes: typeof findNotes }
     const newArr: ArrayOfGroups[] = []
@@ -35,7 +38,7 @@ export const notesTrpc = router({
     findGroups.forEach((g) => {
       const foundedArray: typeof findNotes = []
       findNotes.forEach((n) => {
-        if (g.id_group === n.id_group) {
+        if (g.id_note_group === n.id_note_group) {
           foundedArray.push(n)
         }
       })
@@ -97,24 +100,45 @@ export const notesTrpc = router({
   /**
    *
    */
-  newNote: protectedProcedure
+  addNote: protectedProcedure
     .input(
       z.object({
         note_text: z.string(),
         note_name: z.string(),
-        id_group: z.number(),
+        id_note_group: z.number(),
       })
     )
     .mutation(async ({ input }) => {
-      const { note_text, note_name, id_group } = input
+      const { note_text, note_name, id_note_group } = input
       const insertNote = await db.insert(notes).values({
-        id_group,
+        id_note_group,
         note_text,
         note_name,
       })
       return {
         status: 'ok' as const,
         data: insertNote[0].insertId,
+      }
+    }),
+
+  /**
+   *
+   */
+  deleteNote: protectedProcedure
+    .input(
+      z.object({
+        id_note: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      // const { id_usuario, id_empresa } = ctx.user!
+      const { id_note } = input
+
+      await db.delete(notes).where(and(eq(notes.id_note, id_note)))
+
+      return {
+        status: 'ok' as const,
+        data: 'Se borró la nota',
       }
     }),
 })

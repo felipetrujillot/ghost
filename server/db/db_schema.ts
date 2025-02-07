@@ -4,7 +4,6 @@
  * @author ID
  */
 import {
-  mysqlTable,
   varchar,
   int,
   timestamp,
@@ -46,7 +45,7 @@ export const empresas = mySchema.table('empresas', {
  */
 export const notes = mySchema.table('notes', {
   id_note: int('id_note').primaryKey().autoincrement(),
-  id_group: int('id_group').notNull(),
+  id_note_group: int('id_note_group').notNull(),
   note_name: varchar('note_name', { length: 250 }).notNull(),
   note_text: text('note_text').notNull(),
   active: int('active').notNull().default(1),
@@ -84,8 +83,8 @@ export const tasks_users = mySchema.table('tasks_users', {
 /**
  *
  */
-export const group = mySchema.table('group', {
-  id_group: int('id_group').primaryKey().autoincrement(),
+export const notes_group = mySchema.table('notes_group', {
+  id_note_group: int('id_note_group').primaryKey().autoincrement(),
   group_name: varchar('group_name', { length: 250 }).notNull(),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),

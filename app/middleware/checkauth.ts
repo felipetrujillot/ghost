@@ -11,18 +11,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     token.value = null
     nombre.value = null
 
-    //return navigateTo('/login')
-  }
-  if (typeof authVal === 'number') {
-    if (authVal === 0) {
-      return navigateTo('/admin')
-    }
-    if (authVal === 1) {
-      return navigateTo('/rrhh')
-    }
-
-    if (authVal === 2) {
-      return navigateTo('/dashboard')
-    }
+    return navigateTo('/login')
   }
 })

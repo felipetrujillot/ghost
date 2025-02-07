@@ -3,6 +3,7 @@ documentTitle('Inicio')
 
 definePageMeta({
   layout: 'user-layout',
+  middleware: 'checkauth',
 })
 </script>
 

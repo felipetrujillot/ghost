@@ -1,7 +1,9 @@
 <script setup lang="ts">
 documentTitle('Nota')
+
 definePageMeta({
-  layout: 'notes-layout',
+  layout: 'user-layout',
+  middleware: 'checkauth',
 })
 const { $trpc } = useNuxtApp()
 const route = useRoute()
@@ -13,7 +15,6 @@ const id_note = parseInt(route.params.id_note as string)
 const { data: note, status } = $trpc.notes.getNoteById.useQuery({
   id_note,
 })
-
 /**
  *
  */
@@ -31,7 +32,7 @@ const saveNote = async (res: {
 }
 </script>
 <template>
-  <div class="container-xs">
+  <div class="max-w-3xl mx-auto border-x min-h-full">
     <VueSkeleton v-if="status === 'pending'" />
 
     <template v-if="status === 'success' && note">
@@ -44,5 +45,4 @@ const saveNote = async (res: {
       />
     </template>
   </div>
-  <!--  <Textarea /> -->
 </template>

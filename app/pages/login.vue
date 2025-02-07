@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const { $trpc, $router } = useNuxtApp()
+
 definePageMeta({
   middleware: 'rootauth',
 })
+
 /**
  *
  */
@@ -39,11 +41,11 @@ const newLogin = async () => {
 
     token.value = res.token
 
-    const name = useCookie('name', {
+    const nombre = useCookie('nombre', {
       maxAge,
     })
 
-    name.value = res.usuario_db.nombre
+    nombre.value = res.usuario_db.nombre
 
     $router.push('/')
     return

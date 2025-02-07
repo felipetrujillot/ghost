@@ -5,6 +5,7 @@ import { chat, chat_sessions } from '~~/server/db/db_schema'
 import { and, desc, eq } from 'drizzle-orm'
 import { systemPrompt, vertexModel } from './llm'
 import { v4 as uuid } from 'uuid'
+import { RouterOutput } from '.'
 
 export const chatTrpc = {
   /**
@@ -212,3 +213,5 @@ export const chatTrpc = {
       yield* streamGenerateContent(saveChat)
     }),
 }
+
+export type GetChatSessions = RouterOutput['chat']['getChatSessions']

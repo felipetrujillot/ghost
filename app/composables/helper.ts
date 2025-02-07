@@ -199,8 +199,9 @@ export const isAuthenticated = async () => {
     const res = await $trpc.usuarios.validaToken.query({ token: token.value! })
 
     if ('id_empresa' in res && 'id_usuario' in res) {
-      return res.role
+      return res
     }
+    return false
   } catch (error) {
     token.value = null
     nombre.value = null

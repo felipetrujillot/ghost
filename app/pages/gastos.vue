@@ -1,8 +1,11 @@
 <script setup lang="ts">
 documentTitle('Nota')
+
 definePageMeta({
   layout: 'user-layout',
+  middleware: 'checkauth',
 })
+
 const { $trpc, $router } = useNuxtApp()
 
 const gasto = ref(0)

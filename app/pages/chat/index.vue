@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it'
 
+definePageMeta({
+  layout: 'user-layout',
+  middleware: 'checkauth',
+})
+
 const md = markdownit({
   html: true,
   linkify: true,
   typographer: true,
 })
 
-documentTitle('Nota')
-definePageMeta({
-  layout: 'user-layout',
-})
 const { $trpc, $router, $trpc_stream } = useNuxtApp()
 
 const route = useRoute()
@@ -24,6 +25,8 @@ It's hard to overstate how powerful large language models have become. Sadly, th
 
 That's why we built T3 Chat.
 
+07-02-2025
+
 `
 type ChatAI = {
   origen: 'llm' | 'user'
@@ -32,12 +35,12 @@ type ChatAI = {
 
 const DEFAULT_CHAT = [
   {
-    origen: 'llm' as const,
-    chat: textoMd,
+    origen: 'user' as const,
+    chat: 'Bienvenido',
   },
   {
-    origen: 'user' as const,
-    chat: 'Hola',
+    origen: 'llm' as const,
+    chat: textoMd,
   },
 ]
 
@@ -126,9 +129,9 @@ const scrollToBottom = () => {
   }
 }
 
-const textoFormateado = (text: string) => {
+/* const textoFormateado = (text: string) => {
   return text.replace(/\n/g, '<br>')
-}
+} */
 const chatContainer = ref<HTMLElement | null>(null)
 
 const textArea = ref()
@@ -138,16 +141,7 @@ watch(route, async () => {
   if ('id' in route.query) {
     if (status.value !== 'pending') getRequestId(route.query.id as string)
   } else {
-    chatAI.value = [
-      {
-        origen: 'llm',
-        chat: textoMd,
-      },
-      {
-        origen: 'user',
-        chat: 'Hola',
-      },
-    ]
+    chatAI.value = DEFAULT_CHAT
   }
   await nextTick()
   scrollToBottom()
@@ -155,6 +149,10 @@ watch(route, async () => {
   textArea.value.focus()
 })
 
+/**
+ *
+ * @param idRequest
+ */
 const getRequestId = async (idRequest: string) => {
   const res = await $trpc.chat.getChatId.query({
     requestId: idRequest,
@@ -195,36 +193,38 @@ onMounted(async () => {
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
-          <div class="space-y-4 pb-4 py-4 border-r border-l">
-            <ClientOnly>
-              <template v-for="(c, k) in chatAI" :key="k">
-                <div v-if="c.origen === 'llm'" class="px-4">
-                  <p
-                    class="prose prose-md dark:prose-invert"
-                    v-html="md.render(c.chat)"
-                  ></p>
-                </div>
+          <div class="border-x border-1 min-h-full">
+            <div class="space-y-4 pb-4 py-4">
+              <ClientOnly>
+                <template v-for="(c, k) in chatAI" :key="k">
+                  <div v-if="c.origen === 'llm'" class="px-4">
+                    <p
+                      class="prose prose-md dark:prose-invert"
+                      v-html="md.render(c.chat)"
+                    ></p>
+                  </div>
 
-                <div
-                  v-if="c.origen === 'user'"
-                  class="fadeInFast max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
-                >
                   <div
-                    class="prose prose-md dark:prose-invert"
-                    v-html="md.render(c.chat)"
-                  ></div>
-                </div>
-              </template>
+                    v-if="c.origen === 'user'"
+                    class="fadeInFast max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
+                  >
+                    <div
+                      class="prose prose-md dark:prose-invert"
+                      v-html="md.render(c.chat)"
+                    ></div>
+                  </div>
+                </template>
 
-              <template v-if="status === 'generating'">
-                <div class="fadeInFast px-4">
-                  <p
-                    class="prose prose-md dark:prose-invert"
-                    v-html="md.render(chatLLM)"
-                  ></p>
-                </div>
-              </template>
-            </ClientOnly>
+                <template v-if="status === 'generating'">
+                  <div class="fadeInFast px-4">
+                    <p
+                      class="prose prose-md dark:prose-invert"
+                      v-html="md.render(chatLLM)"
+                    ></p>
+                  </div>
+                </template>
+              </ClientOnly>
+            </div>
           </div>
         </div>
       </div>

@@ -12,6 +12,10 @@ import {
 import { useMagicKeys } from '@vueuse/core'
 import { ref, watch } from 'vue'
 
+const route = useRoute()
+const notas = useNotes()
+const chats = useChatSessions()
+
 const open = ref(false)
 
 const { Meta_K, Ctrl_K } = useMagicKeys({
@@ -83,6 +87,28 @@ const selectItem = (to: string) => {
             <CommandItem @select="selectItem('/logout')" value="cerrar sesión">
               Cerrar sesión
             </CommandItem>
+
+            <template v-for="(grupo, k) in notas" :key="k">
+              <template v-for="(n, i) in grupo.notes" :key="i">
+                <CommandItem
+                  @select="selectItem(`/notas/${n.id_note}`)"
+                  :value="`NOTA: ${n.note_name} ${n.id_note}`"
+                >
+                  Nota: {{ n.note_name }}
+                </CommandItem>
+              </template>
+            </template>
+
+            <template v-if="route.name === 'chat'">
+              <template v-for="(c, k) in chats" :key="k">
+                <CommandItem
+                  @select="selectItem(`/chat?id=${c.uuid}`)"
+                  :value="`CHAT: ${c.titulo} ${c.id_chat_session}`"
+                >
+                  Chat: {{ c.titulo }}
+                </CommandItem>
+              </template>
+            </template>
           </CommandGroup>
           <!--  <CommandSeparator /> -->
           <!--  <CommandGroup heading="Settings">

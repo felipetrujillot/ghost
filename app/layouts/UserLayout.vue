@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { LucidePencil, LucideSquarePen } from 'lucide-vue-next'
+import { LucideSquarePen } from 'lucide-vue-next'
 
 const { $trpc } = useNuxtApp()
-const { status, data } = $trpc.chat.getChatSessions.useQuery()
 
 const route = useRoute()
+
+const notas = useNotes()
+const chats = useChatSessions()
+
+onMounted(async () => {
+  setChatSessions()
+  setNotes()
+})
 </script>
 
 <template>
@@ -33,20 +40,52 @@ const route = useRoute()
                     @click.prevent="$router.push('/chat')"
                     class="hover:text-primary cursor-pointer"
                   />
+
+                  <LucideSquarePen
+                    :size="16"
+                    v-if="route.name === 'notas-id_note'"
+                    @click.prevent="$router.push('/notas')"
+                    class="hover:text-primary cursor-pointer"
+                  />
                 </div>
               </div>
 
               <div
-                class="px-2 lg:px-4 py-4 overflow-y-auto max-h-screen"
+                class="py-4 overflow-y-auto max-h-screen"
+                v-if="route.name === 'notas' || route.name === 'notas-id_note'"
+              >
+                <div class="flex flex-col">
+                  <template v-for="(item, k) in notas" :key="k">
+                    <h1
+                      class="duration-200 px-4 mb-2 flex shrink-0 items-center rounded-md text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0"
+                    >
+                      {{ item.group_name }}
+                    </h1>
+
+                    <template v-for="n in item.notes">
+                      <ItemNavigation
+                        :id_note="n.id_note"
+                        :to="`/notas/${n.id_note}`"
+                        :active="route.params.id_note === n.id_note.toString()"
+                        :text="n.note_name"
+                      />
+                    </template>
+                  </template>
+                </div>
+              </div>
+
+              <div
+                class="overflow-y-auto max-h-screen"
                 v-if="route.path === '/chat'"
               >
-                <div class="flex flex-col gap-4">
-                  <template v-for="(item, k) in data" :key="k">
+                <div class="flex flex-col">
+                  <template v-for="(item, k) in chats" :key="k">
                     <NuxtLink
+                      class="px-2 lg:px-4 py-2"
                       :to="`/chat?id=${item.uuid}`"
                       :class="
                         route.query.id === item.uuid
-                          ? 'text-primary'
+                          ? 'text-white bg-secondary'
                           : 'text-muted-foreground'
                       "
                     >
