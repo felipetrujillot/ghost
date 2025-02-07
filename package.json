@@ -1,8 +1,8 @@
 {
   "name": "ghost",
   "private": true,
+  "version": "0.0.1",
   "type": "module",
-  "main": "dist-electron/main.js",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev --port 9999",
@@ -35,7 +35,6 @@
     "markdown-it": "^14.1.0",
     "mysql2": "^3.9.7",
     "nuxt": "^3.14.1592",
-    "nuxt-electron": "^0.7.0",
     "radix-vue": "^1.8.1",
     "shadcn-nuxt": "^0.10.4",
     "sharp": "^0.33.4",
@@ -52,10 +51,6 @@
     "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.6",
-    "electron": "^34.1.1",
-    "electron-builder": "^25.1.8",
-    "typescript": "^5.4.5",
-    "vite-plugin-electron": "^0.29.0",
-    "vite-plugin-electron-renderer": "^0.14.6"
+    "typescript": "^5.4.5"
   }
 }
