@@ -94,9 +94,7 @@ export const chatTrpc = {
       const { prompt, requestId } = input
       const { id_empresa, id_usuario } = ctx.user!
 
-      const generativeModel = vertexModel(
-        `You are an expert developer on Vue 3 with script setup, react, typescript, tailwind`
-      )
+      const generativeModel = vertexModel(``)
 
       const contents: {
         role: string
@@ -153,7 +151,7 @@ export const chatTrpc = {
 
         if (findChatSession[0].titulo.length === 0) {
           const generativeModelSummary = vertexModel(
-            `You are an expert on summarize text`
+            `You are an expert on summarize the user input in maximun 4 words`
           )
 
           const streamingResult =

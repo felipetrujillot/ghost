@@ -81,7 +81,7 @@ const nuevoMensaje = async () => {
     requestId = route.query.id as string
   } else {
     const { uuid } = await $trpc.chat.addChatSession.query()
-    $router.push({ query: { id: uuid } })
+    //$router.push({ query: { id: uuid } })
     requestId = uuid
   }
 
@@ -108,6 +108,12 @@ const nuevoMensaje = async () => {
     origen: 'llm',
     chat: fullChatLLM,
   })
+
+  if (route.query.id) {
+    //
+  } else {
+    $router.push({ query: { id: requestId } })
+  }
 
   chatLLM.value = ''
 }
