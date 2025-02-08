@@ -41,7 +41,7 @@ const chatAI = ref<ChatAI[]>(DEFAULT_CHAT)
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
-          <div class="border-x border-1 min-h-full">
+          <div class="border-x border-y border-1 min-h-full">
             <div class="space-y-4 pb-4 py-4">
               <ClientOnly>
                 <template v-for="(c, k) in chatAI" :key="k">
