@@ -23,12 +23,6 @@ const textoMd = `
 ## undefined
 
 built with nuxt.
-- <a href="https://www.linkedin.com/in/felipe-trujillo-27289827a/" target="_blank">linkedin</a>
-- <a href="https://github.com/felipetrujillot" target="_blank">github</a>
-- <a href="https://undefined.cl" target="_blank">undefined</a>
-
-07-02-2025
-
 `
 type ChatAI = {
   origen: 'llm' | 'user'
