@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import markdownit from 'markdown-it'
-
+documentTitle('inicio')
 definePageMeta({
   layout: 'user-layout',
   middleware: 'checkauth',

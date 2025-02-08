@@ -5,6 +5,7 @@ definePageMeta({
   layout: 'user-layout',
   middleware: 'checkauth',
 })
+documentTitle('chat')
 
 const md = markdownit({
   html: true,
@@ -159,8 +160,10 @@ const getRequestId = async (idRequest: string) => {
   const res = await $trpc.chat.getChatId.query({
     requestId: idRequest,
   })
-
-  const mapRes = res.map((r) => {
+  if (res.chat_session) {
+    documentTitle(res.chat_session.titulo)
+  }
+  const mapRes = res.chat.map((r) => {
     return {
       origen: r.origen as 'user' | 'llm',
       chat: r.chat,

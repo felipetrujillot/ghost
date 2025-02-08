@@ -58,7 +58,10 @@ export const chatTrpc = {
         .from(chat)
         .where(eq(chat.id_chat_session, findChatSession.id_chat_session))
 
-      return findChat
+      return {
+        chat_session: findChatSession,
+        chat: findChat,
+      }
     }),
   /**
    *

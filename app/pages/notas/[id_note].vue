@@ -1,5 +1,5 @@
 <script setup lang="ts">
-documentTitle('Nota')
+documentTitle('notas')
 
 definePageMeta({
   layout: 'user-layout',
