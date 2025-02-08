@@ -97,6 +97,7 @@ export const chat_sessions = mySchema.table('chat_sessions', {
   id_empresa: int('id_empresa').notNull(),
   id_usuario: int('id_usuario').notNull(),
   uuid: varchar('uuid', { length: 255 }).notNull(),
+  activo: int('activo').notNull().default(1),
   titulo: varchar('titulo', { length: 255 }).notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),

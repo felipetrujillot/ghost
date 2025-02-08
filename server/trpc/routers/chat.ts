@@ -20,7 +20,8 @@ export const chatTrpc = {
       .where(
         and(
           eq(chat_sessions.id_empresa, id_empresa),
-          eq(chat_sessions.id_usuario, id_usuario)
+          eq(chat_sessions.id_usuario, id_usuario),
+          eq(chat_sessions.activo, 1)
         )
       )
       .orderBy(desc(chat_sessions.id_chat_session))
@@ -212,6 +213,55 @@ export const chatTrpc = {
       }
 
       yield* streamGenerateContent(saveChat)
+    }),
+
+  /**
+   *
+   */
+  deleteChat: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { id } = input
+      await db
+        .update(chat_sessions)
+        .set({
+          activo: 0,
+        })
+        .where(eq(chat_sessions.uuid, id))
+
+      return {
+        status: 'ok' as const,
+        data: 'Se borró el chat',
+      }
+    }),
+
+  /**
+   *
+   */
+  updateTitle: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        titulo: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { id, titulo } = input
+      await db
+        .update(chat_sessions)
+        .set({
+          titulo: titulo,
+        })
+        .where(eq(chat_sessions.uuid, id))
+
+      return {
+        status: 'ok' as const,
+        data: 'Se actualizó el nombre',
+      }
     }),
 }
 

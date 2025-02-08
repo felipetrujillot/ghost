@@ -2,23 +2,51 @@
 import { LucideEllipsis } from 'lucide-vue-next'
 
 const { $trpc } = useNuxtApp()
+
 const props = defineProps<{
-  id_note: number
+  uuid: string
   to: string
   text: string
   active: boolean
 }>()
+
 const showPopover = ref(false)
 const showModalDelete = ref(false)
+const showModalUpdate = ref(false)
 
-const deleteNota = async () => {
-  await $trpc.notes.deleteNote.mutate({ id_note: props.id_note })
+const chatTitle = ref(props.text)
 
-  await setNotes()
+/**
+ *
+ */
+const deleteChat = async () => {
+  await $trpc.chat.deleteChat.mutate({ id: props.uuid })
 
-  toast('ok', 'Se borró la nota')
+  await setChatSessions()
+
+  toast('ok', 'Se borró el chat')
 
   showModalDelete.value = false
+  showPopover.value = false
+}
+
+/**
+ *
+ */
+const updateTitle = async () => {
+  if (chatTitle.value.length === 0)
+    return toast('warning', 'Debes seleccionar un título')
+
+  await $trpc.chat.updateTitle.mutate({
+    id: props.uuid,
+    titulo: chatTitle.value,
+  })
+
+  await setChatSessions()
+
+  toast('ok', 'Se actualizó el nombre')
+
+  showModalUpdate.value = false
   showPopover.value = false
 }
 </script>
@@ -31,7 +59,7 @@ const deleteNota = async () => {
         class="flex-grow py-2"
         :class="active ? 'text-white bg-secondary' : 'text-muted-foreground'"
       >
-        {{ text }}
+        {{ text.length > 0 ? text : 'Sin nombre' }}
       </NuxtLink>
 
       <div class="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -45,10 +73,17 @@ const deleteNota = async () => {
             <Command>
               <CommandGroup>
                 <CommandItem
-                  value="Nueva tarea"
+                  value="Borrar nota"
                   @click.prevent="showModalDelete = true"
                 >
                   Borrar nota
+                </CommandItem>
+
+                <CommandItem
+                  value="Renombrar"
+                  @click.prevent="showModalUpdate = true"
+                >
+                  Renombrar
                 </CommandItem>
               </CommandGroup>
             </Command>
@@ -61,11 +96,28 @@ const deleteNota = async () => {
   <VueModal
     @closeModal="showModalDelete = false"
     v-if="showModalDelete === true"
-    title="Borrar nota"
+    title="Borrar Chat"
   >
-    <h1>¿Estás seguro que quieres borrar esta nota?</h1>
+    <h1>¿Estás seguro que quieres borrar este chat?</h1>
     <div class="text-end">
-      <Button @click.prevent="deleteNota">Borrar</Button>
+      <Button @click.prevent="deleteChat">Borrar</Button>
+    </div>
+  </VueModal>
+
+  <VueModal
+    @closeModal="showModalUpdate = false"
+    v-if="showModalUpdate === true"
+    title="Actualizar nombre"
+  >
+    <div class="px-4 space-y-4">
+      <div class="space-y-1">
+        <Label>Título</Label>
+        <Input v-model="chatTitle" placeholder="Título" />
+      </div>
+
+      <div class="text-end">
+        <Button @click.prevent="updateTitle">Aceptar</Button>
+      </div>
     </div>
   </VueModal>
 </template>

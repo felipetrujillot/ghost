@@ -19,7 +19,7 @@ const popoverCompletadas = ref(false)
 <template>
   <div class="container space-y-4 h-screen">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full">
-      <div class="min-h-full flex flex-col border-r border-l">
+      <div class="min-h-full flex flex-col border-r border-l border-y">
         <div class="px-4 h-14 border-b">
           <div class="flex h-full items-center">
             <h1 class="text-lg">Pendientes</h1>
@@ -30,7 +30,7 @@ const popoverCompletadas = ref(false)
         </div>
       </div>
 
-      <div class="min-h-full flex flex-col border-r border-l">
+      <div class="min-h-full flex flex-col border-r border-l border-y">
         <div class="px-4 h-14 border-b">
           <div class="flex h-full items-center">
             <h1 class="text-lg">En proceso</h1>
@@ -41,7 +41,7 @@ const popoverCompletadas = ref(false)
         </div>
       </div>
 
-      <div class="min-h-full flex flex-col border-r border-l">
+      <div class="min-h-full flex flex-col border-r border-l border-y">
         <div class="px-4 h-14 border-b">
           <div class="flex h-full items-center">
             <h1 class="text-lg">Completadas</h1>

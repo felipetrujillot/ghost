@@ -32,7 +32,7 @@ onMounted(async () => {
               >
                 Menús
               </h1> -->
-              <div class="border-b h-14 px-4">
+              <div class="border-b border-t h-14 px-4">
                 <div class="flex justify-between items-center h-full">
                   <CommandModal />
                   <LucideSquarePen
@@ -81,7 +81,14 @@ onMounted(async () => {
               >
                 <div class="flex flex-col">
                   <template v-for="(item, k) in chats" :key="k">
-                    <NuxtLink
+                    <ItemsChats
+                      :uuid="item.uuid"
+                      :to="`/chat?id=${item.uuid}`"
+                      :active="route.query.id === item.uuid.toString()"
+                      :text="item.titulo"
+                    />
+
+                    <!--    <NuxtLink
                       class="px-2 lg:px-4 py-2"
                       :to="`/chat?id=${item.uuid}`"
                       :class="
@@ -91,7 +98,7 @@ onMounted(async () => {
                       "
                     >
                       {{ item.titulo }}
-                    </NuxtLink>
+                    </NuxtLink> -->
                   </template>
                 </div>
               </div>

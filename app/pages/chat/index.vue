@@ -198,7 +198,7 @@ onMounted(async () => {
     <div class="h-screen flex flex-col h-full">
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
-          <div class="border-x border-1 min-h-full">
+          <div class="border-x border-1 min-h-full border-t">
             <div class="space-y-4 pb-4 py-4">
               <ClientOnly>
                 <template v-for="(c, k) in chatAI" :key="k">
