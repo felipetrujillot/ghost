@@ -4,7 +4,7 @@ git checkout main
 git pull
 
 npm install
-npm run build
+npm run build-sw
 
 pm2 delete ghost
 pm2 start ecosystem.config.cjs 
