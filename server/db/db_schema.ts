@@ -56,13 +56,10 @@ export const notes = mySchema.table('notes', {
 /**
  *
  */
-export const tasks = mySchema.table('tasks', {
-  id_task: int('id_task').primaryKey().autoincrement(),
-  id_project: int('id_project').notNull(),
-  task_name: varchar('task_name', { length: 2000 }).notNull(),
-  task_status: int('task_status').notNull(),
-  task_description: text('task_description').notNull(),
-  active: int('active').notNull().default(1),
+export const proyectos = mySchema.table('proyectos', {
+  id_proyecto: int('id_proyecto').primaryKey().autoincrement(),
+  nombre_proyecto: varchar('nombre_proyecto', { length: 2000 }).notNull(),
+  activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
 })
@@ -70,12 +67,13 @@ export const tasks = mySchema.table('tasks', {
 /**
  *
  */
-export const tasks_users = mySchema.table('tasks_users', {
-  id_task_user: int('id_task_user').primaryKey().autoincrement(),
-  id_task: int('id_task').autoincrement(),
-  id_usuario: int('id_usuario').autoincrement(),
-  id_project: int('id_project').autoincrement(),
-  active: int('active').notNull().default(1),
+export const tareas = mySchema.table('tareas', {
+  id_tarea: int('id_tarea').primaryKey().autoincrement(),
+  id_proyecto: int('id_proyecto').notNull(),
+  nombre_tarea: varchar('nombre_tarea', { length: 2000 }).notNull(),
+  estado_tarea: varchar('estado_tarea', { length: 2000 }).notNull(),
+  descripcion_tarea: text('descripcion_tarea').notNull(),
+  activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
 })

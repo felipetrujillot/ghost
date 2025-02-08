@@ -4,13 +4,14 @@ import { LucideSquarePen } from 'lucide-vue-next'
 const { $trpc } = useNuxtApp()
 
 const route = useRoute()
-
 const notas = useNotes()
 const chats = useChatSessions()
+const proyectosTareas = useProyectosTareas()
 
 onMounted(async () => {
   setChatSessions()
   setNotes()
+  setProyectosTareas()
 })
 </script>
 
@@ -91,6 +92,26 @@ onMounted(async () => {
                     >
                       {{ item.titulo }}
                     </NuxtLink>
+                  </template>
+                </div>
+              </div>
+
+              <div
+                class="py-4 overflow-y-auto max-h-screen"
+                v-if="
+                  route.name === 'tareas' || route.name === 'tareas-id_proyecto'
+                "
+              >
+                <div class="flex flex-col">
+                  <template v-for="(t, k) in proyectosTareas" :key="k">
+                    <ItemTareas
+                      :id_proyecto="t.id_proyecto"
+                      :to="`/tareas/${t.id_proyecto}`"
+                      :active="
+                        route.params.id_proyecto === t.id_proyecto.toString()
+                      "
+                      :text="t.nombre_proyecto"
+                    />
                   </template>
                 </div>
               </div>

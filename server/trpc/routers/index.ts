@@ -1,6 +1,6 @@
 import { router } from '../trpc'
 import { notesTrpc } from './notes'
-import { tasksTrpc } from './tasks'
+import { tareasTrpc } from './tareas'
 import type { inferRouterOutputs } from '@trpc/server'
 import { usuariosTrpc } from './usuarios'
 import { chatTrpc } from './chat'
@@ -12,7 +12,7 @@ export const appRouter = router({
 
   notes: notesTrpc,
 
-  tasks: tasksTrpc,
+  tareas: tareasTrpc,
 
   chat: chatTrpc,
 })

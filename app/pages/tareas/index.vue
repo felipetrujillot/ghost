@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { LucideEllipsis } from 'lucide-vue-next'
+documentTitle('Tareas')
 
 definePageMeta({
   layout: 'user-layout',

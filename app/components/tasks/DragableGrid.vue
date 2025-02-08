@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { GetUsersByIdProject } from '~~/server/trpc/routers/projects'
-import type { GetTasksByIdProject } from '~~/server/trpc/routers/tasks'
+import type { GetTasksByIdProject } from '~~/server/trpc/routers/tareas'
 const { $trpc } = useNuxtApp()
 const props = defineProps<{
   tasks: GetTasksByIdProject
