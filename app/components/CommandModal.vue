@@ -15,6 +15,7 @@ import { ref, watch } from 'vue'
 const route = useRoute()
 const notas = useNotes()
 const chats = useChatSessions()
+const tareasProyectos = useProyectosTareas()
 
 const open = ref(false)
 
@@ -108,6 +109,15 @@ const selectItem = (to: string) => {
                   Chat: {{ c.titulo }}
                 </CommandItem>
               </template>
+            </template>
+
+            <template v-for="(c, k) in tareasProyectos" :key="k">
+              <CommandItem
+                @select="selectItem(`/tareas/${c.id_proyecto}`)"
+                :value="`Tareas: ${c.nombre_proyecto} ${c.id_proyecto}`"
+              >
+                Tareas: {{ c.nombre_proyecto }}
+              </CommandItem>
             </template>
           </CommandGroup>
           <!--  <CommandSeparator /> -->

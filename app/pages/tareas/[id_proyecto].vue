@@ -139,7 +139,7 @@ onMounted(async () => {
                 </PopoverTrigger>
                 <PopoverContent class="w-[180px] p-0">
                   <Command>
-                    <CommandGroup>
+                    <CommandGroup heading="Opciones">
                       <CommandItem
                         value="Nueva tarea"
                         @click.prevent="addTarea('Pendiente')"
@@ -159,16 +159,16 @@ onMounted(async () => {
           @dragenter.prevent
           @dragover.prevent
         >
-          <div class="space-y-2">
-            <Card
-              class="cursor-pointer bg-secondary py-0 px-4"
+          <div class="space-y-4">
+            <div
+              class="cursor-pointer bg-secondary py-0"
               v-for="t in filterTask('Pendiente')"
               :key="t.id_tarea"
               draggable="true"
               @dragstart="startDrag($event, t)"
             >
               <TasksDragableCard :tarea="t" @emitUpdateTask="emitUpdateTask" />
-            </Card>
+            </div>
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ onMounted(async () => {
                 </PopoverTrigger>
                 <PopoverContent class="w-[180px] p-0">
                   <Command>
-                    <CommandGroup>
+                    <CommandGroup heading="Opciones">
                       <CommandItem
                         value="Nueva tarea"
                         @click.prevent="addTarea('En proceso')"
@@ -206,16 +206,16 @@ onMounted(async () => {
           @dragenter.prevent
           @dragover.prevent
         >
-          <div class="space-y-2">
-            <Card
-              class="cursor-pointer bg-secondary py-0 px-4"
+          <div class="space-y-4">
+            <div
+              class="cursor-pointer bg-secondary py-0"
               v-for="t in filterTask('En proceso')"
               :key="t.id_tarea"
               draggable="true"
               @dragstart="startDrag($event, t)"
             >
               <TasksDragableCard :tarea="t" @emitUpdateTask="emitUpdateTask" />
-            </Card>
+            </div>
           </div>
         </div>
       </div>
@@ -233,7 +233,7 @@ onMounted(async () => {
                 </PopoverTrigger>
                 <PopoverContent class="w-[180px] p-0">
                   <Command>
-                    <CommandGroup>
+                    <CommandGroup heading="Opciones">
                       <CommandItem
                         value="Nueva tarea"
                         @click.prevent="addTarea('Completada')"
@@ -253,16 +253,16 @@ onMounted(async () => {
           @dragenter.prevent
           @dragover.prevent
         >
-          <div class="space-y-2">
-            <Card
-              class="cursor-pointer bg-secondary py-0 px-4"
+          <div class="space-y-4">
+            <div
+              class="cursor-pointer bg-secondary py-0"
               v-for="t in filterTask('Completada')"
               :key="t.id_tarea"
               draggable="true"
               @dragstart="startDrag($event, t)"
             >
               <TasksDragableCard :tarea="t" @emitUpdateTask="emitUpdateTask" />
-            </Card>
+            </div>
           </div>
         </div>
       </div>

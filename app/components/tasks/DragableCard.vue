@@ -68,9 +68,13 @@ const openSheet = async () => {
 const saveNote = (text: string) => {
   modelTask.value.descripcion_tarea = text
   updateTask()
-  toast('ok', 'Se actualizó la información')
+  //toast('ok', 'Se actualizó la información')
 }
 
+const updateTitle = async () => {
+  await nextTick()
+  updateTask()
+}
 /**
  *
  */
@@ -79,13 +83,13 @@ const { focused } = useFocus(taskRef)
 
 <template>
   <div>
-    <div class="flex justify-between gap-2">
+    <div class="flex justify-between items-center px-4 gap-2 group">
       <div class="w-full py-2" @click.prevent="openSheet">
         <p class="text-sm min-h-6">
           {{ tarea.nombre_tarea }}
         </p>
       </div>
-      <div class="flex py-2">
+      <div class="opacity-0 group-hover:opacity-100 transition-opacity">
         <Popover>
           <PopoverTrigger as-child>
             <LucideEllipsis :size="20" class="cursor-pointer" />
@@ -113,13 +117,14 @@ const { focused } = useFocus(taskRef)
         <SheetTitle>
           <Textarea
             ref="taskRef"
+            @update:model-value="updateTitle"
             class="text-2xl font-bold m-0 p-0 min-h-1 resize border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
             v-model="modelTask.nombre_tarea"
           ></Textarea>
         </SheetTitle>
         <SheetDescription> </SheetDescription>
       </SheetHeader>
-      <div class="pt-4 pb-8 overflow-y-auto h-full space-y-4">
+      <div class="pb-8 overflow-y-auto h-full space-y-4">
         <p class="text-md font-medium text-muted-foreground">
           Creado el: {{ formatearTimeStamp(tarea.created_at).nuevaFecha }}
           {{ formatearTimeStamp(tarea.created_at).nuevaHora }}

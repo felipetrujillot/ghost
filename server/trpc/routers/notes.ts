@@ -23,7 +23,7 @@ export const notesTrpc = router({
         note_name: notes.note_name,
       })
       .from(notes)
-      .orderBy(desc(notes.id_note))
+      .orderBy(notes.note_name)
       .where(eq(notes.active, 1))
 
     const findGroups = await db

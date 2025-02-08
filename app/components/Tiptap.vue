@@ -3,6 +3,7 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import Link from '@tiptap/extension-link'
+
 import Image from '@tiptap/extension-image'
 
 const fileInput = ref()
@@ -59,6 +60,10 @@ const changeFile = async (e: any) => {
 
   return
 }
+
+onMounted(() => {
+  editor.value!.commands.focus()
+})
 </script>
 
 <template>
@@ -71,7 +76,7 @@ const changeFile = async (e: any) => {
   />
 
   <div v-if="editor" class="space-y-1">
-    <Card class="p-4 min-h-36 w-full shadow-none">
+    <Card class="min-h-72 w-full shadow-none">
       <editor-content :editor="editor" class="min-h-36" />
     </Card>
   </div>

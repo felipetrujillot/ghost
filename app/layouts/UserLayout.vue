@@ -23,7 +23,7 @@ onMounted(async () => {
       <div class="hidden lg:block">
         <div class="flex flex-col gap-2" style="width: 250px">
           <div
-            class="fixed flex flex-col justify-between border-r py-4 h-full"
+            class="fixed flex flex-col justify-between border-r pb-4 h-full"
             style="width: 250px"
           >
             <nav class="grid items-start text-sm font-medium">
@@ -32,8 +32,8 @@ onMounted(async () => {
               >
                 Menús
               </h1> -->
-              <div class="border-b pb-4 px-4">
-                <div class="flex justify-between items-center">
+              <div class="border-b h-14 px-4">
+                <div class="flex justify-between items-center h-full">
                   <CommandModal />
                   <LucideSquarePen
                     :size="16"
@@ -97,7 +97,7 @@ onMounted(async () => {
               </div>
 
               <div
-                class="py-4 overflow-y-auto max-h-screen"
+                class="pb-4 overflow-y-auto max-h-screen"
                 v-if="
                   route.name === 'tareas' || route.name === 'tareas-id_proyecto'
                 "

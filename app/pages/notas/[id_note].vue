@@ -19,6 +19,7 @@ const { data: note, status } = $trpc.notes.getNoteById.useQuery({
  *
  */
 const saveNote = async (res: {
+  origin: string
   id_note: number
   note_text: string
   note_name: string
@@ -28,7 +29,9 @@ const saveNote = async (res: {
     note_text: res.note_text,
     note_name: res.note_name,
   })
-  toast(status, data)
+  if (res.origin === 'shortcut') {
+    toast(status, data)
+  }
 }
 </script>
 <template>

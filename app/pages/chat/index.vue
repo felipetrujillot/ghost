@@ -20,10 +20,13 @@ const chatLLM = ref('')
 const status = ref<'idle' | 'pending' | 'generating'>('idle')
 
 const textoMd = `
-## Admin
-It's hard to overstate how powerful large language models have become. Sadly, the apps we use to talk to them keep getting worse.
+## undefined
 
-That's why we built T3 Chat.
+built with nuxt.
+
+- [undefined](https://undefined.cl)
+- [github](https://github.com/felipetrujillot)
+- [linkedin](https://www.linkedin.com/in/felipe-trujillo-27289827a/)
 
 07-02-2025
 
@@ -36,7 +39,7 @@ type ChatAI = {
 const DEFAULT_CHAT = [
   {
     origen: 'user' as const,
-    chat: 'Bienvenido',
+    chat: 'hi',
   },
   {
     origen: 'llm' as const,

@@ -63,7 +63,7 @@ const deleteNota = async () => {
     v-if="showModalDelete === true"
     title="Borrar nota"
   >
-    <h1 class="text-2xl">¿Estás seguro que quieres borrar esta nota?</h1>
+    <h1 class="text-xl">¿Estás seguro que quieres borrar esta nota?</h1>
     <div class="text-end">
       <Button @click.prevent="deleteNota">Borrar</Button>
     </div>
