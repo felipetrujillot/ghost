@@ -223,7 +223,7 @@ onMounted(async () => {
       <div class="space-y-4 py-4 min-h-full flex flex-col border-r border-l">
         <div class="px-4">
           <div class="group flex items-center justify-between">
-            <h1 class="text-lg">Pendientes</h1>
+            <h1 class="text-lg">Completadas</h1>
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
               <Popover v-model:open="popoverCompletadas">
                 <PopoverTrigger as-child>
