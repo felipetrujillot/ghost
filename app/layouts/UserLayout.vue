@@ -18,7 +18,7 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen">
     <div
-      class="grid w-full md:grid-cols-[220px_1fr] lg:grid-cols-[250px_1fr] min-h-screen"
+      class="grid w-full md:grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen"
     >
       <div class="hidden lg:block">
         <div class="flex flex-col gap-2" style="width: 250px">
@@ -119,6 +119,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+
       <div class="flex flex-col flex-1">
         <main class="flex flex-1 flex-col">
           <div class="flex-1">
