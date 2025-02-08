@@ -73,17 +73,17 @@ const updateTitle = async () => {
             <Command>
               <CommandGroup>
                 <CommandItem
-                  value="Borrar nota"
-                  @click.prevent="showModalDelete = true"
-                >
-                  Borrar nota
-                </CommandItem>
-
-                <CommandItem
                   value="Renombrar"
                   @click.prevent="showModalUpdate = true"
                 >
                   Renombrar
+                </CommandItem>
+
+                <CommandItem
+                  value="Borrar nota"
+                  @click.prevent="showModalDelete = true"
+                >
+                  Borrar nota
                 </CommandItem>
               </CommandGroup>
             </Command>
