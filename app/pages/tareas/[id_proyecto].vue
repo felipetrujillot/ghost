@@ -127,8 +127,8 @@ onMounted(async () => {
   <div class="container space-y-4 h-screen">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full">
       <div class="min-h-full flex flex-col border-y border-r border-l">
-        <div class="px-4 h-14 border-b flex items-center">
-          <div class="group flex items-center justify-between">
+        <div class="h-14 border-b flex items-center">
+          <div class="group flex items-center justify-between w-full px-4">
             <h1 class="text-lg">Pendientes</h1>
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
               <Popover v-model:open="popoverPendientes">
@@ -174,8 +174,8 @@ onMounted(async () => {
       </div>
 
       <div class="min-h-full flex flex-col border-y border-r border-l">
-        <div class="px-4 h-14 border-b flex items-center">
-          <div class="group flex items-center justify-between">
+        <div class="h-14 border-b flex items-center">
+          <div class="group flex items-center justify-between w-full px-4">
             <h1 class="text-lg">En proceso</h1>
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
               <Popover v-model:open="popoverProceso">
@@ -221,8 +221,8 @@ onMounted(async () => {
       </div>
 
       <div class="min-h-full flex flex-col border-y border-r border-l">
-        <div class="px-4 h-14 border-b flex items-center">
-          <div class="group flex items-center justify-between">
+        <div class="h-14 border-b flex items-center">
+          <div class="group flex items-center justify-between w-full px-4">
             <h1 class="text-lg">Completadas</h1>
             <div class="opacity-0 group-hover:opacity-100 transition-opacity">
               <Popover v-model:open="popoverCompletadas">
