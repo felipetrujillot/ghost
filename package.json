@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev-sw": "SW=true nuxi dev",
     "dev": "nuxt dev --port 9999",
-    "generate": "nuxt generate",
+    "dev-sw": "SW=true nuxi dev",
     "build-sw": "SW=true nuxi build",
+    "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
@@ -26,7 +26,6 @@
     "@trpc/client": "^11.0.0-rc.741",
     "@trpc/server": "^11.0.0-rc.741",
     "@types/uuid": "^10.0.0",
-    "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/core": "^10.9.0",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
@@ -54,6 +53,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.6",
+    "@vite-pwa/nuxt": "^0.10.6",
     "typescript": "^5.4.5"
   }
 }
