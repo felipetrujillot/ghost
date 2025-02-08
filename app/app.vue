@@ -9,6 +9,8 @@ useHead({
 <template>
   <div>
     <NuxtLayout>
+      <NuxtPwaManifest />
+
       <NuxtPage />
       <Toaster />
     </NuxtLayout>
