@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "dev-sw": "SW=true nuxi dev",
     "dev": "nuxt dev --port 9999",
     "generate": "nuxt generate",
+    "build-sw": "SW=true nuxi build",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
