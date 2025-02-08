@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     filename: sw ? 'sw.ts' : undefined,
     registerType: 'autoUpdate',
     manifest: {
+      display: 'standalone',
       name: 'undefined',
       short_name: 'undefined',
       theme_color: '#181621',
