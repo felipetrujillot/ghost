@@ -29,7 +29,7 @@ export function vertexModel(sysPrompt: string) {
         threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
       },
     ],
-    generationConfig: { maxOutputTokens: 8193 },
+    generationConfig: { maxOutputTokens: 8000 },
     systemInstruction: {
       role: 'system',
       parts: [
