@@ -5,7 +5,12 @@ const sw = process.env.SW === 'true'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@vite-pwa/nuxt'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    '@vite-pwa/nuxt',
+    '@nuxt/content',
+  ],
 
   devtools: { enabled: false },
 
