@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import Tiptap from '~/components/Tiptap.vue'
 const { $trpc } = useNuxtApp()
-import markdownit from 'markdown-it'
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-})
 
+const route = useRoute()
+const filename = route.params.filename as string
 /**
  *
  */
 onMounted(async () => {
   const file = await $trpc.markdown.getFile.query()
 
-  const m = md.render(file)
-  text.value = m
+  text.value = file
   isLoading.value = true
   return
 })
@@ -34,7 +29,9 @@ const saveNote = async (text: string) => {
  *
  */
 const commitNotas = async () => {
-  await $trpc.markdown.commitFiles.mutate()
+  await $trpc.markdown.commitFiles.mutate({
+    filename,
+  })
 }
 </script>
 

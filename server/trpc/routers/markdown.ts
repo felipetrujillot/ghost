@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { protectedProcedure, router } from '../trpc'
 import { promises as fs } from 'fs'
 import { exec } from 'child_process'
+import markdownit from 'markdown-it'
 
 const ROUTE_PATH = 'content/notas'
 
@@ -15,8 +16,13 @@ export const markdownTrpc = router({
     const filename = 'nueva.md'
 
     const file = await fs.readFile(`${ROUTE_PATH}/${filename}`, 'utf-8')
+    const md = markdownit({
+      html: true,
+      linkify: true,
+      typographer: true,
+    })
 
-    return file
+    return md.render(file)
   }),
 
   /**
@@ -54,20 +60,26 @@ export const markdownTrpc = router({
   /**
    *
    */
-  commitFiles: protectedProcedure.mutation(async () => {
-    const message = 'hi'
-    exec(
-      `git add . && git commit -m "${message}" && git push origin main`,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Exec error: ${error}`)
-          return true
-        }
-
-        return false
-      }
+  commitFiles: protectedProcedure
+    .input(
+      z.object({
+        filename: z.string(),
+      })
     )
+    .mutation(async () => {
+      const message = 'hi'
+      exec(
+        `git add . && git commit -m "${message}" && git push origin main`,
+        (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Exec error: ${error}`)
+            return true
+          }
 
-    return true
-  }),
+          return false
+        }
+      )
+
+      return true
+    }),
 })

@@ -50,7 +50,12 @@ export function vertexModel(sysPrompt: string) {
  */
 export function systemPromptTxt() {
   const prompt = `
-Engage in productive collaboration with the user utilising multi-step reasoning to answer the question, if there are multiple questions in the initial question split them up and answer them in the order that will provide the most accurate response.
+You write math answers using latex rendering. Dont ever use singler dollar sign like "$a_5$ for inline. Use double dollar like "$$a_5$$ instead for both multiline and inline. Always use latex for all kind of maths. Never use normal text for math, as it is very ugly.
+
+Multiline latex (for example matrices etc): You will need to write all of this in one line, since multiline can not render. Luckily, this should be no problem.
+
+Use markdown for headers to make it more readable. Use the ## header as the main header and avoid using the largest, as it is too big. Readability is key!
+
   `
   return prompt
 }
