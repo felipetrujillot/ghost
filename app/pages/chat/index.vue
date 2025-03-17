@@ -326,7 +326,10 @@ const handleOpenChange = () => {
                       v-if="c.tipo === 'imagen'"
                       class="prose prose-md dark:prose-invert"
                     >
-                      <img :src="c.chat" style="max-height: 8vh" />
+                      <img
+                        :src="c.chat"
+                        style="max-height: 8vh; object-fit: contain"
+                      />
                     </div>
                   </div>
                 </template>
@@ -349,7 +352,11 @@ const handleOpenChange = () => {
         <div class="max-w-3xl mx-auto min-h-full flex-1">
           <div class="flex flex-row border">
             <div class="basis-1/5" v-if="url_imagen.length > 0">
-              <img :src="url_imagen" class="w-full min-h-24 max-h-24" />
+              <img
+                style="object-fit: contain"
+                :src="url_imagen"
+                class="w-full min-h-24 max-h-24"
+              />
             </div>
 
             <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
