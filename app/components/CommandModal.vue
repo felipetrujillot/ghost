@@ -17,7 +17,7 @@ const notas = useNotes()
 const chats = useChatSessions()
 const tareasProyectos = useProyectosTareas()
 
-const open = ref(false)
+const open = useShowModal()
 
 const { Meta_K, Ctrl_K } = useMagicKeys({
   passive: false,

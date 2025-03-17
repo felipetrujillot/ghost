@@ -278,10 +278,27 @@ const renderHtml = (html: string) => {
 
   return regEx
 }
+
+const show = useShowModal()
+const handleOpenChange = () => {
+  show.value = !show.value
+}
 </script>
 <template>
   <div class="relative flex-1 w-full min-h-full justify-between">
     <div class="h-screen flex flex-col h-full">
+      <div class="block md:hidden lg:hidden">
+        <p
+          class="text-sm text-muted-foreground cursor-pointer"
+          @click.prevent="handleOpenChange"
+        >
+          <kbd
+            class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"
+          >
+            <span class="text-xs">⌘</span>K
+          </kbd>
+        </p>
+      </div>
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
           <div class="border-x border-1 min-h-full border-t">

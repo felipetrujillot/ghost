@@ -2,6 +2,8 @@ import type { GetNotes } from '~~/server/trpc/routers/notes'
 import type { GetChatSessions } from '~~/server/trpc/routers/chat'
 import type { GetProyectos } from '~~/server/trpc/routers/tareas'
 
+export const useShowModal = () => useState<boolean>('useShowModal', () => false)
+
 export const useNotes = () => useState<GetNotes>('useNotes', () => [])
 
 export const useChatSessions = () =>
