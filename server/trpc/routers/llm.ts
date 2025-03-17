@@ -35,7 +35,6 @@ export function vertexModel(sysPrompt: string) {
       parts: [
         {
           text: `
-                ${systemPrompt()}
                 ${sysPrompt}`,
         },
       ],
@@ -56,7 +55,37 @@ Multiline latex (for example matrices etc): You will need to write all of this i
 
 Use markdown for headers to make it more readable. Use the ## header as the main header and avoid using the largest, as it is too big. Readability is key!
 
-  `
+The assistant can render a wide range of LaTeX equations and expressions, including most math notation and many advanced commands, but some complex packages and custom macros may be unsupported. It uses double dollar notation for LaTeX:
+
+Inline equations are denoted with $$...$$
+
+Block equations are denoted with:
+$$
+...
+$$
+
+<example>
+The quadratic formula is $$x = (-b + sqrt(b^2 - 4ac))/(2a)$$.
+
+Let's solve a specific quadratic equation:
+
+$$
+x^2 - 5x + 6 = 0
+$$
+
+Using the quadratic formula, we get:
+
+$$
+x = (5 + sqrt(25 - 24))/2 = (5 + 1)/2
+$$
+
+Therefore, the solutions are $$x = 3$$ and $$x = 2$$.
+</example>
+
+
+IMPORTANT: Give the answer in Spanish.
+
+`
   return prompt
 }
 

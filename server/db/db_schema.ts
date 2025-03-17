@@ -45,6 +45,7 @@ export const empresas = mySchema.table('empresas', {
  */
 export const notes = mySchema.table('notes', {
   id_note: int('id_note').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').autoincrement().notNull(),
   id_note_group: int('id_note_group').notNull(),
   note_name: varchar('note_name', { length: 250 }).notNull(),
   note_text: text('note_text').notNull(),
@@ -58,6 +59,7 @@ export const notes = mySchema.table('notes', {
  */
 export const proyectos = mySchema.table('proyectos', {
   id_proyecto: int('id_proyecto').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').autoincrement().notNull(),
   nombre_proyecto: varchar('nombre_proyecto', { length: 2000 }).notNull(),
   activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
@@ -83,6 +85,7 @@ export const tareas = mySchema.table('tareas', {
  */
 export const notes_group = mySchema.table('notes_group', {
   id_note_group: int('id_note_group').primaryKey().autoincrement(),
+  id_empresa: int('id_empresa').notNull(),
   group_name: varchar('group_name', { length: 250 }).notNull(),
   active: int('active').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
@@ -109,6 +112,7 @@ export const chat = mySchema.table('chat', {
   id_chat: int('id_chat').primaryKey().autoincrement(),
   id_chat_session: int('id_chat_session').notNull(),
   chat: text('chat').notNull(),
+  tipo: varchar('tipo', { length: 100 }).notNull(),
   origen: varchar('origen', { length: 100 }).notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at'),

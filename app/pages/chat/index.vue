@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { LucidePaperclip, LucidePlay, LucideX } from 'lucide-vue-next'
 import markdownit from 'markdown-it'
+import katex from 'katex'
 
 definePageMeta({
   layout: 'user-layout',
@@ -18,6 +20,8 @@ const { $trpc, $router, $trpc_stream } = useNuxtApp()
 const route = useRoute()
 
 const chatLLM = ref('')
+const url_imagen = ref('')
+
 const status = ref<'idle' | 'pending' | 'generating'>('idle')
 
 const textoMd = `
@@ -27,6 +31,7 @@ built with nuxt.
 `
 type ChatAI = {
   origen: 'llm' | 'user'
+  tipo: 'imagen' | 'texto'
   chat: string
 }
 
@@ -34,10 +39,12 @@ const DEFAULT_CHAT = [
   {
     origen: 'user' as const,
     chat: 'hi',
+    tipo: 'texto' as const,
   },
   {
     origen: 'llm' as const,
     chat: textoMd,
+    tipo: 'texto' as const,
   },
 ]
 
@@ -51,22 +58,58 @@ const nuevoMensaje = async () => {
   status.value = 'pending'
   let requestId = ''
 
+  const hasImage = url_imagen.value
   const chatPersistent = inputChat.value
 
   inputChat.value = ''
+  url_imagen.value = ''
 
   if (route.query.id) {
-    chatAI.value.push({
-      origen: 'user',
-      chat: chatPersistent,
-    })
+    if (hasImage) {
+      chatAI.value.push({
+        origen: 'user',
+        tipo: 'texto',
+        chat: chatPersistent,
+      })
+      chatAI.value.push({
+        origen: 'user',
+        tipo: 'imagen',
+        chat: hasImage,
+      })
+    } else {
+      chatAI.value.push({
+        origen: 'user',
+        tipo: 'texto',
+
+        chat: chatPersistent,
+      })
+    }
   } else {
     chatAI.value = [
       {
         origen: 'user',
+        tipo: 'texto',
+
         chat: chatPersistent,
       },
     ]
+
+    if (hasImage) {
+      chatAI.value = [
+        {
+          origen: 'user',
+          tipo: 'texto',
+
+          chat: chatPersistent,
+        },
+        {
+          origen: 'user',
+          tipo: 'imagen',
+
+          chat: hasImage,
+        },
+      ]
+    }
   }
 
   await nextTick()
@@ -83,6 +126,7 @@ const nuevoMensaje = async () => {
   const res = await $trpc_stream.chat.addPrompt.mutate({
     prompt: chatPersistent,
     requestId: requestId,
+    url_imagen: hasImage,
   })
 
   status.value = 'generating'
@@ -102,6 +146,7 @@ const nuevoMensaje = async () => {
   chatAI.value.push({
     origen: 'llm',
     chat: fullChatLLM,
+    tipo: 'texto',
   })
 
   if (route.query.id) {
@@ -111,6 +156,7 @@ const nuevoMensaje = async () => {
   }
 
   chatLLM.value = ''
+  url_imagen.value = ''
 }
 
 /**
@@ -167,6 +213,7 @@ const getRequestId = async (idRequest: string) => {
     return {
       origen: r.origen as 'user' | 'llm',
       chat: r.chat,
+      tipo: r.tipo as 'texto' | 'imagen',
     }
   })
 
@@ -192,6 +239,45 @@ onMounted(async () => {
 
   textArea.value.focus()
 })
+
+const uploadFile = async (files: File[]) => {
+  const file = files[0]
+  /**
+   *
+   */
+
+  const [_oldName, ...formatArray] = file!.name.split('.')
+
+  const format = formatArray[formatArray.length - 1]
+
+  if (format !== 'jpg' && format !== 'jpeg' && format !== 'png') {
+    return toast('warning', 'El formato debe ser .jpg o .png')
+  }
+  if (!file) {
+    return toast('warning', 'No se pudo subir el documento')
+  }
+
+  const fileUrl = await uploadFileGcp(file)
+
+  url_imagen.value = fileUrl
+}
+
+const renderMath = (math: any, displayMode: any) => {
+  return `<p  white-space: pre;>${katex.renderToString(math, {
+    throwOnError: false,
+    displayMode,
+    output: 'mathml',
+  })}</p>`
+}
+
+const renderHtml = (html: string) => {
+  const markdownContent = md.render(html)
+  const regEx = markdownContent
+    .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
+    .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
+
+  return regEx
+}
 </script>
 <template>
   <div class="relative flex-1 w-full min-h-full justify-between">
@@ -205,7 +291,7 @@ onMounted(async () => {
                   <div v-if="c.origen === 'llm'" class="px-4">
                     <p
                       class="prose prose-md dark:prose-invert"
-                      v-html="md.render(c.chat)"
+                      v-html="renderHtml(c.chat)"
                     ></p>
                   </div>
 
@@ -214,9 +300,17 @@ onMounted(async () => {
                     class="fadeInFast max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
                   >
                     <div
+                      v-if="c.tipo === 'texto'"
                       class="prose prose-md dark:prose-invert"
-                      v-html="md.render(c.chat)"
+                      v-html="renderHtml(c.chat)"
                     ></div>
+
+                    <div
+                      v-if="c.tipo === 'imagen'"
+                      class="prose prose-md dark:prose-invert"
+                    >
+                      <img :src="c.chat" style="max-height: 8vh" />
+                    </div>
                   </div>
                 </template>
 
@@ -224,7 +318,7 @@ onMounted(async () => {
                   <div class="fadeInFast px-4">
                     <p
                       class="prose prose-md dark:prose-invert"
-                      v-html="md.render(chatLLM)"
+                      v-html="renderHtml(chatLLM)"
                     ></p>
                   </div>
                 </template>
@@ -236,16 +330,68 @@ onMounted(async () => {
 
       <div class="flex-[1]">
         <div class="max-w-3xl mx-auto min-h-full flex-1">
-          <textarea
-            @keydown.enter.prevent="handleEnter"
-            ref="textArea"
-            class="flex min-h-20 w-full rounded-md border border-input bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            style="field-sizing: content; max-height: 20vh; min-height: 20vh"
-            placeholder="Escribe un mensaje..."
-            v-model="inputChat"
-          />
+          <div class="flex flex-row border">
+            <div class="basis-1/5" v-if="url_imagen.length > 0">
+              <img :src="url_imagen" class="w-full min-h-24 max-h-24" />
+            </div>
+
+            <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
+              <textarea
+                @keydown.enter.prevent="handleEnter"
+                ref="textArea"
+                class="flex min-h-24 max-h-24 w-full rounded-md bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                style="field-sizing: content"
+                placeholder="Escribe un mensaje..."
+                v-model="inputChat"
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-between">
+            <Dropzone
+              @files-dropped="uploadFile"
+              v-if="url_imagen.length === 0"
+            >
+              <div class="bg-secondary p-2">
+                <LucidePaperclip
+                  class="cursor-pointer text-primary-foreground"
+                />
+              </div>
+            </Dropzone>
+
+            <div
+              class="bg-secondary p-2"
+              v-if="url_imagen.length > 0"
+              @click.prevent="url_imagen = ''"
+            >
+              <LucideX class="cursor-pointer text-primary-foreground" />
+            </div>
+
+            <div class="bg-secondary p-2" @click.prevent="nuevoMensaje">
+              <LucidePlay class="text-primary-foreground cursor-pointer" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.prose :where(.katex) {
+  font-size: 1em !important; /* Prevent Tailwind from making equations too large */
+}
+
+.prose :where(.katex-display) {
+  overflow-x: auto; /* Prevent inline equations from overflowing */
+  text-align: center;
+}
+
+.prose :where(.katex-html) {
+  font-family: inherit; /* Ensure text inside KaTeX remains readable */
+}
+
+.prose :where(.katex .mathnormal) {
+  font-family: inherit !important; /* Avoid KaTeX overriding prose typography */
+}
+</style>

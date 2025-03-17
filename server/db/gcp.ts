@@ -8,4 +8,4 @@ const gcpStorage = new Storage({
   keyFilename: 'server/db/linebox-412716-fe1f0c92ff90.json',
 })
 
-export const gcpBucket = gcpStorage.bucket('ghost')
+export const gcpBucket = gcpStorage.bucket('linebox-bucket')

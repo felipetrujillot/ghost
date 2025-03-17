@@ -429,3 +429,27 @@ export const documentTitle = (title: string) => {
     meta: [{ name: 'description', content: projectName }],
   })
 }
+
+/**
+ * Sube archivo
+ * Retorna url de gcp
+ * PÚBLICO
+ * @param file
+ * @returns
+ */
+export const uploadFileGcp = async (file: File) => {
+  const formData = new FormData()
+  formData.append('document', file, file.name)
+
+  const url = `/api/upload`
+
+  /**
+   */
+
+  const res = await $fetch(url, {
+    method: 'POST',
+    body: formData,
+  })
+
+  return res
+}

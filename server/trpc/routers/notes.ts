@@ -12,7 +12,9 @@ export const notesTrpc = router({
   /**
    *
    */
-  getNotes: protectedProcedure.query(async () => {
+  getNotes: protectedProcedure.query(async ({ ctx }) => {
+    const { id_empresa } = ctx.user
+
     /**
      *
      */
@@ -24,13 +26,15 @@ export const notesTrpc = router({
       })
       .from(notes)
       .orderBy(notes.note_name)
-      .where(eq(notes.active, 1))
+      .where(and(eq(notes.active, 1), eq(notes.id_empresa, id_empresa)))
 
     const findGroups = await db
       .select()
       .from(notes_group)
       .orderBy(desc(notes_group.id_note_group))
-      .where(eq(notes_group.active, 1))
+      .where(
+        and(eq(notes_group.id_empresa, id_empresa), eq(notes_group.active, 1))
+      )
 
     type ArrayOfGroups = (typeof findGroups)[0] & { notes: typeof findNotes }
     const newArr: ArrayOfGroups[] = []
@@ -105,15 +109,23 @@ export const notesTrpc = router({
       z.object({
         note_text: z.string(),
         note_name: z.string(),
-        id_note_group: z.number(),
+        //  id_note_group: z.number(),
       })
     )
-    .mutation(async ({ input }) => {
-      const { note_text, note_name, id_note_group } = input
+    .mutation(async ({ input, ctx }) => {
+      const { id_empresa } = ctx.user
+      const { note_text, note_name } = input
+
+      const [findGroup] = await db
+        .select()
+        .from(notes_group)
+        .where(eq(notes_group.id_empresa, id_empresa))
+
       const insertNote = await db.insert(notes).values({
-        id_note_group,
+        id_note_group: findGroup.id_note_group,
         note_text,
         note_name,
+        id_empresa,
       })
       return {
         status: 'ok' as const,

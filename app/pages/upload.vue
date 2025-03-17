@@ -23,31 +23,25 @@ const filesDropHeader = async (files: File[]) => {
 const uploadProgress = ref(0)
 
 const uploadFile = async (files: File[]) => {
+  /**
+   *
+   */
   const file = files[0]
 
-  if (!file) throw new Error('NO FILE')
-  const formData = new FormData()
-  formData.append('document', file, file.name)
+  const [_oldName, ...formatArray] = file!.name.split('.')
 
-  try {
-    const response = await axios.post('/api/save', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: (progressEvent) => {
-        uploadProgress.value = Math.round(
-          (progressEvent.loaded / progressEvent.total) * 100
-        )
-      },
-    })
-    inputForm.value.url_imagen = 'ok'
+  const format = formatArray[formatArray.length - 1]
 
-    console.log('File uploaded successfully', response.data)
-  } catch (error) {
-    inputForm.value.url_imagen = 'error'
-
-    console.error('Error uploading file', error)
+  if (format !== 'jpg' && format !== 'jpeg') {
+    return toast('warning', 'El formato debe ser .jpg')
   }
+  if (!file) {
+    return toast('warning', 'No se pudo subir el documento')
+  }
+
+  const fileUrl = await uploadFileGcp(file)
+
+  form.value.header_imagen = fileUrl
 }
 
 const inputForm = ref({

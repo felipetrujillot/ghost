@@ -14,8 +14,13 @@ export const tareasTrpc = router({
    *
    *
    */
-  getProyectos: protectedProcedure.query(async () => {
-    return await db.select().from(proyectos)
+  getProyectos: protectedProcedure.query(async ({ ctx }) => {
+    const { id_empresa } = ctx.user
+
+    return await db
+      .select()
+      .from(proyectos)
+      .where(eq(proyectos.id_empresa, id_empresa))
   }),
   /**
    *
@@ -26,7 +31,7 @@ export const tareasTrpc = router({
         id_proyecto: z.number(),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const { id_proyecto } = input
 
       const findTasks = await db

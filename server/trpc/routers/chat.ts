@@ -3,9 +3,10 @@ import { z } from 'zod'
 import { db } from '~~/server/db/db'
 import { chat, chat_sessions } from '~~/server/db/db_schema'
 import { and, desc, eq } from 'drizzle-orm'
-import { systemPrompt, vertexModel } from './llm'
+import { systemPrompt, systemPromptTxt, vertexModel } from './llm'
 import { v4 as uuid } from 'uuid'
 import { RouterOutput } from '.'
+import { Part } from '@google-cloud/vertexai'
 
 export const chatTrpc = {
   /**
@@ -92,19 +93,19 @@ export const chatTrpc = {
       z.object({
         prompt: z.string(),
         requestId: z.string(),
+        url_imagen: z.string(),
       })
     )
     .mutation(async function* ({ input, ctx }) {
-      const { prompt, requestId } = input
+      const { prompt, requestId, url_imagen } = input
       const { id_empresa, id_usuario } = ctx.user!
 
-      const generativeModel = vertexModel(``)
+      const sys_prompt = systemPromptTxt()
+      const generativeModel = vertexModel(sys_prompt)
 
       const contents: {
         role: string
-        parts: {
-          text: string
-        }[]
+        parts: Part[]
       }[] = []
 
       const findChatSession = await db
@@ -134,24 +135,58 @@ export const chatTrpc = {
         contents.push(...mapChat)
       }
 
-      contents.push({ role: 'user', parts: [{ text: prompt }] })
+      /*   contents.push({
+        role:'user' :parts []
+      }) */
+
+      const newPromptArr: (typeof contents)[0] = {
+        role: 'user',
+        parts: [{ text: prompt }],
+      }
+
+      if (url_imagen.length > 0) {
+        newPromptArr.parts.push({
+          fileData: {
+            fileUri: url_imagen,
+            mimeType: 'image/jpeg',
+          },
+        })
+      }
+
+      contents.push(newPromptArr)
 
       /**
        *
        */
       const saveChat = async (responseLLM: string) => {
-        await db.insert(chat).values([
+        const insertParamsUser = [
           {
             origen: 'user',
             chat: prompt,
+            tipo: 'texto',
             id_chat_session: findChatSession[0].id_chat_session,
           },
+        ]
+
+        if (url_imagen.length > 0) {
+          insertParamsUser.push({
+            origen: 'user',
+            chat: url_imagen,
+            tipo: 'imagen',
+            id_chat_session: findChatSession[0].id_chat_session,
+          })
+        }
+
+        const insertParams = [
+          ...insertParamsUser,
           {
             origen: 'llm',
             chat: responseLLM,
+            tipo: 'texto',
             id_chat_session: findChatSession[0].id_chat_session,
           },
-        ])
+        ]
+        await db.insert(chat).values(insertParams)
 
         if (findChatSession[0].titulo.length === 0) {
           const generativeModelSummary = vertexModel(
@@ -195,6 +230,8 @@ export const chatTrpc = {
        * @param onSuccess
        */
       async function* streamGenerateContent(onSuccess: Function) {
+        console.log(contents)
+
         const streamingResult = await generativeModel.generateContentStream({
           contents: contents,
         })

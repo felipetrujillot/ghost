@@ -18,7 +18,6 @@ const updateSaveNote = async (res: {
   const { data } = await $trpc.notes.addNote.mutate({
     note_text: res.note_text,
     note_name: res.note_name,
-    id_note_group: 1,
   })
 
   $router.push(`/notas/${data}`)

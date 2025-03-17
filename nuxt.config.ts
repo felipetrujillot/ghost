@@ -81,6 +81,8 @@ export default defineNuxtConfig({
     viewer: false,
   },
 
+  css: ['katex/dist/katex.min.css'],
+
   build: {
     transpile: ['trpc-nuxt'],
   },
