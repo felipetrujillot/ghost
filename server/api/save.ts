@@ -9,16 +9,22 @@ import { writeFile } from 'fs/promises'
  * deprecando formidable
  */
 export default defineEventHandler(async (event) => {
-  const formData = await readFormData(event)
+  const formData = await readMultipartFormData(event)
 
-  const doc = formData.get('document') as File
+  if (!formData) return 'error'
 
-  const arrayBuffer = await doc.arrayBuffer()
+  const findData = formData.find((item) => item.name === 'document')!
+
+  const arrayBuffer = findData.data
+
+  // const doc = formData.get('document') as File
+
+  //const arrayBuffer = await doc.arrayBuffer()
   const fileBuffer = Buffer.from(arrayBuffer)
   // Define the file path
-  const filePath = join(process.cwd(), 'public', doc.name)
+  const filePath = join(process.cwd(), 'public', findData.filename!)
 
   // Save the file
   await writeFile(filePath, fileBuffer)
-  return doc.name
+  return 'okay'
 })

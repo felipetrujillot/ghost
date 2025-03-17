@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { LucideFileImage, LucideXCircle } from 'lucide-vue-next'
-
+import axios from 'axios'
 /**
  *
  */
@@ -18,6 +18,36 @@ const filesDropHeader = async (files: File[]) => {
   const fileUrl = await uploadFileGcp(file)
 
   inputForm.value.url_imagen = fileUrl
+}
+
+const uploadProgress = ref(0)
+
+const uploadFile = async (files: File[]) => {
+  const file = files[0]
+
+  if (!file) throw new Error('NO FILE')
+  const formData = new FormData()
+  formData.append('document', file, file.name)
+
+  try {
+    const response = await axios.post('/api/save', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        uploadProgress.value = Math.round(
+          (progressEvent.loaded / progressEvent.total) * 100
+        )
+      },
+    })
+    inputForm.value.url_imagen = 'ok'
+
+    console.log('File uploaded successfully', response.data)
+  } catch (error) {
+    inputForm.value.url_imagen = 'error'
+
+    console.error('Error uploading file', error)
+  }
 }
 
 const inputForm = ref({
@@ -58,7 +88,7 @@ const uploadFileGcp = async (file: File) => {
             <h1 class="text-primary text-center font-bold text-xl">
               Selecciona una imagen
             </h1>
-            <Dropzone @files-dropped="filesDropHeader">
+            <Dropzone @files-dropped="uploadFile">
               <div class="border rounded-lg border-dashed cursor-pointer p-4">
                 <div class="flex justify-center items-center h-full">
                   <div class="space-y-2 text-center">
@@ -71,6 +101,9 @@ const uploadFileGcp = async (file: File) => {
                     <h2 class="text-sm text-muted-foreground">
                       Formato .jpg o .png soportado.
                     </h2>
+                    <div v-if="uploadProgress > 0">
+                      Progreso: {{ uploadProgress }}%
+                    </div>
                   </div>
                 </div>
               </div>
