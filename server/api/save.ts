@@ -9,8 +9,6 @@ import { writeFile } from 'fs/promises'
  * deprecando formidable
  */
 export default defineEventHandler(async (event) => {
-  await authEvent(event)
-
   const formData = await readFormData(event)
 
   const doc = formData.get('document') as File
@@ -18,7 +16,7 @@ export default defineEventHandler(async (event) => {
   const arrayBuffer = await doc.arrayBuffer()
   const fileBuffer = Buffer.from(arrayBuffer)
   // Define the file path
-  const filePath = join(process.cwd(), 'media', doc.name)
+  const filePath = join(process.cwd(), 'public', doc.name)
 
   // Save the file
   await writeFile(filePath, fileBuffer)
