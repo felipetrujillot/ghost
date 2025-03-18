@@ -80,7 +80,6 @@ export default defineNuxtConfig({
   tailwindcss: {
     viewer: false,
   },
-
   css: ['katex/dist/katex.min.css'],
 
   build: {

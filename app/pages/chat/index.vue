@@ -263,19 +263,39 @@ const uploadFile = async (files: File[]) => {
 }
 
 const renderMath = (math: any, displayMode: any) => {
-  return `<p  white-space: pre;>${katex.renderToString(math, {
+  return `<span  white-space: pre;>${katex.renderToString(math, {
     throwOnError: false,
     displayMode,
     output: 'mathml',
-  })}</p>`
+  })}</span>`
 }
 
 const renderHtml = (html: string) => {
   const markdownContent = md.render(html)
+
+  /* 
+  let convertedHtml = markdownContent.replace(
+    /<code>([\s\S]*?)<\/code>/g,
+    (match, code) => {
+      // Check if <code> contains LaTeX (basic detection)
+      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
+        return `<code>${renderMath(code, false)}</code>` // Convert if it's likely LaTeX
+      }
+      return match // Keep original if it's normal code
+    }
+  ) */
+
   const regEx = markdownContent
     .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
     .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
-
+    .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
+    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
+      // Check if <code> contains LaTeX (basic detection)
+      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
+        return renderMath(code, true) // Convert if it's likely LaTeX
+      }
+      return match // Keep original if it's normal code
+    })
   return regEx
 }
 

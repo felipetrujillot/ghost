@@ -230,8 +230,6 @@ export const chatTrpc = {
        * @param onSuccess
        */
       async function* streamGenerateContent(onSuccess: Function) {
-        console.log(contents)
-
         const streamingResult = await generativeModel.generateContentStream({
           contents: contents,
         })

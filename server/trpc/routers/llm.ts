@@ -64,7 +64,10 @@ $$
 ...
 $$
 
-<example>
+IMPORTANT: Give the answer in Spanish.
+
+
+Output Example:
 The quadratic formula is $$x = (-b + sqrt(b^2 - 4ac))/(2a)$$.
 
 Let's solve a specific quadratic equation:
@@ -80,10 +83,8 @@ x = (5 + sqrt(25 - 24))/2 = (5 + 1)/2
 $$
 
 Therefore, the solutions are $$x = 3$$ and $$x = 2$$.
-</example>
 
 
-IMPORTANT: Give the answer in Spanish.
 
 `
   return prompt
