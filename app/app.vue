@@ -18,6 +18,14 @@ useHead({
 </template>
 
 <style>
+html,
+body,
+#__nuxt,
+#__layout {
+  height: 100% !important;
+  width: 100% !important;
+}
+
 .container-sm {
   width: 100%;
   margin-right: auto;

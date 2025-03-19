@@ -16,10 +16,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <div
-      class="grid w-full md:grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen"
-    >
+  <div class="h-full">
+    <div class="grid w-full md:grid-cols-1 lg:grid-cols-[250px_1fr] min-h-full">
       <div class="hidden lg:block">
         <div class="flex flex-col gap-2" style="width: 250px">
           <div
@@ -28,10 +26,10 @@ onMounted(async () => {
           >
             <nav class="grid items-start text-sm font-medium">
               <!--   <h1
-                class="duration-200 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0"
-              >
-                Menús
-              </h1> -->
+                  class="duration-200 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0"
+                >
+                  Menús
+                </h1> -->
               <div class="border-b border-t h-14 px-4">
                 <div class="flex justify-between items-center h-full">
                   <CommandModal />
@@ -52,7 +50,7 @@ onMounted(async () => {
               </div>
 
               <div
-                class="py-4 overflow-y-auto max-h-screen"
+                class="py-4 overflow-y-auto max-h-full"
                 v-if="route.name === 'notas' || route.name === 'notas-id_note'"
               >
                 <div class="flex flex-col">
@@ -76,7 +74,7 @@ onMounted(async () => {
               </div>
 
               <div
-                class="overflow-y-auto max-h-screen"
+                class="overflow-y-auto max-h-full"
                 v-if="route.path === '/chat'"
               >
                 <div class="flex flex-col">
@@ -89,22 +87,22 @@ onMounted(async () => {
                     />
 
                     <!--    <NuxtLink
-                      class="px-2 lg:px-4 py-2"
-                      :to="`/chat?id=${item.uuid}`"
-                      :class="
-                        route.query.id === item.uuid
-                          ? 'text-white bg-secondary'
-                          : 'text-muted-foreground'
-                      "
-                    >
-                      {{ item.titulo }}
-                    </NuxtLink> -->
+                        class="px-2 lg:px-4 py-2"
+                        :to="`/chat?id=${item.uuid}`"
+                        :class="
+                          route.query.id === item.uuid
+                            ? 'text-white bg-secondary'
+                            : 'text-muted-foreground'
+                        "
+                      >
+                        {{ item.titulo }}
+                      </NuxtLink> -->
                   </template>
                 </div>
               </div>
 
               <div
-                class="pb-4 overflow-y-auto max-h-screen"
+                class="pb-4 overflow-y-auto max-h-full"
                 v-if="
                   route.name === 'tareas' || route.name === 'tareas-id_proyecto'
                 "
