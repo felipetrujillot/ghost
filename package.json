@@ -27,6 +27,7 @@
     "@trpc/client": "^11.0.0-rc.741",
     "@trpc/server": "^11.0.0-rc.741",
     "@types/uuid": "^10.0.0",
+    "@vscode/markdown-it-katex": "^1.1.1",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.8.3",
     "bcrypt": "^5.1.1",

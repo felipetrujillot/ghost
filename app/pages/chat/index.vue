@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { LucidePaperclip, LucidePlay, LucideX } from 'lucide-vue-next'
 import markdownit from 'markdown-it'
-import katex from 'katex'
+//import katex from 'katex'
+import mk from '@vscode/markdown-it-katex'
 
 definePageMeta({
   layout: 'user-layout',
@@ -262,30 +263,20 @@ const uploadFile = async (files: File[]) => {
   url_imagen.value = fileUrl
 }
 
-const renderMath = (math: any, displayMode: any) => {
+/* const renderMath = (math: any, displayMode: any) => {
   return `<span  white-space: pre;>${katex.renderToString(math, {
     throwOnError: false,
     displayMode,
-    output: 'mathml',
+    output: 'htmlAndMathml',
   })}</span>`
 }
+ */
 
 const renderHtml = (html: string) => {
-  const markdownContent = md.render(html)
+  const markdownContent = md.use(mk).render(html)
 
-  /* 
-  let convertedHtml = markdownContent.replace(
-    /<code>([\s\S]*?)<\/code>/g,
-    (match, code) => {
-      // Check if <code> contains LaTeX (basic detection)
-      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
-        return `<code>${renderMath(code, false)}</code>` // Convert if it's likely LaTeX
-      }
-      return match // Keep original if it's normal code
-    }
-  ) */
-
-  const regEx = markdownContent
+  return markdownContent
+  /*  const regEx = markdownContent
     .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
     .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
     .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
@@ -296,7 +287,7 @@ const renderHtml = (html: string) => {
       }
       return match // Keep original if it's normal code
     })
-  return regEx
+  return regEx */
 }
 
 const show = useShowModal()
