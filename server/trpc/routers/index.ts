@@ -5,6 +5,7 @@ import type { inferRouterOutputs } from '@trpc/server'
 import { usuariosTrpc } from './usuarios'
 import { chatTrpc } from './chat'
 import { markdownTrpc } from './markdown'
+import { gastosTrpc } from './gastos'
 /**
  *
  */
@@ -18,6 +19,8 @@ export const appRouter = router({
   chat: chatTrpc,
 
   markdown: markdownTrpc,
+
+  gastos: gastosTrpc,
 })
 
 // export type definition of API

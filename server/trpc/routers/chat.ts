@@ -7,8 +7,41 @@ import { systemPrompt, systemPromptTxt, vertexModel } from './llm'
 import { v4 as uuid } from 'uuid'
 import { RouterOutput } from '.'
 import { Part } from '@google-cloud/vertexai'
+import { octetInputParser } from '@trpc/server/http'
 
 export const chatTrpc = {
+  /**
+   *
+   */
+
+  experimentalPrompt: protectedProcedure
+    .input(z.instanceof(FormData))
+    .mutation(async function* ({ input, ctx }) {
+      const object = {} as Record<string, unknown>
+      for (const [key, value] of input.entries()) {
+        if (value instanceof File) {
+          object[key] = {
+            name: value.name,
+            type: value.type,
+            size: value.size,
+            text: await value.text(),
+          }
+        } else {
+          object[key] = value
+        }
+      }
+
+      console.log(object)
+      async function* streamGenerateContent() {
+        yield 'Subiendo documentos'
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        yield 'Procesando'
+      }
+
+      yield* streamGenerateContent()
+    }),
+
   /**
    *
    */

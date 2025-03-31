@@ -74,7 +74,7 @@ const chatAI = ref<ChatAI[]>(DEFAULT_CHAT)
                       <NuxtLink to="/notas">notas</NuxtLink>
                     </li>
                     <li>
-                      <NuxtLink to="/notas">gastos</NuxtLink>
+                      <NuxtLink to="/gastos">gastos</NuxtLink>
                     </li>
                   </ul>
                 </div>

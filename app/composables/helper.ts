@@ -57,6 +57,19 @@ export const setDefaultDate = (day: number, month: number, year: number) => {
   return date
 }
 
+export const getStringDate = () => {
+  const date = new Date()
+
+  const formattedDate = date.toLocaleString('es-CL', {
+    timeZone: 'America/Santiago',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+  const [day, month, year] = formattedDate.split('-')
+
+  return [day, month, year]
+}
 /**
  *
  * @returns

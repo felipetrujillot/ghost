@@ -130,5 +130,18 @@ export const passwords_reset = mySchema.table('passwords_reset', {
   updated_at: timestamp('updated_at'),
 })
 
+export const gastos = mySchema.table('gastos', {
+  id_gasto: int('id_gasto').primaryKey().autoincrement(),
+  id_usuario: int('id_usuario').notNull(),
+  id_empresa: int('id_empresa').notNull(),
+  cantidad: int('cantidad').notNull(),
+  categoria: varchar('categoria', { length: 250 }).notNull(),
+  comentario: varchar('comentario', { length: 250 }).notNull(),
+  fecha: varchar('fecha', { length: 250 }).notNull(),
+  activo: int('activo').default(1).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
+
 export type Usuarios = typeof usuarios.$inferSelect
 export type PasswordsReset = typeof passwords_reset.$inferSelect

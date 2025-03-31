@@ -1,5 +1,4 @@
 import {
-  FunctionDeclarationSchemaType,
   HarmBlockThreshold,
   HarmCategory,
   VertexAI,
@@ -7,7 +6,9 @@ import {
 
 const project = 'linebox-412716'
 const location = 'us-central1'
-const textModel = 'gemini-2.0-flash-lite-preview-02-05'
+const textModel = 'gemini-2.0-flash'
+
+//const textModel = 'gemini-2.0-flash-exp'
 
 const vertexAI = new VertexAI({
   project: project,
@@ -29,6 +30,7 @@ export function vertexModel(sysPrompt: string) {
         threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
       },
     ],
+
     generationConfig: { maxOutputTokens: 8000 },
     systemInstruction: {
       role: 'system',
