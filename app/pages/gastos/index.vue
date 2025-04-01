@@ -10,6 +10,8 @@ definePageMeta({
 
 const { $trpc } = useNuxtApp()
 const [day, month, year] = getStringDate()
+
+const { data: gastos, status, refresh } = $trpc.gastos.getGastos.useQuery()
 /**
  *
  */
@@ -61,6 +63,7 @@ const addGasto = async () => {
     fecha: formatedDate,
   })
 
+  refresh()
   resetForm()
 
   toast('ok', 'Se agregó el gasto')
@@ -133,6 +136,44 @@ const addGasto = async () => {
         <div class="text-end">
           <Button @click.prevent="addGasto">Agregar gasto</Button>
         </div>
+      </div>
+
+      <div class="px-4 h-14 border-t">
+        <div class="flex h-full items-center">
+          <h1 class="text-lg">Historial</h1>
+        </div>
+        <VueSkeleton v-if="status === 'pending'" />
+
+        <template v-if="status === 'success'">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead class="text-white"> Monto </TableHead>
+                <TableHead class="text-white"> Categoría </TableHead>
+                <TableHead class="text-white"> Fecha </TableHead>
+                <TableHead class="text-white"> Comentario </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="g in gastos" :key="g.id_gasto">
+                <TableCell>
+                  {{ clpFormat(g.cantidad) }}
+                </TableCell>
+
+                <TableCell>
+                  {{ g.categoria }}
+                </TableCell>
+
+                <TableCell>
+                  {{ g.fecha }}
+                </TableCell>
+                <TableCell>
+                  {{ g.comentario }}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </template>
       </div>
     </div>
   </div>

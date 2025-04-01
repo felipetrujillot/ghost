@@ -10,10 +10,7 @@ const props = defineProps<{
 <template>
   <td
     :class="
-      cn(
-        'p-4 align-middle [&:has([role=checkbox])]:pr-0',
-        props.class,
-      )
+      cn('p-4 align-middle [&:has([role=checkbox])]:pr-0 border', props.class)
     "
   >
     <slot />
