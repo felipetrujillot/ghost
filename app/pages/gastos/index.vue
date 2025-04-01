@@ -70,110 +70,112 @@ const addGasto = async () => {
 }
 </script>
 <template>
-  <div class="max-w-3xl mx-auto border-x min-h-full">
-    <div class="h-screen flex flex-col h-full">
-      <div class="px-4 h-14 border-b">
-        <div class="flex h-full items-center">
-          <h1 class="text-lg">Pendientes</h1>
-        </div>
-      </div>
-
-      <div class="space-y-4 py-4 px-4">
-        <div class="space-y-1">
-          <NumberField
-            v-model="formGasto.cantidad"
-            id="monto"
-            :default-value="18"
-            :min="0"
-            locale="es-CL"
-            :format-options="{
-              minimumFractionDigits: 0,
-            }"
-          >
-            <Label for="monto">Monto</Label>
-            <NumberFieldContent>
-              <FocusScope>
-                <NumberFieldInput class="text-start px-4" />
-              </FocusScope>
-            </NumberFieldContent>
-          </NumberField>
-        </div>
-
-        <div class="space-y-1">
-          <Label> Categoría </Label>
-
-          <Select v-model="formGasto.categoria">
-            <SelectTrigger>
-              <SelectValue placeholder="Selecciona categoría" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Categorías</SelectLabel>
-                <SelectItem v-for="c in categorias" :value="c">
-                  {{ c }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div class="space-y-1">
-          <Label> Fecha </Label>
-          <div>
-            <DatePicker v-model="formGasto.fecha" />
+  <div class="w-full overflow-y-scroll">
+    <div class="max-w-3xl mx-auto border-x min-h-full">
+      <div class="h-screen flex flex-col h-full">
+        <div class="px-4 h-14 border-b">
+          <div class="flex h-full items-center">
+            <h1 class="text-lg">Pendientes</h1>
           </div>
         </div>
 
-        <div class="space-y-1">
-          <Label> Comentario </Label>
+        <div class="space-y-4 py-4 px-4">
+          <div class="space-y-1">
+            <NumberField
+              v-model="formGasto.cantidad"
+              id="monto"
+              :default-value="18"
+              :min="0"
+              locale="es-CL"
+              :format-options="{
+                minimumFractionDigits: 0,
+              }"
+            >
+              <Label for="monto">Monto</Label>
+              <NumberFieldContent>
+                <FocusScope>
+                  <NumberFieldInput class="text-start px-4" />
+                </FocusScope>
+              </NumberFieldContent>
+            </NumberField>
+          </div>
 
-          <Input
-            placeholder="Añade un comentario"
-            v-model="formGasto.comentario"
-          />
+          <div class="space-y-1">
+            <Label> Categoría </Label>
+
+            <Select v-model="formGasto.categoria">
+              <SelectTrigger>
+                <SelectValue placeholder="Selecciona categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categorías</SelectLabel>
+                  <SelectItem v-for="c in categorias" :value="c">
+                    {{ c }}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div class="space-y-1">
+            <Label> Fecha </Label>
+            <div>
+              <DatePicker v-model="formGasto.fecha" />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <Label> Comentario </Label>
+
+            <Input
+              placeholder="Añade un comentario"
+              v-model="formGasto.comentario"
+            />
+          </div>
+
+          <div class="text-end">
+            <Button @click.prevent="addGasto">Agregar gasto</Button>
+          </div>
         </div>
 
-        <div class="text-end">
-          <Button @click.prevent="addGasto">Agregar gasto</Button>
+        <div class="px-4 h-14 border-t">
+          <div class="flex h-full items-center">
+            <h1 class="text-lg">Historial</h1>
+          </div>
+          <VueSkeleton v-if="status === 'pending'" />
+
+          <template v-if="status === 'success'">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead class="text-white"> Monto </TableHead>
+                  <TableHead class="text-white"> Categoría </TableHead>
+                  <TableHead class="text-white"> Fecha </TableHead>
+                  <TableHead class="text-white"> Comentario </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow v-for="g in gastos" :key="g.id_gasto">
+                  <TableCell>
+                    {{ clpFormat(g.cantidad) }}
+                  </TableCell>
+
+                  <TableCell>
+                    {{ g.categoria }}
+                  </TableCell>
+
+                  <TableCell>
+                    {{ g.fecha }}
+                  </TableCell>
+                  <TableCell>
+                    {{ g.comentario }}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </template>
         </div>
-      </div>
-
-      <div class="px-4 h-14 border-t">
-        <div class="flex h-full items-center">
-          <h1 class="text-lg">Historial</h1>
-        </div>
-        <VueSkeleton v-if="status === 'pending'" />
-
-        <template v-if="status === 'success'">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead class="text-white"> Monto </TableHead>
-                <TableHead class="text-white"> Categoría </TableHead>
-                <TableHead class="text-white"> Fecha </TableHead>
-                <TableHead class="text-white"> Comentario </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow v-for="g in gastos" :key="g.id_gasto">
-                <TableCell>
-                  {{ clpFormat(g.cantidad) }}
-                </TableCell>
-
-                <TableCell>
-                  {{ g.categoria }}
-                </TableCell>
-
-                <TableCell>
-                  {{ g.fecha }}
-                </TableCell>
-                <TableCell>
-                  {{ g.comentario }}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </template>
       </div>
     </div>
   </div>
