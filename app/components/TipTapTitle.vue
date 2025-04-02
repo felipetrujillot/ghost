@@ -141,9 +141,12 @@ const filesDropHeader = async (files: File[]) => {
         </div>
 
         <div class="flex flex-wrap flex-row-reverse gap-2">
+          <!-- 
+            
           <Button variant="outline" @click.prevent="openInput">
             <LucideImage :size="20" />
           </Button>
+            -->
         </div>
       </div>
 
