@@ -60,7 +60,7 @@ onUnmounted(() => {
       class="hidden"
       @change="changeFile"
     />
-    <div @drop.prevent="onDrop" @click.prevent="openInput">
+    <div @drop.prevent="onDrop">
       <slot />
     </div>
   </div>
