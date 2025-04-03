@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { LucidePaperclip, LucidePlay, LucideX } from 'lucide-vue-next'
+import {
+  LucideFileText,
+  LucidePaperclip,
+  LucidePlay,
+  LucideX,
+} from 'lucide-vue-next'
 import markdownit from 'markdown-it'
 //import katex from 'katex'
 import mk from '@vscode/markdown-it-katex'
@@ -22,7 +27,7 @@ const route = useRoute()
 
 const chatLLM = ref('')
 const url_imagen = ref('')
-
+const url_pdf = ref('')
 const status = ref<'idle' | 'pending' | 'generating'>('idle')
 
 const textoMd = `
@@ -32,7 +37,7 @@ built with nuxt.
 `
 type ChatAI = {
   origen: 'llm' | 'user'
-  tipo: 'imagen' | 'texto'
+  tipo: 'imagen' | 'texto' | 'pdf'
   chat: string
 }
 
@@ -60,10 +65,12 @@ const nuevoMensaje = async () => {
   let requestId = ''
 
   const hasImage = url_imagen.value
+  const hasPdf = url_pdf.value
   const chatPersistent = inputChat.value
 
   inputChat.value = ''
   url_imagen.value = ''
+  url_pdf.value = ''
 
   if (route.query.id) {
     if (hasImage) {
@@ -76,6 +83,17 @@ const nuevoMensaje = async () => {
         origen: 'user',
         tipo: 'imagen',
         chat: hasImage,
+      })
+    } else if (hasPdf) {
+      chatAI.value.push({
+        origen: 'user',
+        tipo: 'texto',
+        chat: chatPersistent,
+      })
+      chatAI.value.push({
+        origen: 'user',
+        tipo: 'pdf',
+        chat: hasPdf,
       })
     } else {
       chatAI.value.push({
@@ -111,6 +129,23 @@ const nuevoMensaje = async () => {
         },
       ]
     }
+
+    if (hasPdf) {
+      chatAI.value = [
+        {
+          origen: 'user',
+          tipo: 'texto',
+
+          chat: chatPersistent,
+        },
+        {
+          origen: 'user',
+          tipo: 'pdf',
+
+          chat: hasPdf,
+        },
+      ]
+    }
   }
 
   await nextTick()
@@ -128,6 +163,7 @@ const nuevoMensaje = async () => {
     prompt: chatPersistent,
     requestId: requestId,
     url_imagen: hasImage,
+    url_pdf: hasPdf,
   })
 
   status.value = 'generating'
@@ -214,7 +250,7 @@ const getRequestId = async (idRequest: string) => {
     return {
       origen: r.origen as 'user' | 'llm',
       chat: r.chat,
-      tipo: r.tipo as 'texto' | 'imagen',
+      tipo: r.tipo as 'texto' | 'imagen' | 'pdf',
     }
   })
 
@@ -251,8 +287,13 @@ const uploadFile = async (files: File[]) => {
 
   const format = formatArray[formatArray.length - 1]
 
-  if (format !== 'jpg' && format !== 'jpeg' && format !== 'png') {
-    return toast('warning', 'El formato debe ser .jpg o .png')
+  if (
+    format !== 'jpg' &&
+    format !== 'jpeg' &&
+    format !== 'png' &&
+    format !== 'pdf'
+  ) {
+    return toast('warning', 'El formato debe ser .jpg, .png o .pdf')
   }
   if (!file) {
     return toast('warning', 'No se pudo subir el documento')
@@ -260,7 +301,11 @@ const uploadFile = async (files: File[]) => {
 
   const fileUrl = await uploadFileGcp(file)
 
-  url_imagen.value = fileUrl
+  if (format === 'pdf') {
+    url_pdf.value = fileUrl
+  } else {
+    url_imagen.value = fileUrl
+  }
 }
 
 /* const renderMath = (math: any, displayMode: any) => {
@@ -276,18 +321,6 @@ const renderHtml = (html: string) => {
   const markdownContent = md.use(mk).render(html)
 
   return markdownContent
-  /*  const regEx = markdownContent
-    .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
-    .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
-    .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
-    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
-      // Check if <code> contains LaTeX (basic detection)
-      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
-        return renderMath(code, true) // Convert if it's likely LaTeX
-      }
-      return match // Keep original if it's normal code
-    })
-  return regEx */
 }
 
 const show = useShowModal()
@@ -342,6 +375,13 @@ const handleOpenChange = () => {
                         style="max-height: 8vh; object-fit: contain"
                       />
                     </div>
+
+                    <div
+                      v-if="c.tipo === 'pdf'"
+                      class="prose prose-md dark:prose-invert"
+                    >
+                      <a :href="c.chat" target="_blank"> Ver pdf </a>
+                    </div>
                   </div>
                 </template>
 
@@ -370,6 +410,17 @@ const handleOpenChange = () => {
               />
             </div>
 
+            <div class="basis-1/5" v-if="url_pdf.length > 0">
+              <!--     <img
+                style="object-fit: contain"
+                :src="url_imagen"
+                class="w-full min-h-24 max-h-24"
+              /> -->
+              <div class="w-full flex min-h-24 justify-center items-center">
+                <LucideFileText class="h-10 w-10" />
+              </div>
+            </div>
+
             <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
               <textarea
                 @keydown.enter.prevent="handleEnter"
@@ -383,7 +434,7 @@ const handleOpenChange = () => {
           </div>
 
           <div class="flex justify-between">
-            <Dropzone
+            <DropzoneClick
               @files-dropped="uploadFile"
               v-if="url_imagen.length === 0"
             >
@@ -392,7 +443,7 @@ const handleOpenChange = () => {
                   class="cursor-pointer text-primary-foreground"
                 />
               </div>
-            </Dropzone>
+            </DropzoneClick>
 
             <div
               class="bg-secondary p-2"

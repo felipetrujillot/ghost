@@ -127,10 +127,11 @@ export const chatTrpc = {
         prompt: z.string(),
         requestId: z.string(),
         url_imagen: z.string(),
+        url_pdf: z.string(),
       })
     )
     .mutation(async function* ({ input, ctx }) {
-      const { prompt, requestId, url_imagen } = input
+      const { prompt, requestId, url_imagen, url_pdf } = input
       const { id_empresa, id_usuario } = ctx.user!
 
       const sys_prompt = systemPromptTxt()
@@ -182,6 +183,15 @@ export const chatTrpc = {
           fileData: {
             fileUri: url_imagen,
             mimeType: 'image/jpeg',
+          },
+        })
+      }
+
+      if (url_pdf.length > 0) {
+        newPromptArr.parts.push({
+          fileData: {
+            fileUri: url_pdf,
+            mimeType: 'application/pdf',
           },
         })
       }
