@@ -317,10 +317,10 @@ const handleOpenChange = () => {
               <ClientOnly>
                 <template v-for="(c, k) in chatAI" :key="k">
                   <div v-if="c.origen === 'llm'" class="px-4">
-                    <p
+                    <div
                       class="prose prose-md dark:prose-invert"
                       v-html="renderHtml(c.chat)"
-                    ></p>
+                    ></div>
                   </div>
 
                   <div
