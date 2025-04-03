@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   LucideArrowUp,
+  LucideEllipsis,
   LucideFileText,
   LucidePaperclip,
   LucidePlay,
@@ -319,6 +320,7 @@ const show = useShowModal()
 const handleOpenChange = () => {
   show.value = !show.value
 }
+const showPopover = ref(false)
 </script>
 <template>
   <div class="relative flex-1 w-full min-h-full justify-between">
@@ -420,40 +422,63 @@ const handleOpenChange = () => {
             </div>
           </div>
 
-          <div class="flex justify-end border-x h-12">
-            <DropzoneClick
-              @files-dropped="uploadFile"
-              v-if="url_imagen.length === 0 && url_pdf.length === 0"
-            >
-              <div class="border-x cursor-pointer p-4">
-                <LucidePaperclip
+          <div class="flex justify-between border-x h-12">
+            <div>
+              <Popover v-model:open="showPopover">
+                <PopoverTrigger as-child>
+                  <div class="border-x p-4 cursor-pointer">
+                    <LucideEllipsis
+                      class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+                    />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent class="w-[180px] p-0">
+                  <Command>
+                    <CommandGroup>
+                      <CommandItem disabled value="Nueva tarea">
+                        Default Prompt
+                      </CommandItem>
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div class="flex">
+              <DropzoneClick
+                @files-dropped="uploadFile"
+                v-if="url_imagen.length === 0 && url_pdf.length === 0"
+              >
+                <div class="border-x cursor-pointer p-4">
+                  <LucidePaperclip
+                    class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+                  />
+                </div>
+              </DropzoneClick>
+
+              <div
+                class="border-x cursor-pointer p-4"
+                v-if="url_imagen.length > 0 || url_pdf.length > 0"
+                @click.prevent="
+                  () => {
+                    url_imagen = ''
+                    url_pdf = ''
+                  }
+                "
+              >
+                <LucideX
                   class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
                 />
               </div>
-            </DropzoneClick>
 
-            <div
-              class="border-x cursor-pointer p-4"
-              v-if="url_imagen.length > 0 || url_pdf.length > 0"
-              @click.prevent="
-                () => {
-                  url_imagen = ''
-                  url_pdf = ''
-                }
-              "
-            >
-              <LucideX
-                class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
-              />
-            </div>
-
-            <div
-              class="bg-secondary border-x p-4 cursor-pointer"
-              @click.prevent="nuevoMensaje"
-            >
-              <LucideArrowUp
-                class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
-              />
+              <div
+                class="bg-secondary border-x p-4 cursor-pointer"
+                @click.prevent="nuevoMensaje"
+              >
+                <LucideArrowUp
+                  class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+                />
+              </div>
             </div>
           </div>
         </div>
