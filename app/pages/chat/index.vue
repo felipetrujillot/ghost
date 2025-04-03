@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  LucideArrowUp,
   LucideFileText,
   LucidePaperclip,
   LucidePlay,
@@ -308,15 +309,6 @@ const uploadFile = async (files: File[]) => {
   }
 }
 
-/* const renderMath = (math: any, displayMode: any) => {
-  return `<span  white-space: pre;>${katex.renderToString(math, {
-    throwOnError: false,
-    displayMode,
-    output: 'htmlAndMathml',
-  })}</span>`
-}
- */
-
 const renderHtml = (html: string) => {
   const markdownContent = md.use(mk).render(html)
 
@@ -411,11 +403,6 @@ const handleOpenChange = () => {
             </div>
 
             <div class="basis-1/5" v-if="url_pdf.length > 0">
-              <!--     <img
-                style="object-fit: contain"
-                :src="url_imagen"
-                class="w-full min-h-24 max-h-24"
-              /> -->
               <div class="w-full flex min-h-24 justify-center items-center">
                 <LucideFileText class="h-10 w-10" />
               </div>
@@ -433,28 +420,40 @@ const handleOpenChange = () => {
             </div>
           </div>
 
-          <div class="flex justify-between">
+          <div class="flex justify-end border-x h-12">
             <DropzoneClick
               @files-dropped="uploadFile"
-              v-if="url_imagen.length === 0"
+              v-if="url_imagen.length === 0 && url_pdf.length === 0"
             >
-              <div class="bg-secondary p-2">
+              <div class="border-x cursor-pointer p-4">
                 <LucidePaperclip
-                  class="cursor-pointer text-primary-foreground"
+                  class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
                 />
               </div>
             </DropzoneClick>
 
             <div
-              class="bg-secondary p-2"
-              v-if="url_imagen.length > 0"
-              @click.prevent="url_imagen = ''"
+              class="border-x cursor-pointer p-4"
+              v-if="url_imagen.length > 0 || url_pdf.length > 0"
+              @click.prevent="
+                () => {
+                  url_imagen = ''
+                  url_pdf = ''
+                }
+              "
             >
-              <LucideX class="cursor-pointer text-primary-foreground" />
+              <LucideX
+                class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+              />
             </div>
 
-            <div class="bg-secondary p-2" @click.prevent="nuevoMensaje">
-              <LucidePlay class="text-primary-foreground cursor-pointer" />
+            <div
+              class="bg-secondary border-x p-4 cursor-pointer"
+              @click.prevent="nuevoMensaje"
+            >
+              <LucideArrowUp
+                class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+              />
             </div>
           </div>
         </div>
