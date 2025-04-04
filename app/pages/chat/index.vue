@@ -340,15 +340,18 @@ const showModalConfig = ref(false)
           </kbd>
         </p>
       </div>
-      <div class="flex-[5]" ref="chatContainer">
+      <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
           <div class="border-x border-1 min-h-full border-t">
             <div class="space-y-4 pb-4 py-4">
               <ClientOnly>
                 <template v-for="(c, k) in chatAI" :key="k">
-                  <div v-if="c.origen === 'llm'" class="px-4">
+                  <div
+                    v-if="c.origen === 'llm'"
+                    class="px-4 w-full max-w-full overflow-x-auto"
+                  >
                     <div
-                      class="prose prose-md dark:prose-invert"
+                      class="prose prose-md dark:prose-invert w-full !max-w-none break-words !break-words"
                       v-html="renderHtml(c.chat)"
                     ></div>
                   </div>
