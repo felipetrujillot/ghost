@@ -6,7 +6,7 @@ import {
 
 const project = 'linebox-412716'
 const location = 'us-central1'
-const textModel = 'gemini-2.0-flash'
+const textModel = 'gemini-2.5-pro-exp-03-25'
 
 //const textModel = 'gemini-2.0-flash-exp'
 
@@ -18,10 +18,16 @@ const vertexAI = new VertexAI({
   },
 })
 
-export function vertexModel(sysPrompt: string) {
+export function vertexModel({
+  system_prompt,
+  llm_model,
+}: {
+  system_prompt: string
+  llm_model: string
+}) {
   // Instantiate Gemini models
   const generativeModel = vertexAI.getGenerativeModel({
-    model: textModel,
+    model: llm_model,
     // The following parameters are optional
     // They can also be passed to individual content generation requests
     safetySettings: [
@@ -37,7 +43,7 @@ export function vertexModel(sysPrompt: string) {
       parts: [
         {
           text: `
-                ${sysPrompt}`,
+                ${system_prompt}`,
         },
       ],
     },
@@ -89,7 +95,6 @@ x = (5 + sqrt(25 - 24))/2 = (5 + 1)/2
 $$
 
 Therefore, the solutions are $$x = 3$$ and $$x = 2$$.
-
 
 
 `

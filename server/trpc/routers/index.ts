@@ -6,6 +6,8 @@ import { usuariosTrpc } from './usuarios'
 import { chatTrpc } from './chat'
 import { markdownTrpc } from './markdown'
 import { gastosTrpc } from './gastos'
+import { modelsTrpc } from './models'
+import { systemPromptsTrpc } from './system_prompt'
 /**
  *
  */
@@ -21,6 +23,10 @@ export const appRouter = router({
   markdown: markdownTrpc,
 
   gastos: gastosTrpc,
+
+  models: modelsTrpc,
+
+  system_prompt: systemPromptsTrpc,
 })
 
 // export type definition of API

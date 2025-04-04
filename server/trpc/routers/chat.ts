@@ -1,7 +1,13 @@
 import { protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { db } from '~~/server/db/db'
-import { chat, chat_sessions } from '~~/server/db/db_schema'
+import {
+  chat,
+  chat_sessions,
+  models,
+  system_prompts,
+  usuarios,
+} from '~~/server/db/db_schema'
 import { and, desc, eq } from 'drizzle-orm'
 import { systemPrompt, systemPromptTxt, vertexModel } from './llm'
 import { v4 as uuid } from 'uuid'
@@ -134,8 +140,25 @@ export const chatTrpc = {
       const { prompt, requestId, url_imagen, url_pdf } = input
       const { id_empresa, id_usuario } = ctx.user!
 
+      const [myModel] = await db
+        .select({
+          id_model: usuarios.id_model,
+          id_system_prompt: usuarios.id_system_prompt,
+          system_prompt: system_prompts.system_prompt,
+          llm_model: models.llm_model,
+        })
+        .from(usuarios)
+        .innerJoin(models, eq(models.id_model, usuarios.id_model))
+        .innerJoin(
+          system_prompts,
+          eq(system_prompts.id_system_prompt, usuarios.id_system_prompt)
+        )
+        .where(eq(usuarios.id_usuario, id_usuario))
+
+      const { system_prompt, llm_model } = myModel
+
       const sys_prompt = systemPromptTxt()
-      const generativeModel = vertexModel(sys_prompt)
+      const generativeModel = vertexModel({ system_prompt, llm_model })
 
       const contents: {
         role: string
@@ -232,9 +255,10 @@ export const chatTrpc = {
         await db.insert(chat).values(insertParams)
 
         if (findChatSession[0].titulo.length === 0) {
-          const generativeModelSummary = vertexModel(
-            `You are an expert on summarize the user input in maximun 4 words`
-          )
+          const generativeModelSummary = vertexModel({
+            system_prompt: `You are an expert on summarize the user input in maximun 4 words`,
+            llm_model: 'gemini-2.0-flash',
+          })
 
           const streamingResult =
             await generativeModelSummary.generateContentStream({

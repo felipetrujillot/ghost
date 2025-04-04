@@ -13,6 +13,45 @@ import { rejects } from 'assert'
  *
  */
 export const usuariosTrpc = router({
+  getUserConfigs: protectedProcedure.query(async ({ ctx }) => {
+    const [myModel] = await db
+      .select({
+        id_model: usuarios.id_model,
+        id_system_prompt: usuarios.id_system_prompt,
+      })
+      .from(usuarios)
+      .where(eq(usuarios.id_usuario, ctx.user!.id_usuario))
+
+    return myModel
+  }),
+
+  /**
+   *
+   *
+   *
+   */
+  updateUserConfigs: protectedProcedure
+    .input(
+      z.object({
+        id_model: z.number(),
+        id_system_prompt: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id_model, id_system_prompt } = input
+      await db
+        .update(usuarios)
+        .set({
+          id_model: id_model,
+          id_system_prompt: id_system_prompt,
+        })
+        .where(eq(usuarios.id_usuario, ctx.user!.id_usuario))
+
+      return {
+        status: 'ok' as const,
+        data: 'Se actualizó correctamente',
+      }
+    }),
   /**
    * Busca un proyecto según
    * @param email

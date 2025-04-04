@@ -10,6 +10,7 @@ import {
 import markdownit from 'markdown-it'
 //import katex from 'katex'
 import mk from '@vscode/markdown-it-katex'
+import ModalConfigs from './_components/ModalConfigs.vue'
 
 definePageMeta({
   layout: 'user-layout',
@@ -321,8 +322,10 @@ const handleOpenChange = () => {
   show.value = !show.value
 }
 const showPopover = ref(false)
+const showModalConfig = ref(false)
 </script>
 <template>
+  <ModalConfigs v-if="showModalConfig" @closeModal="showModalConfig = false" />
   <div class="relative flex-1 w-full min-h-full justify-between">
     <div class="h-screen flex flex-col h-full">
       <div class="block md:hidden lg:hidden">
@@ -337,7 +340,7 @@ const showPopover = ref(false)
           </kbd>
         </p>
       </div>
-      <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
+      <div class="flex-[5]" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
           <div class="border-x border-1 min-h-full border-t">
             <div class="space-y-4 pb-4 py-4">
@@ -435,8 +438,11 @@ const showPopover = ref(false)
                 <PopoverContent class="w-[180px] p-0">
                   <Command>
                     <CommandGroup>
-                      <CommandItem disabled value="Nueva tarea">
-                        Default Prompt
+                      <CommandItem
+                        value="Configuraciones"
+                        @click.prevent="showModalConfig = true"
+                      >
+                        Configuraciones
                       </CommandItem>
                     </CommandGroup>
                   </Command>

@@ -16,7 +16,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen overflow-hidden">
+  <div class="min-h-screen">
     <div
       class="grid w-full md:grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen"
     >

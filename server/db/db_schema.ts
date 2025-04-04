@@ -24,6 +24,8 @@ export const usuarios = mySchema.table('usuarios', {
   email: varchar('email', { length: 255 }).notNull(),
   password: varchar('password', { length: 255 }).notNull(),
   role: int('role').notNull(),
+  id_model: int('id_model').notNull(),
+  id_system_prompt: int('id_system_prompt').notNull(),
   activo: int('activo').notNull().default(1),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at').onUpdateNow(),
@@ -126,6 +128,30 @@ export const passwords_reset = mySchema.table('passwords_reset', {
   token: varchar('token', { length: 250 }).notNull(),
   id_user: int('id_user').notNull(),
   active: int('active').default(1).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
+
+/**
+ *
+ */
+export const models = mySchema.table('models', {
+  id_model: int('id_model').primaryKey().autoincrement(),
+  location: varchar('location', { length: 255 }).notNull(),
+  llm_model: varchar('llm_model', { length: 255 }).notNull(),
+  activo: int('activo').default(1).notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at'),
+})
+
+/**
+ *
+ */
+export const system_prompts = mySchema.table('system_prompts', {
+  id_system_prompt: int('id_system_prompt').primaryKey().autoincrement(),
+  nombre: varchar('nombre', { length: 255 }).notNull(),
+  system_prompt: text('system_prompt').notNull(),
+  activo: int('activo').default(1).notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at'),
 })
