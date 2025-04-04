@@ -197,6 +197,8 @@ const nuevoMensaje = async () => {
 
   chatLLM.value = ''
   url_imagen.value = ''
+
+  setChatSessions()
 }
 
 /**
