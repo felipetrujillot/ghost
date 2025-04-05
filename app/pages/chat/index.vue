@@ -11,6 +11,11 @@ import markdownit from 'markdown-it'
 //import katex from 'katex'
 import mk from '@vscode/markdown-it-katex'
 import ModalConfigs from './_components/ModalConfigs.vue'
+import { marked, Marked } from 'marked'
+import markedCodeFormat from 'marked-code-format'
+import katex from 'katex'
+import prettierPluginVue from 'prettier-plugin-vue'
+import prettierSvelte from 'prettier-plugin-svelte'
 
 definePageMeta({
   layout: 'user-layout',
@@ -313,12 +318,53 @@ const uploadFile = async (files: File[]) => {
   }
 }
 
-const renderHtml = (html: string) => {
-  const markdownContent = md.use(mk).render(html)
-
-  return markdownContent
+const renderMath = (math: any, displayMode: any) => {
+  return `<pre>${katex.renderToString(math, {
+    throwOnError: false,
+    displayMode,
+    output: 'mathml', // Cambia 'mathml' por 'html' o 'htmlAndMathml'
+  })}</pre>`
 }
 
+const prettierPlugins = [prettierPluginVue]
+
+/**
+ *
+ * @param html
+ *
+ *
+ */
+const renderHtml = async (html: string) => {
+  const regEx = html
+    .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
+    .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
+    .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
+    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
+      // Check if <code> contains LaTeX (basic detection)
+      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
+        return renderMath(code, true) // Convert if it's likely LaTeX
+      }
+      return match // Keep original if it's normal code
+    })
+
+  const par = new Marked({ async: true })
+
+  const r = await par
+    .use(
+      markedCodeFormat({
+        plugins: [prettierSvelte],
+      }),
+    )
+    .parse(regEx)
+
+  return r
+}
+
+/*  const mark = marked.parse(latexString)
+  return mark
+  const markdownContent = md.use(mk).render(latexString)
+
+  return markdownContent */
 const show = useShowModal()
 const handleOpenChange = () => {
   show.value = !show.value
@@ -352,10 +398,11 @@ const showModalConfig = ref(false)
                     v-if="c.origen === 'llm'"
                     class="px-4 w-full max-w-full overflow-x-auto"
                   >
-                    <div
+                    <!--   <div
                       class="prose prose-md dark:prose-invert w-full !max-w-none break-words !break-words"
                       v-html="renderHtml(c.chat)"
-                    ></div>
+                    ></div> -->
+                    <AsyncHtml :chat="c.chat" />
                   </div>
 
                   <div
@@ -365,8 +412,9 @@ const showModalConfig = ref(false)
                     <div
                       v-if="c.tipo === 'texto'"
                       class="prose prose-md dark:prose-invert"
-                      v-html="renderHtml(c.chat)"
-                    ></div>
+                    >
+                      {{ c.chat }}
+                    </div>
 
                     <div
                       v-if="c.tipo === 'imagen'"

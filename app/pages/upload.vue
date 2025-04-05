@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { LucideFileImage, LucideXCircle } from 'lucide-vue-next'
-import axios from 'axios'
 /**
  *
  */

@@ -17,9 +17,7 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen overflow-hidden">
-    <div
-      class="grid w-full md:grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen"
-    >
+    <div class="grid w-full grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen">
       <div class="hidden lg:block">
         <div class="flex flex-col gap-2" style="width: 250px">
           <div
@@ -87,18 +85,6 @@ onMounted(async () => {
                       :active="route.query.id === item.uuid.toString()"
                       :text="item.titulo"
                     />
-
-                    <!--    <NuxtLink
-                      class="px-2 lg:px-4 py-2"
-                      :to="`/chat?id=${item.uuid}`"
-                      :class="
-                        route.query.id === item.uuid
-                          ? 'text-white bg-secondary'
-                          : 'text-muted-foreground'
-                      "
-                    >
-                      {{ item.titulo }}
-                    </NuxtLink> -->
                   </template>
                 </div>
               </div>
