@@ -7,27 +7,13 @@ import {
   LucidePlay,
   LucideX,
 } from 'lucide-vue-next'
-import markdownit from 'markdown-it'
-//import katex from 'katex'
-import mk from '@vscode/markdown-it-katex'
 import ModalConfigs from './_components/ModalConfigs.vue'
-import { marked, Marked } from 'marked'
-import markedCodeFormat from 'marked-code-format'
-import katex from 'katex'
-import prettierPluginVue from 'prettier-plugin-vue'
-import prettierSvelte from 'prettier-plugin-svelte'
 
 definePageMeta({
   layout: 'user-layout',
   middleware: 'checkauth',
 })
 documentTitle('chat')
-
-const md = markdownit({
-  html: true,
-  linkify: true,
-  typographer: true,
-})
 
 const { $trpc, $router, $trpc_stream } = useNuxtApp()
 
@@ -318,48 +304,6 @@ const uploadFile = async (files: File[]) => {
   }
 }
 
-const renderMath = (math: any, displayMode: any) => {
-  return `<pre>${katex.renderToString(math, {
-    throwOnError: false,
-    displayMode,
-    output: 'mathml', // Cambia 'mathml' por 'html' o 'htmlAndMathml'
-  })}</pre>`
-}
-
-const prettierPlugins = [prettierPluginVue]
-
-/**
- *
- * @param html
- *
- *
- */
-const renderHtml = async (html: string) => {
-  const regEx = html
-    .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
-    .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
-    .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
-    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
-      // Check if <code> contains LaTeX (basic detection)
-      if (/\\[a-zA-Z]+|\^|_/.test(code)) {
-        return renderMath(code, true) // Convert if it's likely LaTeX
-      }
-      return match // Keep original if it's normal code
-    })
-
-  const par = new Marked({ async: true })
-
-  const r = await par
-    .use(
-      markedCodeFormat({
-        plugins: [prettierSvelte],
-      }),
-    )
-    .parse(regEx)
-
-  return r
-}
-
 /*  const mark = marked.parse(latexString)
   return mark
   const markdownContent = md.use(mk).render(latexString)
@@ -437,10 +381,7 @@ const showModalConfig = ref(false)
 
                 <template v-if="status === 'generating'">
                   <div class="fadeInFast px-4">
-                    <p
-                      class="prose prose-md dark:prose-invert"
-                      v-html="renderHtml(chatLLM)"
-                    ></p>
+                    <AsyncHtml :chat="chatLLM" />
                   </div>
                 </template>
               </ClientOnly>
