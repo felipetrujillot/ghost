@@ -23,7 +23,6 @@ const { Meta_B, Ctrl_B } = useMagicKeys({
 })
 
 const handleSidebar = () => {
-  console.log('here')
   sidebar.value = !sidebar.value
 }
 
