@@ -2,6 +2,7 @@
 import {
   LucideAlignJustify,
   LucideHeart,
+  LucideHome,
   LucideSquare,
   LucideSquarePen,
   Route,
@@ -41,13 +42,19 @@ const selectItem = (to: string) => {
     <SheetContent class="p-0 m-0" side="left" v-model:overlay="overlay">
       <SheetHeader class="p-0 m-0">
         <SheetTitle class="p-0 px-0">
-          <div class="flex w-full justify-end">
-            <Button variant="outline" @click.prevent="selectItem('/chat')">
-              <LucideSquarePen />
+          <div class="flex w-full justify-between">
+            <Button variant="outline" @click.prevent="$router.push('/')">
+              <LucideHome class="w-5 h-5" />
             </Button>
-            <Button variant="outline" @click.prevent="overlay = !overlay">
-              <X class="w-5 h-5" />
-            </Button>
+
+            <div class="flex">
+              <Button variant="outline" @click.prevent="selectItem('/chat')">
+                <LucideSquarePen />
+              </Button>
+              <Button variant="outline" @click.prevent="overlay = !overlay">
+                <X class="w-5 h-5" />
+              </Button>
+            </div>
           </div>
           <p>undefined</p>
         </SheetTitle>
