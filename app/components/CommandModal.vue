@@ -61,7 +61,7 @@ const selectItem = (to: string) => {
     </p>
     <CommandDialog v-model:open="open">
       <div class="p-4">
-        <CommandInput placeholder="Busca un menú..." />
+        <CommandInput :auto-focus="true" placeholder="Busca un menú..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup>

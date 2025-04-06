@@ -9,6 +9,7 @@ import {
 } from 'lucide-vue-next'
 import ModalConfigs from './_components/ModalConfigs.vue'
 import SheetChat from './_components/SheetChat.vue'
+import { FocusScope } from 'reka-ui'
 
 definePageMeta({
   layout: 'user-layout',
@@ -229,7 +230,7 @@ watch(route, async () => {
   await nextTick()
   scrollToBottom()
 
-  textArea.value.focus()
+  //textArea.value.focus()
 })
 
 /**
@@ -271,7 +272,7 @@ onMounted(async () => {
   await nextTick()
   scrollToBottom()
 
-  textArea.value.focus()
+  //textArea.value.focus()
 })
 
 const uploadFile = async (files: File[]) => {
@@ -313,13 +314,14 @@ const uploadFile = async (files: File[]) => {
 
 const showPopover = ref(false)
 const showModalConfig = ref(false)
+const showSheet = ref(false)
 </script>
 <template>
   <ModalConfigs v-if="showModalConfig" @closeModal="showModalConfig = false" />
   <div class="relative flex-1 w-full min-h-full justify-between">
     <div class="h-screen flex flex-col h-full">
       <div class="block md:hidden lg:hidden">
-        <SheetChat />
+        <SheetChat v-model="showSheet" />
       </div>
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
         <div class="max-w-3xl mx-auto h-full">
@@ -397,14 +399,16 @@ const showModalConfig = ref(false)
             </div>
 
             <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
-              <textarea
-                @keydown.enter.prevent="handleEnter"
-                ref="textArea"
-                class="flex min-h-24 max-h-24 w-full rounded-md bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                style="field-sizing: content"
-                placeholder="Escribe un mensaje..."
-                v-model="inputChat"
-              />
+              <FocusScope>
+                <textarea
+                  ref="textArea"
+                  @keydown.enter.prevent="handleEnter"
+                  class="flex min-h-24 max-h-24 w-full rounded-md bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  style="field-sizing: content"
+                  placeholder="Escribe un mensaje..."
+                  v-model="inputChat"
+                />
+              </FocusScope>
             </div>
           </div>
 
