@@ -31,12 +31,12 @@ const renderHtml = (html: string) => {
     .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
     .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
     .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
-    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
+  /*  .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
       if (/\\[a-zA-Z]+|\^|_/.test(code)) {
         return renderMath(code, true)
       }
       return match
-    })
+    }) */
 
   return marked.parse(regEx) // now this returns a string, not a Promise
 }

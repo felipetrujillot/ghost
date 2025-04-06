@@ -46,10 +46,10 @@ const chatAI = ref<ChatAI[]>(DEFAULT_CHAT)
               <ClientOnly>
                 <template v-for="(c, k) in chatAI" :key="k">
                   <div v-if="c.origen === 'llm'" class="px-4">
-                    <p
+                    <div
                       class="prose prose-md dark:prose-invert"
                       v-html="md.render(c.chat)"
-                    ></p>
+                    ></div>
                   </div>
 
                   <div

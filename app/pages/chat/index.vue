@@ -161,12 +161,15 @@ const nuevoMensaje = async () => {
     url_imagen: hasImage,
     url_pdf: hasPdf,
   })
+  const randomDelay = () =>
+    new Promise((resolve) => setTimeout(resolve, Math.random() * 30 + 10))
 
   status.value = 'generating'
 
-  for await (const line of res) {
+  for await (const char of res) {
     try {
-      chatLLM.value += line
+      chatLLM.value += char
+      await randomDelay()
     } catch (err) {
       console.log(err)
     }
@@ -331,12 +334,8 @@ const showSheet = ref(false)
                 <template v-for="(c, k) in chatAI" :key="k">
                   <div
                     v-if="c.origen === 'llm'"
-                    class="px-4 w-full max-w-full overflow-x-auto"
+                    class="px-4 w-full max-w-full overflow-x-auto fadeInFast"
                   >
-                    <!--   <div
-                      class="prose prose-md dark:prose-invert w-full !max-w-none break-words !break-words"
-                      v-html="renderHtml(c.chat)"
-                    ></div> -->
                     <AsyncHtml :chat="c.chat" />
                   </div>
 
@@ -371,7 +370,9 @@ const showSheet = ref(false)
                 </template>
 
                 <template v-if="status === 'generating'">
-                  <div class="fadeInFast px-4">
+                  <div
+                    class="px-4 w-full max-w-full overflow-x-auto fadeInFast"
+                  >
                     <AsyncHtml :chat="chatLLM" />
                   </div>
                 </template>
