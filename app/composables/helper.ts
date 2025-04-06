@@ -466,3 +466,21 @@ export const uploadFileGcp = async (file: File) => {
 
   return res
 }
+
+export type ChunkDetector = (buffer: string) => string | undefined | null
+
+const InvalidArgumentError = (val: any) => {
+  return val
+}
+
+const CHUNKING_REGEXPS = {
+  word: /\S+\s+/m,
+  line: /\n+/m,
+}
+
+// src/delay.ts
+async function delay(delayInMs: number) {
+  return delayInMs == null
+    ? Promise.resolve()
+    : new Promise((resolve2) => setTimeout(resolve2, delayInMs))
+}

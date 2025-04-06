@@ -21,6 +21,7 @@ const marked = new Marked(
     langPrefix: 'hljs language-',
     highlight(code, lang, info) {
       const language = hljs.getLanguage(lang) ? lang : 'plainttext'
+      console.log(language)
       return hljs.highlight(code, { language: 'typescript' }).value
     },
   }),

@@ -161,6 +161,7 @@ const nuevoMensaje = async () => {
     url_imagen: hasImage,
     url_pdf: hasPdf,
   })
+
   const randomDelay = () =>
     new Promise((resolve) => setTimeout(resolve, Math.random() * 30 + 10))
 
@@ -169,6 +170,7 @@ const nuevoMensaje = async () => {
   for await (const char of res) {
     try {
       chatLLM.value += char
+
       await randomDelay()
     } catch (err) {
       console.log(err)
