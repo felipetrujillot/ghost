@@ -4,6 +4,7 @@ import {
   LucideHeart,
   LucideSquare,
   LucideSquarePen,
+  Route,
   X,
 } from 'lucide-vue-next'
 
@@ -11,7 +12,7 @@ const overlay = ref(false)
 const chats = useChatSessions()
 
 const { $router } = useNuxtApp()
-
+const route = useRoute()
 const selectItem = (to: string) => {
   if (to === '/logout') {
     logoutToIndex()
@@ -56,37 +57,16 @@ const selectItem = (to: string) => {
             <CommandList class="px-0" style="min-height: 80vh">
               <CommandEmpty>No se encontraron resultados.</CommandEmpty>
               <CommandGroup>
-                <!--  <CommandItem @select="selectItem('/')" value="inicio">
-              Inicio
-            </CommandItem>
-            <CommandItem @select="selectItem('/chat')" value="chat">
-              Chat
-            </CommandItem>
-            <CommandItem @select="selectItem('/tareas')" value="tareas">
-              Tareas
-            </CommandItem>
-            <CommandItem @select="selectItem('/notas')" value="notas">
-              Notas
-            </CommandItem>
-            <CommandItem @select="selectItem('/gastos')" value="gastos">
-              Gastos
-            </CommandItem>
-
-            <CommandItem @select="selectItem('/login')" value="login">
-              Login
-            </CommandItem>
-
-            <CommandItem @select="selectItem('/logout')" value="cerrar sesión">
-              Cerrar sesión
-            </CommandItem>
-
-            -->
-
                 <template v-for="(c, k) in chats" :key="k">
                   <CommandItem
                     class="text-start px-0"
+                    :class="
+                      route.query.id === c.uuid
+                        ? 'bg-accent data-[highlighted]:bg-accent'
+                        : 'bg-background data-[highlighted]:bg-background'
+                    "
                     @select="selectItem(`/chat?id=${c.uuid}`)"
-                    :value="`${c.titulo} ${c.id_chat_session}`"
+                    :value="`CHAT: ${c.titulo} ${c.id_chat_session}`"
                   >
                     {{ c.titulo }}
                   </CommandItem>
