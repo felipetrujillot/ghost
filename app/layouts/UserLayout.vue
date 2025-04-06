@@ -2,6 +2,7 @@
 import { LucideSquarePen } from 'lucide-vue-next'
 
 const { $trpc } = useNuxtApp()
+import { useMagicKeys } from '@vueuse/core'
 
 const route = useRoute()
 const notas = useNotes()
@@ -13,16 +14,38 @@ onMounted(async () => {
   setNotes()
   setProyectosTareas()
 })
+
+const { Meta_B, Ctrl_B } = useMagicKeys({
+  passive: false,
+  onEventFired(e) {
+    if (e.key === 'k' && (e.metaKey || e.ctrlKey)) e.preventDefault()
+  },
+})
+
+const handleSidebar = () => {
+  console.log('here')
+  sidebar.value = !sidebar.value
+}
+
+watch([Meta_B, Ctrl_B], (v) => {
+  if (v[0] || v[1]) handleSidebar()
+})
+
+const sidebar = ref(true)
 </script>
 
 <template>
   <div class="min-h-screen overflow-hidden">
-    <div class="grid w-full grid-cols-1 lg:grid-cols-[250px_1fr] min-h-screen">
+    <div
+      class="grid w-full grid-cols-1 min-h-screen"
+      :class="sidebar ? 'lg:grid-cols-[250px_1fr]' : ''"
+    >
       <div class="hidden lg:block">
         <div class="flex flex-col gap-2" style="width: 250px">
           <div
             class="fixed flex flex-col justify-between border-r pb-4 h-full"
             style="width: 250px"
+            v-show="sidebar"
           >
             <nav class="grid items-start text-sm font-medium">
               <!--   <h1
