@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { marked } from 'marked'
+import { Marked } from 'marked'
 import katex from 'katex'
+import { markedHighlight } from 'marked-highlight'
+import hljs from 'highlight.js'
 
 defineProps<{
   chat: string
@@ -12,6 +14,17 @@ const renderMath = (math: any, displayMode: any) => {
     output: 'mathml', // Cambia 'mathml' por 'html' o 'htmlAndMathml'
   })}</pre>`
 }
+
+const marked = new Marked(
+  markedHighlight({
+    emptyLangClass: 'hljs',
+    langPrefix: 'hljs language-',
+    highlight(code, lang, info) {
+      const language = hljs.getLanguage(lang) ? lang : 'plainttext'
+      return hljs.highlight(code, { language: 'typescript' }).value
+    },
+  }),
+)
 
 const renderHtml = (html: string) => {
   const regEx = html

@@ -93,7 +93,7 @@ export const getCurrentDate = () => {
     0,
     0,
     0,
-    0
+    0,
   )
 
   return newDat
@@ -120,7 +120,7 @@ export const formatearDate = (date: Date) => {
  */
 export const toast = async (
   status: 'success' | 'ok' | 'warning' | 'wrn' | 'error' | 'err',
-  msg: string
+  msg: string,
 ) => {
   const { useToast } = await import('@/components/ui/toast/use-toast')
   const { toast } = useToast()
@@ -278,7 +278,7 @@ type KeyboardShortcutKey =
 
 export const useCtrlKey = (
   keysSelected: KeyboardShortcutKey,
-  emit: Function
+  emit: Function,
 ) => {
   const ctrlEvent = (e: KeyboardEvent) => {
     const { ctrlKey, key } = e
@@ -303,7 +303,7 @@ export const useCtrlKey = (
 
 export const useMetaKey = (
   keysSelected: KeyboardShortcutKey,
-  emit: Function
+  emit: Function,
 ) => {
   const ctrlEvent = (e: KeyboardEvent) => {
     const { key, metaKey } = e

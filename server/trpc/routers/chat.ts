@@ -61,8 +61,8 @@ export const chatTrpc = {
         and(
           eq(chat_sessions.id_empresa, id_empresa),
           eq(chat_sessions.id_usuario, id_usuario),
-          eq(chat_sessions.activo, 1)
-        )
+          eq(chat_sessions.activo, 1),
+        ),
       )
       .orderBy(desc(chat_sessions.id_chat_session))
   }),
@@ -74,7 +74,7 @@ export const chatTrpc = {
     .input(
       z.object({
         requestId: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { requestId } = input
@@ -87,8 +87,8 @@ export const chatTrpc = {
           and(
             eq(chat_sessions.uuid, requestId),
             eq(chat_sessions.id_empresa, id_empresa),
-            eq(chat_sessions.id_usuario, id_usuario)
-          )
+            eq(chat_sessions.id_usuario, id_usuario),
+          ),
         )
 
       /**
@@ -134,7 +134,7 @@ export const chatTrpc = {
         requestId: z.string(),
         url_imagen: z.string(),
         url_pdf: z.string(),
-      })
+      }),
     )
     .mutation(async function* ({ input, ctx }) {
       const { prompt, requestId, url_imagen, url_pdf } = input
@@ -151,7 +151,7 @@ export const chatTrpc = {
         .innerJoin(models, eq(models.id_model, usuarios.id_model))
         .innerJoin(
           system_prompts,
-          eq(system_prompts.id_system_prompt, usuarios.id_system_prompt)
+          eq(system_prompts.id_system_prompt, usuarios.id_system_prompt),
         )
         .where(eq(usuarios.id_usuario, id_usuario))
 
@@ -172,8 +172,8 @@ export const chatTrpc = {
           and(
             eq(chat_sessions.uuid, requestId),
             eq(chat_sessions.id_empresa, id_empresa),
-            eq(chat_sessions.id_usuario, id_usuario)
-          )
+            eq(chat_sessions.id_usuario, id_usuario),
+          ),
         )
 
       const findChat = await db
@@ -256,7 +256,10 @@ export const chatTrpc = {
 
         if (findChatSession[0].titulo.length === 0) {
           const generativeModelSummary = vertexModel({
-            system_prompt: `You are an expert on summarize the user input in maximun 4 words`,
+            system_prompt: `You are an expert on summarize the user input in maximun 4 words
+        IMPORTANT: Give the answer in Spanish.
+        IMPORTANT: Only use words and not special characters.
+            `,
             llm_model: 'gemini-2.0-flash',
           })
 
@@ -286,8 +289,8 @@ export const chatTrpc = {
             .where(
               eq(
                 chat_sessions.id_chat_session,
-                findChatSession[0].id_chat_session
-              )
+                findChatSession[0].id_chat_session,
+              ),
             )
         }
       }
@@ -324,7 +327,7 @@ export const chatTrpc = {
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { id } = input
@@ -349,7 +352,7 @@ export const chatTrpc = {
       z.object({
         id: z.string(),
         titulo: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { id, titulo } = input
