@@ -80,7 +80,7 @@ export default defineNuxtConfig({
   tailwindcss: {
     viewer: false,
   },
-  css: ['katex/dist/katex.min.css', 'highlight.js/styles/tokyo-night-dark.css'],
+  css: ['katex/dist/katex.min.css', './public/tokyo-night-dark.css'],
 
   build: {
     transpile: ['trpc-nuxt'],
