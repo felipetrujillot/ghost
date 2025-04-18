@@ -40,6 +40,6 @@ const params =
         //ssl: sslConfig,
       }
 
-const connection = mysql.createPool(params)
+export const connection = mysql.createPool(params)
 
 export const db = drizzle(connection)

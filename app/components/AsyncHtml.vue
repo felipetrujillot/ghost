@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Marked } from 'marked'
+import { Marked, type Tokens } from 'marked'
 import katex from 'katex'
 import { markedHighlight } from 'marked-highlight'
 import hljs from 'highlight.js'
@@ -27,19 +27,28 @@ const marked = new Marked(
   }),
 )
 
+const renderer = {
+  code({ text, lang, escaped }: Tokens.Code) {
+    const buttonHTML = `<button class="copy-button" >Copy</button>`
+    const codeBlock = `<pre class="code-block"><code class="${lang}">${text}</code></pre>`
+    return `<div class="code-container">${buttonHTML}${codeBlock}</div>`
+  },
+}
+
 const renderHtml = (html: string) => {
-  const regEx = html
-    .replace(/\$\$([^$]+?)\$\$/g, (_, math) => renderMath(math, true))
-    .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
+  const regEx = html.replace(/\$\$([^$]+?)\$\$/g, (_, math) =>
+    renderMath(math, true),
+  )
+  /* .replace(/\$([^$]+?)\$/g, (_, math) => renderMath(math, false))
     .replace(/(\d)\s*-\s*(\d)/g, '$1 - $2')
-  /*  .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
+    .replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
       if (/\\[a-zA-Z]+|\^|_/.test(code)) {
         return renderMath(code, true)
       }
       return match
     }) */
 
-  return marked.parse(regEx) // now this returns a string, not a Promise
+  return marked.use({ renderer }).parse(regEx)
 }
 </script>
 

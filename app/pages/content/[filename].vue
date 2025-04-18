@@ -37,7 +37,8 @@ const commitNotas = async () => {
 
 <template>
   <div v-if="isLoading === true">
-    <Tiptap :text="text" @saveNote="saveNote" />
+    {{ text }}
+    <!--  <Tiptap :text="text" @saveNote="saveNote" /> -->
 
     <Button @click.prevent="commitNotas">avance</Button>
   </div>

@@ -3,7 +3,7 @@ import { protectedProcedure, router } from '../trpc'
 import { models, system_prompts, usuarios } from '~~/server/db/db_schema'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { systemPrompt } from './llm'
+import { systemPrompt } from '../../db/llm'
 import { RouterOutput } from '.'
 
 export const systemPromptsTrpc = router({
@@ -26,7 +26,7 @@ export const systemPromptsTrpc = router({
     .input(
       z.object({
         id_system_prompt: z.number(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const { id_usuario } = ctx.user!

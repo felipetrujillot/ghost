@@ -9,8 +9,9 @@ import {
   timestamp,
   mysqlSchema,
   text,
+  customType,
+  json,
 } from 'drizzle-orm/mysql-core'
-
 const config = useRuntimeConfig()
 export const mySchema = mysqlSchema(config.dbName)
 
@@ -144,6 +145,41 @@ export const models = mySchema.table('models', {
   updated_at: timestamp('updated_at'),
 })
 
+/* const customVectorDb = customType<{
+  data: Date
+  driverData: string
+  config: { withTimezone: boolean; precision?: number }
+}>({
+  dataType(config) {
+    const precision =
+      typeof config.precision !== 'undefined' ? ` (${config.precision})` : ''
+    return `timestamp${precision}${
+      config.withTimezone ? ' with time zone' : ''
+    }`
+  },
+   fromDriver(value: string): Date {
+    return new Date(value)
+  },
+}) */
+
+const customVector = customType<{
+  data: number[]
+
+  config: { dimensions: number }
+}>({
+  dataType(config) {
+    return `vector(${config?.dimensions})`
+  },
+})
+
+const t = varchar('name', { length: 255 })
+
+export const vectores = mySchema.table('vectores', {
+  id: int('id').primaryKey().autoincrement(),
+  name: text('name').notNull(),
+  vector_data: customVector('vector_data', { dimensions: 768 }),
+})
+
 /**
  *
  */
@@ -171,3 +207,4 @@ export const gastos = mySchema.table('gastos', {
 
 export type Usuarios = typeof usuarios.$inferSelect
 export type PasswordsReset = typeof passwords_reset.$inferSelect
+export type Vectores = typeof vectores.$inferSelect

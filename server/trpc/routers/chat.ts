@@ -9,11 +9,12 @@ import {
   usuarios,
 } from '~~/server/db/db_schema'
 import { and, desc, eq } from 'drizzle-orm'
-import { systemPrompt, systemPromptTxt, vertexModel } from './llm'
+import { systemPrompt, systemPromptTxt, vertexModel } from '../../db/llm'
 import { v4 as uuid } from 'uuid'
 import { RouterOutput } from '.'
-import { Part } from '@google-cloud/vertexai'
+import { Part } from '@google/genai'
 import { octetInputParser } from '@trpc/server/http'
+import { generateContent, generateImage } from '~~/server/db/ai'
 
 export const chatTrpc = {
   /**
@@ -158,7 +159,7 @@ export const chatTrpc = {
       const { system_prompt, llm_model } = myModel
 
       const sys_prompt = systemPromptTxt()
-      const generativeModel = vertexModel({ system_prompt, llm_model })
+      //const generativeModel = vertexModel({ system_prompt, llm_model })
 
       const contents: {
         role: string
@@ -255,25 +256,28 @@ export const chatTrpc = {
         await db.insert(chat).values(insertParams)
 
         if (findChatSession[0].titulo.length === 0) {
-          const generativeModelSummary = vertexModel({
+          /* const generativeModelSummary = vertexModel({
             system_prompt: `You are an expert on summarize the user input in maximun 4 words
         IMPORTANT: Give the answer in Spanish.
         IMPORTANT: Only use words and not special characters.
             `,
             llm_model: 'gemini-2.0-flash',
-          })
+          }) */
 
-          const streamingResult =
-            await generativeModelSummary.generateContentStream({
-              contents: contents,
-            })
+          const streamingResult = await generateContent({
+            system_prompt: `You are an expert on summarize the user input in maximun 4 words
+        IMPORTANT: Give the answer in Spanish.
+        IMPORTANT: Only use words and not special characters.
+            `,
+            llm_model: 'gemini-2.0-flash',
+            contents: contents,
+          })
 
           let fullResponse = ''
           /* return streamingResult */
-          for await (const item of streamingResult.stream) {
-            if (item.candidates) {
-              const textChunk = item.candidates[0].content.parts[0].text
-
+          for await (const item of streamingResult) {
+            if (item.text) {
+              const textChunk = item.text
               fullResponse += textChunk
             }
           }
@@ -300,20 +304,36 @@ export const chatTrpc = {
        * @param onSuccess
        */
       async function* streamGenerateContent(onSuccess: Function) {
-        const streamingResult = await generativeModel.generateContentStream({
-          contents: contents,
-        })
-
         let fullResponse = ''
-        /* return streamingResult */
-        for await (const item of streamingResult.stream) {
-          if (item.candidates) {
-            const textChunk = item.candidates[0].content.parts[0].text
 
-            fullResponse += textChunk
-            yield textChunk
+        if (llm_model === 'gemini-2.0-flash-exp') {
+          const imageRes = await generateImage({
+            system_prompt:
+              'You are an expert on generate images, ONLY GENERATE IMAGES',
+            llm_model: 'gemini-2.0-flash-exp',
+            contents: contents,
+          })
+
+          const llmImageResponse = `![Alt Text](${imageRes})`
+
+          console.log(llmImageResponse)
+          fullResponse += llmImageResponse
+          yield llmImageResponse
+        } else {
+          const streamingResult = await generateContent({
+            system_prompt: sys_prompt,
+            llm_model,
+            contents: contents,
+          })
+
+          for await (const item of streamingResult) {
+            if (item.text) {
+              fullResponse += item.text
+              yield item.text
+            }
           }
         }
+
         await onSuccess(fullResponse)
       }
 

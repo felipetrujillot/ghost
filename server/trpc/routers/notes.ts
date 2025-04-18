@@ -33,7 +33,7 @@ export const notesTrpc = router({
       .from(notes_group)
       .orderBy(desc(notes_group.id_note_group))
       .where(
-        and(eq(notes_group.id_empresa, id_empresa), eq(notes_group.active, 1))
+        and(eq(notes_group.id_empresa, id_empresa), eq(notes_group.active, 1)),
       )
 
     type ArrayOfGroups = (typeof findGroups)[0] & { notes: typeof findNotes }
@@ -63,7 +63,7 @@ export const notesTrpc = router({
     .input(
       z.object({
         id_note: z.number(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { id_note } = input
@@ -85,7 +85,7 @@ export const notesTrpc = router({
         id_note: z.number(),
         note_text: z.string(),
         note_name: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { id_note, note_text, note_name } = input
@@ -110,7 +110,7 @@ export const notesTrpc = router({
         note_text: z.string(),
         note_name: z.string(),
         //  id_note_group: z.number(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id_empresa } = ctx.user
@@ -140,7 +140,7 @@ export const notesTrpc = router({
     .input(
       z.object({
         id_note: z.number(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       // const { id_usuario, id_empresa } = ctx.user!

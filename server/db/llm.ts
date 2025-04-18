@@ -4,13 +4,10 @@ import {
   VertexAI,
 } from '@google-cloud/vertexai'
 
-const project = 'linebox-412716'
-const location = 'us-central1'
-const textModel = 'gemini-2.5-pro-exp-03-25'
+export const project = 'linebox-412716'
+export const location = 'us-central1'
 
-//const textModel = 'gemini-2.0-flash-exp'
-
-const vertexAI = new VertexAI({
+export const vertexAI = new VertexAI({
   project: project,
   location: location,
   googleAuthOptions: {
