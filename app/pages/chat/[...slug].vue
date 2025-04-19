@@ -26,8 +26,6 @@ const useChatId = useIdChat()
 const isAtBottom = ref(false)
 
 const scrollToBottom = async () => {
-  await nextTick()
-  await timeSleep(0.2)
   if (chatContainer.value) {
     chatContainer.value.scrollTo({
       top: chatContainer.value.scrollHeight - chatContainer.value.clientHeight,
@@ -98,6 +96,7 @@ onMounted(async () => {
     statusChat.value = 'success'
   }
   await nextTick()
+  await timeSleep(0.2)
 
   await scrollToBottom()
 })
