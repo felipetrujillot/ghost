@@ -4,7 +4,6 @@ import {
   LucideEllipsis,
   LucideFileText,
   LucidePaperclip,
-  LucidePlay,
   LucideX,
 } from 'lucide-vue-next'
 import ModalConfigs from './_components/ModalConfigs.vue'
@@ -62,8 +61,9 @@ const nuevoMensaje = async () => {
 
   const hasImage = url_imagen.value
   const hasPdf = url_pdf.value
-  const chatPersistent = inputChat.value
+  const chatPersistent = inputChat.value.replace(/\n/g, '<br>')
 
+  return
   inputChat.value = ''
   url_imagen.value = ''
   url_pdf.value = ''
@@ -131,13 +131,11 @@ const nuevoMensaje = async () => {
         {
           origen: 'user',
           tipo: 'texto',
-
           chat: chatPersistent,
         },
         {
           origen: 'user',
           tipo: 'pdf',
-
           chat: hasPdf,
         },
       ]
@@ -311,12 +309,6 @@ const uploadFile = async (files: File[]) => {
   }
 }
 
-/*  const mark = marked.parse(latexString)
-  return mark
-  const markdownContent = md.use(mk).render(latexString)
-
-  return markdownContent */
-
 const showPopover = ref(false)
 const showModalConfig = ref(false)
 const showSheet = ref(false)
@@ -348,9 +340,8 @@ const showSheet = ref(false)
                     <div
                       v-if="c.tipo === 'texto'"
                       class="prose prose-md dark:prose-invert"
-                    >
-                      {{ c.chat }}
-                    </div>
+                      v-html="c.chat"
+                    ></div>
 
                     <div
                       v-if="c.tipo === 'imagen'"
@@ -371,6 +362,18 @@ const showSheet = ref(false)
                   </div>
                 </template>
 
+                <template
+                  v-if="
+                    status === 'pending' ||
+                    (status === 'generating' && chatLLM.length === 0)
+                  "
+                >
+                  <div
+                    class="px-4 w-full max-w-full overflow-x-auto fadeInFast"
+                  >
+                    <Skeleton class="h-8 rounded" />
+                  </div>
+                </template>
                 <template v-if="status === 'generating'">
                   <div
                     class="px-4 w-full max-w-full overflow-x-auto fadeInFast"

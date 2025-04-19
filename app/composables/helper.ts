@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 /**
  *
  * @param numero
@@ -483,4 +485,25 @@ async function delay(delayInMs: number) {
   return delayInMs == null
     ? Promise.resolve()
     : new Promise((resolve2) => setTimeout(resolve2, delayInMs))
+}
+
+/**
+ *
+ * @param fileName
+ * @returns
+ */
+export const extractFileInfo = (fileName: string) => {
+  // Get the format (extension)
+  const format = fileName.split('.').pop()
+
+  // Get the name without the format
+  const name = fileName.substring(0, fileName.lastIndexOf('.'))
+
+  return { name, format: format! }
+}
+
+export const newUuid = () => {
+  const newId = uuid()
+
+  return newId
 }

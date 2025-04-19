@@ -25,11 +25,15 @@ const changeTheme = (themeVal: 'dark' | 'light') => {
   <AdminNavbar />
 
   <div class="flex min-h-screen w-full flex-col">
-    <main class="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+    <main
+      class="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10"
+    >
       <div class="mx-auto grid w-full max-w-6xl gap-2">
         <h1 class="text-3xl font-semibold">Configuraciones</h1>
       </div>
-      <div class="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
+      <div
+        class="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]"
+      >
         <nav class="grid gap-4 text-sm text-muted-foreground">
           <a href="#" class="font-semibold text-primary"> General </a>
           <a href="#"> Security </a>
@@ -68,12 +72,20 @@ const changeTheme = (themeVal: 'dark' | 'light') => {
                   <Label>Tema</Label>
                   <RadioGroup :default-value="themeRef!">
                     <div class="flex items-center space-x-2">
-                      <RadioGroupItem value="light" @click.prevent="changeTheme('light')" />
+                      <RadioGroupItem
+                        value="light"
+                        @click.prevent="changeTheme('light')"
+                      />
                       <Label class="cursor-pointer text-sm" for="r1">Día</Label>
                     </div>
                     <div class="flex items-center space-x-2">
-                      <RadioGroupItem value="dark" @click.prevent="changeTheme('dark')" />
-                      <Label class="cursor-pointer text-sm" for="r2">Noche</Label>
+                      <RadioGroupItem
+                        value="dark"
+                        @click.prevent="changeTheme('dark')"
+                      />
+                      <Label class="cursor-pointer text-sm" for="r2"
+                        >Noche</Label
+                      >
                     </div>
                   </RadioGroup>
                 </div>

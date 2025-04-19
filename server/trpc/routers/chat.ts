@@ -9,12 +9,13 @@ import {
   usuarios,
 } from '~~/server/db/db_schema'
 import { and, desc, eq } from 'drizzle-orm'
-import { systemPrompt, systemPromptTxt, vertexModel } from '../../db/llm'
+import { systemPromptTxt } from '../../db/llm'
 import { v4 as uuid } from 'uuid'
 import { RouterOutput } from '.'
 import { Part } from '@google/genai'
 import { octetInputParser } from '@trpc/server/http'
 import { generateContent, generateImage } from '~~/server/db/ai'
+import { createMarkdownRenderer } from '~/components/md/markdown'
 
 export const chatTrpc = {
   /**
@@ -99,6 +100,47 @@ export const chatTrpc = {
         .select()
         .from(chat)
         .where(eq(chat.id_chat_session, findChatSession.id_chat_session))
+
+      /*  const md = await createMarkdownRenderer('', {
+        math: true,
+        config(md) {
+          // TODO: remove when https://github.com/vuejs/vitepress/issues/4431 is fixed
+          const fence = md.renderer.rules.fence!
+          md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+            const { localeIndex = 'root' } = env
+            const codeCopyButtonTitle = (() => {
+              switch (localeIndex) {
+                case 'es':
+                  return 'Copiar código'
+                case 'fa':
+                  return 'کپی کد'
+                case 'ko':
+                  return '코드 복사'
+                case 'pt':
+                  return 'Copiar código'
+                case 'ru':
+                  return 'Скопировать код'
+                case 'zh':
+                  return '复制代码'
+                default:
+                  return 'Copy code'
+              }
+            })()
+            return fence(tokens, idx, options, env, self).replace(
+              '<button title="Copy Code" class="copy"></button>',
+              `<button title="${codeCopyButtonTitle}" class="copy"></button>`,
+            )
+          }
+          // md.use(groupIconMdPlugin)
+        },
+      })
+
+      const mapChat = findChat.map((c) => {
+        return {
+          ...c,
+          chat: md.render(c.chat),
+        }
+      }) */
 
       return {
         chat_session: findChatSession,
@@ -309,7 +351,7 @@ export const chatTrpc = {
         if (llm_model === 'gemini-2.0-flash-exp') {
           const imageRes = await generateImage({
             system_prompt:
-              'You are an expert on generate images, ONLY GENERATE IMAGES',
+              'You are an expert on generate images, use the provided context ONLY GENERATE IMAGES',
             llm_model: 'gemini-2.0-flash-exp',
             contents: contents,
           })

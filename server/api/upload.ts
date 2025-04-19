@@ -1,5 +1,9 @@
 import { gcpBucket } from '~~/server/db/gcp'
-import { generateRandom13Digits } from '~/composables/helper'
+import {
+  extractFileInfo,
+  generateRandom13Digits,
+  newUuid,
+} from '~/composables/helper'
 import { authEvent } from '~~/server/auth'
 
 /**
@@ -14,10 +18,12 @@ export default defineEventHandler(async (event) => {
   const doc = formData.get('document') as File
 
   const originalFilename = doc.name
+
+  const { format } = extractFileInfo(originalFilename)
   const randomDigit = generateRandom13Digits()
 
-  const filename =
-    randomDigit.toString() + '_' + originalFilename.replace(' ', '_')
+  const id = newUuid()
+  const filename = randomDigit.toString() + id + '.' + format
 
   const arrayBuffer = await doc.arrayBuffer()
   const fileBuffer = Buffer.from(arrayBuffer)

@@ -57,7 +57,7 @@ const sidebar = ref(true)
                   <CommandModal />
                   <LucideSquarePen
                     :size="16"
-                    v-if="route.path === '/chat'"
+                    v-if="route.name === 'chat-slug'"
                     @click.prevent="$router.push('/chat')"
                     class="hover:text-primary cursor-pointer"
                   />
@@ -97,14 +97,14 @@ const sidebar = ref(true)
 
               <div
                 class="overflow-y-auto max-h-screen"
-                v-if="route.path === '/chat'"
+                v-if="route.name === 'chat-slug'"
               >
                 <div class="flex flex-col">
                   <template v-for="(item, k) in chats" :key="k">
                     <ItemsChats
                       :uuid="item.uuid"
-                      :to="`/chat?id=${item.uuid}`"
-                      :active="route.query.id === item.uuid.toString()"
+                      :to="`/chat/${item.uuid}`"
+                      :active="route.params.slug![0] === item.uuid.toString()"
                       :text="item.titulo"
                     />
                   </template>

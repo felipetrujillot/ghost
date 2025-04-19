@@ -1,5 +1,7 @@
 import type { NuxtPage } from '@nuxt/schema'
+import plugin from '@vite-pwa/nuxt/dist/runtime/plugins/pwa.client.js'
 import process from 'node:process'
+import remarkMath from 'remark-math'
 
 const sw = process.env.SW === 'true'
 
@@ -10,9 +12,30 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@vite-pwa/nuxt',
     '@nuxt/content',
+    '@nuxtjs/mdc',
   ],
 
   devtools: { enabled: false },
+
+  mdc: {
+    components: {
+      prose: true,
+    },
+    highlight: {
+      highlighter: 'shiki',
+      theme: 'tokyo-night',
+    },
+    remarkPlugins: {
+      'remark-math': {},
+    },
+    rehypePlugins: {
+      'rehype-katex': {},
+    },
+  },
+  components: {
+    global: true,
+    dirs: ['./components/prose', './components'],
+  },
 
   future: {
     compatibilityVersion: 4,
@@ -80,7 +103,14 @@ export default defineNuxtConfig({
   tailwindcss: {
     viewer: false,
   },
-  css: ['katex/dist/katex.min.css', './public/tokyo-night-dark.css'],
+  css: [
+    'katex/dist/katex.min.css',
+    './public/tokyo-night-dark.css',
+    /*  './app/styles/base.css',
+    './app/styles/fonts.css',
+    './app/styles/utils.css',
+    './app/styles/vars.css', */
+  ],
 
   build: {
     transpile: ['trpc-nuxt'],

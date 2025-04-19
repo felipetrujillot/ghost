@@ -1,52 +1,5 @@
-import {
-  HarmBlockThreshold,
-  HarmCategory,
-  VertexAI,
-} from '@google-cloud/vertexai'
-
 export const project = 'linebox-412716'
 export const location = 'us-central1'
-
-export const vertexAI = new VertexAI({
-  project: project,
-  location: location,
-  googleAuthOptions: {
-    keyFilename: 'server/db/linebox-412716-fe1f0c92ff90.json',
-  },
-})
-
-export function vertexModel({
-  system_prompt,
-  llm_model,
-}: {
-  system_prompt: string
-  llm_model: string
-}) {
-  // Instantiate Gemini models
-  const generativeModel = vertexAI.getGenerativeModel({
-    model: llm_model,
-    // The following parameters are optional
-    // They can also be passed to individual content generation requests
-    safetySettings: [
-      {
-        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-    ],
-
-    generationConfig: { maxOutputTokens: 8000 },
-    systemInstruction: {
-      role: 'system',
-      parts: [
-        {
-          text: `
-                ${system_prompt}`,
-        },
-      ],
-    },
-  })
-  return generativeModel
-}
 
 /**
  *

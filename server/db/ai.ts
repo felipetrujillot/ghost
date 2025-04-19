@@ -1,10 +1,10 @@
 import { GoogleGenAI } from '@google/genai'
-import { HarmCategory } from '@google-cloud/vertexai'
-import { HarmBlockThreshold } from '@google-cloud/vertexai'
+import { HarmCategory } from '@google/genai'
+import { HarmBlockThreshold } from '@google/genai'
 import type { ContentListUnion } from '@google/genai'
 import type { Part } from '@google/genai'
 import { gcpBucket } from './gcp'
-import { v4 as uuid } from 'uuid'
+import { newUuid } from '~/composables/helper'
 
 // Initialize Vertex with your Cloud project and location
 const ai = new GoogleGenAI({
@@ -101,6 +101,7 @@ export async function generateImage({
     parts: Part[]
   }[]
 }) {
+  console.log(contents)
   const streamingResp = await ai.models.generateContent({
     model: llm_model,
     contents: contents,
@@ -111,7 +112,7 @@ export async function generateImage({
       seed: 0,
       responseModalities: ['IMAGE', 'TEXT'],
 
-      systemInstruction: {
+      /*  systemInstruction: {
         role: 'system',
         parts: [
           {
@@ -119,7 +120,7 @@ export async function generateImage({
                 ${system_prompt}`,
           },
         ],
-      },
+      }, */
 
       safetySettings: [
         {
@@ -148,9 +149,9 @@ export async function generateImage({
 
   const bufferFile = Buffer.from(image, 'base64')
 
-  const newUuid = uuid()
+  const id = newUuid()
 
-  const filename = `${newUuid}.png`
+  const filename = `${id}.png`
 
   await gcpBucket
     .file(filename)
