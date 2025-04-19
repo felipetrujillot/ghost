@@ -5,7 +5,7 @@ import { Storage } from '@google-cloud/storage'
  */
 const gcpStorage = new Storage({
   projectId: 'linebox-412716',
-  keyFilename: 'server/db/linebox-412716-fe1f0c92ff90.json',
+  keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
 })
 
 export const gcpBucket = gcpStorage.bucket('linebox-bucket')
