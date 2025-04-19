@@ -11,7 +11,7 @@ const ai = new GoogleGenAI({
   project: 'linebox-412716',
   location: 'us-central1',
   googleAuthOptions: {
-    keyFilename: 'server/db/linebox-412716-fe1f0c92ff90.json',
+    keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
   },
   httpOptions: {
     headers: {
