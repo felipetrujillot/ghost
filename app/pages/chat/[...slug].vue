@@ -121,6 +121,12 @@ onMounted(async () => {
                 </template>
               </template>
 
+              <template v-if="statusGeneration === 'error'">
+                <h1>
+                  Hubo un error intentando generar el contenido, intenta
+                  refrescando el navegador
+                </h1>
+              </template>
               <Skeleton
                 class="h-8 rounded"
                 v-if="statusGeneration === 'pending' && chatLLM.length === 0"
