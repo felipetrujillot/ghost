@@ -45,6 +45,12 @@ export async function generateContent({
     model: llm_model,
     contents: contents,
     config: {
+      httpOptions: {
+        headers: {
+          Connection: 'keep-alive',
+          'content-type': 'multipart/form-data',
+        },
+      },
       maxOutputTokens: 8192,
       temperature: 1,
       topP: 0.95,

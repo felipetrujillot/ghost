@@ -42,7 +42,7 @@
     "lucide-vue-next": "^0.376.0",
     "mysql2": "^3.9.7",
     "node-poppler": "^7.2.4",
-    "nuxt": "^3.14.1592",
+    "nuxt": "^3.16.2",
     "pdfreader": "^3.0.7",
     "prettier": "^3.5.3",
     "prettier-plugin-svelte": "^3.3.3",

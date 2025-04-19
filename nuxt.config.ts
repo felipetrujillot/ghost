@@ -46,9 +46,9 @@ export default defineNuxtConfig({
         target: 'esnext',
       },
     },
-    /* prerender: {
+    prerender: {
       routes: ['*'],
-    }, */
+    },
   },
   pwa: {
     strategies: sw ? 'injectManifest' : 'generateSW',
