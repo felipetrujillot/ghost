@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import GeneratingChat from './_components/GeneratingChat.vue'
 import InputChat from './_components/InputChat.vue'
 import RenderChat from './_components/RenderChat.vue'
 import SheetChat from './_components/SheetChat.vue'

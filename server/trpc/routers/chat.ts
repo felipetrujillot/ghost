@@ -69,47 +69,6 @@ export const chatTrpc = {
         .from(chat)
         .where(eq(chat.id_chat_session, findChatSession.id_chat_session))
 
-      /*  const md = await createMarkdownRenderer('', {
-        math: true,
-        config(md) {
-          // TODO: remove when https://github.com/vuejs/vitepress/issues/4431 is fixed
-          const fence = md.renderer.rules.fence!
-          md.renderer.rules.fence = function (tokens, idx, options, env, self) {
-            const { localeIndex = 'root' } = env
-            const codeCopyButtonTitle = (() => {
-              switch (localeIndex) {
-                case 'es':
-                  return 'Copiar código'
-                case 'fa':
-                  return 'کپی کد'
-                case 'ko':
-                  return '코드 복사'
-                case 'pt':
-                  return 'Copiar código'
-                case 'ru':
-                  return 'Скопировать код'
-                case 'zh':
-                  return '复制代码'
-                default:
-                  return 'Copy code'
-              }
-            })()
-            return fence(tokens, idx, options, env, self).replace(
-              '<button title="Copy Code" class="copy"></button>',
-              `<button title="${codeCopyButtonTitle}" class="copy"></button>`,
-            )
-          }
-          // md.use(groupIconMdPlugin)
-        },
-      })
-
-      const mapChat = findChat.map((c) => {
-        return {
-          ...c,
-          chat: md.render(c.chat),
-        }
-      }) */
-
       return {
         chat_session: findChatSession,
         chat: findChat,
@@ -152,7 +111,6 @@ export const chatTrpc = {
     )
     .mutation(async function* ({ input, ctx }) {
       const { id: requestId, input_chat } = input
-      // const { prompt, requestId, url_imagen, url_pdf } = input
       const { id_empresa, id_usuario } = ctx.user!
 
       const [myModel] = await db
@@ -171,9 +129,6 @@ export const chatTrpc = {
         .where(eq(usuarios.id_usuario, id_usuario))
 
       const { system_prompt, llm_model } = myModel
-
-      // const sys_prompt = systemPromptTxt()
-      //const generativeModel = vertexModel({ system_prompt, llm_model })
 
       const contents: {
         role: string
@@ -281,14 +236,6 @@ export const chatTrpc = {
         await db.insert(chat).values(insertParams)
 
         if (findChatSession[0].titulo.length === 0) {
-          /* const generativeModelSummary = vertexModel({
-            system_prompt: `You are an expert on summarize the user input in maximun 4 words
-        IMPORTANT: Give the answer in Spanish.
-        IMPORTANT: Only use words and not special characters.
-            `,
-            llm_model: 'gemini-2.0-flash',
-          }) */
-
           const streamingResult = await generateContent({
             system_prompt: `You are an expert on summarize the user input in maximun 4 words
         IMPORTANT: Give the answer in Spanish.
