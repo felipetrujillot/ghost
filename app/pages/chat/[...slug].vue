@@ -104,12 +104,6 @@ onMounted(async () => {
 
 const checkScrollPosition = () => {
   if (chatContainer.value) {
-    console.log({
-      scrollTop: chatContainer.value.scrollTop,
-      scrollHeight: chatContainer.value.scrollHeight,
-      clientHeight: chatContainer.value.clientHeight,
-    })
-
     const scrollHeight = chatContainer.value.scrollHeight
     const clientHeight = chatContainer.value.clientHeight
 
