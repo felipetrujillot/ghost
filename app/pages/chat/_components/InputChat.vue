@@ -73,6 +73,8 @@ const nuevoMensaje = () => {
 
   emit('nuevoMensaje', chatArray)
   inputChat.value = ''
+  url_imagen.value = ''
+  url_pdf.value = ''
 }
 
 /**
