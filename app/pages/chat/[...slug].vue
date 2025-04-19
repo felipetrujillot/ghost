@@ -9,8 +9,6 @@ definePageMeta({
 })
 documentTitle('chat')
 
-const { $trpc } = useNuxtApp()
-
 const statusChat = ref<'idle' | 'pending' | 'generating' | 'success'>('idle')
 
 const route = useRoute()
@@ -25,10 +23,18 @@ const inputChat = ref('')
 
 const chatContainer = ref<HTMLElement | null>(null)
 const useChatId = useIdChat()
+const isAtBottom = ref(false)
 
-const scrollToBottom = () => {
+const scrollToBottom = async () => {
+  await nextTick()
+  await timeSleep(0.2)
   if (chatContainer.value) {
-    chatContainer.value.scrollTop = chatContainer.value.scrollHeight
+    chatContainer.value.scrollTo({
+      top: chatContainer.value.scrollHeight - chatContainer.value.clientHeight,
+      behavior: 'instant',
+    })
+    /*  chatContainer.value.scrollTop =
+      chatContainer.value.scrollHeight - chatContainer.value.clientHeight */
   }
 }
 
@@ -93,7 +99,35 @@ onMounted(async () => {
   }
   await nextTick()
 
-  scrollToBottom()
+  await scrollToBottom()
+})
+
+const checkScrollPosition = () => {
+  if (chatContainer.value) {
+    console.log({
+      scrollTop: chatContainer.value.scrollTop,
+      scrollHeight: chatContainer.value.scrollHeight,
+      clientHeight: chatContainer.value.clientHeight,
+    })
+
+    const scrollHeight = chatContainer.value.scrollHeight
+    const clientHeight = chatContainer.value.clientHeight
+
+    const scrollTop = chatContainer.value.scrollTop
+
+    const res = scrollHeight - scrollTop
+
+    isAtBottom.value = res - 200 <= clientHeight
+  }
+}
+
+onMounted(() => {
+  chatContainer.value?.addEventListener('scroll', checkScrollPosition)
+  checkScrollPosition()
+})
+
+onBeforeUnmount(() => {
+  chatContainer.value?.removeEventListener('scroll', checkScrollPosition)
 })
 </script>
 
@@ -104,7 +138,7 @@ onMounted(async () => {
         <SheetChat v-model="showSheet" />
       </div>
       <div class="flex-[5] overflow-y-scroll" ref="chatContainer">
-        <div class="max-w-3xl mx-auto h-full">
+        <div class="max-w-3xl mx-auto h-full relative">
           <div class="border-x border-1 min-h-full border-t">
             <div class="space-y-4 py-4 px-4">
               <Skeleton
@@ -139,7 +173,12 @@ onMounted(async () => {
       </div>
 
       <div class="flex-[1]">
-        <InputChat v-model="inputChat" @nuevoMensaje="nuevoMensaje" />
+        <InputChat
+          v-model="inputChat"
+          @nuevoMensaje="nuevoMensaje"
+          @scrollToBottom="scrollToBottom"
+          :isAtBottom="isAtBottom"
+        />
       </div>
     </div>
   </div>

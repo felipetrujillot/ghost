@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   LucideArrowUp,
+  LucideChevronDown,
   LucideEllipsis,
   LucideFileText,
   LucidePaperclip,
@@ -15,8 +16,12 @@ const inputChat = defineModel<string>()
 const showPopover = ref(false)
 const showModalConfig = ref(false)
 
+defineProps<{
+  isAtBottom: boolean
+}>()
 const emit = defineEmits<{
   (e: 'nuevoMensaje', payload: ChatAI[]): void
+  (e: 'scrollToBottom'): void
 }>()
 
 /**
@@ -108,7 +113,12 @@ const uploadFile = async (files: File[]) => {
 <template>
   <ModalConfigs v-if="showModalConfig" @closeModal="showModalConfig = false" />
 
-  <div class="max-w-3xl mx-auto min-h-full flex-1">
+  <div class="max-w-3xl mx-auto min-h-full flex-1 relative">
+    <div class="absolute w-full text-center" v-if="!isAtBottom">
+      <Button @click="$emit('scrollToBottom')" variant="outline">
+        <LucideChevronDown />
+      </Button>
+    </div>
     <div class="flex flex-row border">
       <div class="basis-1/5" v-if="url_imagen.length > 0">
         <img
