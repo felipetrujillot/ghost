@@ -2,9 +2,18 @@
   <div class="py-4">
     <div class="w-full bg-popover">
       <div class="flex justify-end">
-        <Button variant="outline" @click.prevent="copyToClipboard">
-          <LucideClipboard />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger as-child>
+              <Button variant="outline" @click.prevent="copyToClipboard">
+                <LucideClipboard />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Copiar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
     <pre
