@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import GeneratingChat from './_components/GeneratingChat.vue'
 import InputChat from './_components/InputChat.vue'
 import RenderChat from './_components/RenderChat.vue'
 import SheetChat from './_components/SheetChat.vue'
@@ -9,16 +10,22 @@ definePageMeta({
 })
 documentTitle('chat')
 
-const status = ref<'idle' | 'pending' | 'generating' | 'success'>('idle')
-
 const { $trpc } = useNuxtApp()
+
+const statusChat = ref<'idle' | 'pending' | 'generating' | 'success'>('idle')
+
 const route = useRoute()
+const router = useRouter()
+
+const chatAI = useChat()
+
+const { chatLLM, addPrompt, status: statusGeneration } = useGeneratingChat()
 
 const showSheet = ref(false)
 const inputChat = ref('')
 
-const chatAI = ref<ChatAI[]>(DEFAULT_CHAT)
 const chatContainer = ref<HTMLElement | null>(null)
+const useChatId = useIdChat()
 
 const scrollToBottom = () => {
   if (chatContainer.value) {
@@ -26,53 +33,69 @@ const scrollToBottom = () => {
   }
 }
 
-onMounted(async () => {
-  status.value = 'pending'
+/**
+ *
+ */
+const isNewChat = computed(() => {
   const routeSlug = route.params.slug
-
   if (typeof routeSlug === 'undefined') {
-    status.value = 'success'
-    return []
+    return true
+  } else if (typeof routeSlug === 'object') {
+    return routeSlug[0]!
   }
-
-  if (typeof routeSlug === 'object') {
-    const res = await $trpc.chat.getChatId.query({
-      requestId: routeSlug[0]!,
-    })
-
-    if (res.chat_session) {
-      documentTitle(res.chat_session.titulo)
-    }
-
-    const mapRes = res.chat.map((r) => {
-      return {
-        origen: r.origen as 'user' | 'llm',
-        chat: r.chat,
-        tipo: r.tipo as 'texto' | 'imagen' | 'pdf',
-      }
-    })
-
-    chatAI.value = mapRes
-
-    status.value = 'success'
-
-    await nextTick()
-    scrollToBottom()
-    return
-  }
-
-  status.value = 'success'
-
-  return []
+  return true
 })
 
 /**
  *
  * @param params
  */
-const nuevoMensaje = (params: ChatAI[]) => {
-  chatAI.value.push(...params)
+const nuevoMensaje = async (params: ChatAI[]) => {
+  if (isNewChat.value) {
+    clearChat()
+  }
+
+  addItemsChat(params)
+
+  if (isNewChat.value) {
+    await newChatSession()
+  }
+
+  const onSuccessChat = () => {
+    addItemsChat([
+      {
+        chat: chatLLM.value,
+        origen: 'llm',
+        tipo: 'texto',
+      },
+    ])
+
+    if (isNewChat.value) {
+      router.push(`/chat/${useChatId.value}`)
+    }
+  }
+
+  addPrompt(params, onSuccessChat)
 }
+
+/**
+ *
+ */
+onMounted(async () => {
+  clearChat()
+  statusChat.value = 'pending'
+
+  if (typeof isNewChat.value === 'string') {
+    await selectChatById(isNewChat.value)
+    statusChat.value = 'success'
+  } else {
+    addItemsChat(DEFAULT_CHAT)
+    statusChat.value = 'success'
+  }
+  await nextTick()
+
+  scrollToBottom()
+})
 </script>
 
 <template>
@@ -85,11 +108,25 @@ const nuevoMensaje = (params: ChatAI[]) => {
         <div class="max-w-3xl mx-auto h-full">
           <div class="border-x border-1 min-h-full border-t">
             <div class="space-y-4 py-4 px-4">
-              <Skeleton class="h-8 rounded" v-if="status === 'pending'" />
-              <template v-if="status === 'success'">
+              <Skeleton
+                class="h-8 rounded"
+                v-if="
+                  statusChat === 'pending' ||
+                  (statusChat === 'generating' && chatLLM.length === 0)
+                "
+              />
+              <template v-if="statusChat === 'success'">
                 <template v-for="(chat, k) in chatAI" :key="k">
                   <RenderChat :chat="chat" />
                 </template>
+              </template>
+
+              <Skeleton
+                class="h-8 rounded"
+                v-if="statusGeneration === 'pending' && chatLLM.length === 0"
+              />
+              <template v-if="statusGeneration === 'pending'">
+                <MDC :value="chatLLM" class="space-y-6" />
               </template>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { db } from '~~/server/db/db'
 import {
   chat,
   chat_sessions,
+  InsertChat,
   models,
   system_prompts,
   usuarios,
@@ -15,41 +16,8 @@ import { RouterOutput } from '.'
 import { Part } from '@google/genai'
 import { octetInputParser } from '@trpc/server/http'
 import { generateContent, generateImage } from '~~/server/db/ai'
-import { createMarkdownRenderer } from '~/components/md/markdown'
 
 export const chatTrpc = {
-  /**
-   *
-   */
-
-  experimentalPrompt: protectedProcedure
-    .input(z.instanceof(FormData))
-    .mutation(async function* ({ input, ctx }) {
-      const object = {} as Record<string, unknown>
-      for (const [key, value] of input.entries()) {
-        if (value instanceof File) {
-          object[key] = {
-            name: value.name,
-            type: value.type,
-            size: value.size,
-            text: await value.text(),
-          }
-        } else {
-          object[key] = value
-        }
-      }
-
-      console.log(object)
-      async function* streamGenerateContent() {
-        yield 'Subiendo documentos'
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        yield 'Procesando'
-      }
-
-      yield* streamGenerateContent()
-    }),
-
   /**
    *
    */
@@ -151,7 +119,7 @@ export const chatTrpc = {
    *
    *
    */
-  addChatSession: protectedProcedure.query(async ({ ctx }) => {
+  addChatSession: protectedProcedure.mutation(async ({ ctx }) => {
     const { id_empresa, id_usuario } = ctx.user!
 
     const newUuid = uuid()
@@ -173,14 +141,18 @@ export const chatTrpc = {
   addPrompt: protectedProcedure
     .input(
       z.object({
-        prompt: z.string(),
-        requestId: z.string(),
-        url_imagen: z.string(),
-        url_pdf: z.string(),
+        id: z.string(),
+        input_chat: z.array(
+          z.object({
+            chat: z.string(),
+            tipo: z.string(),
+          }),
+        ),
       }),
     )
     .mutation(async function* ({ input, ctx }) {
-      const { prompt, requestId, url_imagen, url_pdf } = input
+      const { id: requestId, input_chat } = input
+      // const { prompt, requestId, url_imagen, url_pdf } = input
       const { id_empresa, id_usuario } = ctx.user!
 
       const [myModel] = await db
@@ -200,7 +172,7 @@ export const chatTrpc = {
 
       const { system_prompt, llm_model } = myModel
 
-      const sys_prompt = systemPromptTxt()
+      // const sys_prompt = systemPromptTxt()
       //const generativeModel = vertexModel({ system_prompt, llm_model })
 
       const contents: {
@@ -235,56 +207,67 @@ export const chatTrpc = {
         contents.push(...mapChat)
       }
 
-      /*   contents.push({
-        role:'user' :parts []
-      }) */
+      const chatParts: Part[] = []
 
-      const newPromptArr: (typeof contents)[0] = {
+      input_chat.forEach((c) => {
+        if (c.tipo === 'texto') {
+          chatParts.push({ text: c.chat })
+        }
+
+        if (c.tipo === 'imagen')
+          chatParts.push({
+            fileData: {
+              fileUri: c.chat,
+              mimeType: 'image/jpeg',
+            },
+          })
+
+        if (c.tipo === 'pdf')
+          chatParts.push({
+            fileData: {
+              fileUri: c.chat,
+              mimeType: 'application/pdf',
+            },
+          })
+      })
+
+      contents.push({
         role: 'user',
-        parts: [{ text: prompt }],
-      }
-
-      if (url_imagen.length > 0) {
-        newPromptArr.parts.push({
-          fileData: {
-            fileUri: url_imagen,
-            mimeType: 'image/jpeg',
-          },
-        })
-      }
-
-      if (url_pdf.length > 0) {
-        newPromptArr.parts.push({
-          fileData: {
-            fileUri: url_pdf,
-            mimeType: 'application/pdf',
-          },
-        })
-      }
-
-      contents.push(newPromptArr)
+        parts: chatParts,
+      })
 
       /**
        *
        */
       const saveChat = async (responseLLM: string) => {
-        const insertParamsUser = [
-          {
-            origen: 'user',
-            chat: prompt,
-            tipo: 'texto',
-            id_chat_session: findChatSession[0].id_chat_session,
-          },
-        ]
+        const insertParamsUser: InsertChat[] = []
 
-        if (url_imagen.length > 0) {
-          insertParamsUser.push({
-            origen: 'user',
-            chat: url_imagen,
-            tipo: 'imagen',
-            id_chat_session: findChatSession[0].id_chat_session,
-          })
-        }
+        input_chat.forEach((c) => {
+          if (c.tipo === 'texto') {
+            insertParamsUser.push({
+              chat: c.chat,
+              tipo: 'texto',
+              origen: 'user',
+              id_chat_session: findChatSession[0].id_chat_session,
+            })
+          }
+
+          if (c.tipo === 'imagen')
+            insertParamsUser.push({
+              chat: c.chat,
+              tipo: 'imagen',
+              origen: 'user',
+              id_chat_session: findChatSession[0].id_chat_session,
+            })
+
+          if (c.tipo === 'pdf')
+            insertParamsUser.push({
+              chat: c.chat,
+              tipo: 'pdf',
+              origen: 'user',
+              id_chat_session: findChatSession[0].id_chat_session,
+            })
+        })
 
         const insertParams = [
           ...insertParamsUser,
@@ -363,7 +346,7 @@ export const chatTrpc = {
           yield llmImageResponse
         } else {
           const streamingResult = await generateContent({
-            system_prompt: sys_prompt,
+            system_prompt: system_prompt,
             llm_model,
             contents: contents,
           })
