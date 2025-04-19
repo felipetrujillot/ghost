@@ -208,3 +208,4 @@ export const gastos = mySchema.table('gastos', {
 export type Usuarios = typeof usuarios.$inferSelect
 export type PasswordsReset = typeof passwords_reset.$inferSelect
 export type Vectores = typeof vectores.$inferSelect
+export type InsertChat = typeof chat.$inferInsert
