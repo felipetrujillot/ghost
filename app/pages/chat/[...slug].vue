@@ -73,6 +73,8 @@ const nuevoMensaje = async (params: ChatAI[]) => {
       },
     ])
 
+    setChatSessions()
+
     if (isNewChat.value) {
       router.push(`/chat/${useChatId.value}`)
     }
