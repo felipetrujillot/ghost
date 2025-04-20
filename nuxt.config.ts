@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     highlight: {
       highlighter: 'shiki',
       theme: 'tokyo-night',
-      noApiRoute: true,
     },
     remarkPlugins: {
       'remark-math': {},
