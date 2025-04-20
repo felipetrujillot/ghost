@@ -18,7 +18,7 @@
     </div>
     <pre
       ref="codeRef"
-      class="bg-popover px-4 overflow-x-scroll font-mono"
+      class="dark:bg-popover bg-secondary px-4 overflow-x-scroll font-mono"
       :class="$props.class"
     >
       <slot />

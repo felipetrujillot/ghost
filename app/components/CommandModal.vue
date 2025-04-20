@@ -45,6 +45,10 @@ const selectItem = (to: string) => {
   $router.push(to)
   open.value = false
 }
+const changeTheme = (th: 'dark' | 'light') => {
+  setTheme(th)
+  open.value = false
+}
 </script>
 
 <template>
@@ -83,6 +87,14 @@ const selectItem = (to: string) => {
 
             <CommandItem @select="selectItem('/login')" value="login">
               Login
+            </CommandItem>
+
+            <CommandItem @select="changeTheme('dark')" value="dark">
+              Modo oscuro
+            </CommandItem>
+
+            <CommandItem @select="changeTheme('light')" value="light">
+              Modo día
             </CommandItem>
 
             <CommandItem @select="selectItem('/logout')" value="cerrar sesión">

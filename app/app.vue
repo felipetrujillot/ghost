@@ -1,7 +1,9 @@
 <script setup lang="ts">
+const useTheme = useCookie('useTheme')
+
 useHead({
   bodyAttrs: {
-    class: 'dark',
+    class: useTheme.value || 'dark',
   },
 })
 </script>

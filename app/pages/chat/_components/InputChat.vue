@@ -155,7 +155,7 @@ const uploadFile = async (files: File[]) => {
           <PopoverTrigger as-child>
             <div class="border-x p-4 cursor-pointer">
               <LucideEllipsis
-                class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+                class="dark:text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
               />
             </div>
           </PopoverTrigger>
@@ -181,7 +181,7 @@ const uploadFile = async (files: File[]) => {
         >
           <div class="border-x cursor-pointer p-4">
             <LucidePaperclip
-              class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+              class="dark:text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
             />
           </div>
         </DropzoneClick>
@@ -197,7 +197,7 @@ const uploadFile = async (files: File[]) => {
           "
         >
           <LucideX
-            class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+            class="dark:text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
           />
         </div>
 
@@ -206,7 +206,7 @@ const uploadFile = async (files: File[]) => {
           @click.prevent="nuevoMensaje"
         >
           <LucideArrowUp
-            class="text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
+            class="dark:text-primary-foreground h-4 w-4 min-h-4 min-w-4 max-h-4 max-w-4"
           />
         </div>
       </div>

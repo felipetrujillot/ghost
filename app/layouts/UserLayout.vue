@@ -39,7 +39,7 @@ const sidebar = ref(true)
       class="grid w-full grid-cols-1 min-h-screen"
       :class="sidebar ? 'lg:grid-cols-[250px_1fr]' : ''"
     >
-      <div class="hidden lg:block">
+      <div class="hidden lg:block dark:bg-transparent bg-secondary">
         <div class="flex flex-col gap-2" style="width: 250px">
           <div
             class="fixed flex flex-col justify-between border-r pb-4 h-full"
@@ -47,11 +47,6 @@ const sidebar = ref(true)
             v-show="sidebar"
           >
             <nav class="grid items-start text-sm font-medium">
-              <!--   <h1
-                class="duration-200 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0"
-              >
-                Menús
-              </h1> -->
               <div class="border-b border-t h-14 px-4">
                 <div class="flex justify-between items-center h-full">
                   <CommandModal />

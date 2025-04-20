@@ -29,7 +29,11 @@ const deleteNota = async () => {
       <NuxtLink
         :to="to"
         class="flex-grow py-2"
-        :class="active ? 'text-white bg-secondary' : 'text-muted-foreground'"
+        :class="
+          active
+            ? 'text-black dark:text-white bg-secondary'
+            : 'text-muted-foreground'
+        "
       >
         {{ text }}
       </NuxtLink>
