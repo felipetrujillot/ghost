@@ -1,20 +1,10 @@
 <script setup lang="ts">
-import { LucideEllipsis } from 'lucide-vue-next'
 documentTitle('tareas')
 
 definePageMeta({
   layout: 'user-layout',
   middleware: 'checkauth',
 })
-
-/**
- *
- */
-const { $trpc, $router } = useNuxtApp()
-
-const popoverPendientes = ref(false)
-const popoverProceso = ref(false)
-const popoverCompletadas = ref(false)
 </script>
 <template>
   <div class="container space-y-4 h-screen">
