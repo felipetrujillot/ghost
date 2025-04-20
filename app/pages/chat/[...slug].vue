@@ -62,6 +62,7 @@ const nuevoMensaje = async (params: ChatAI[]) => {
 
   if (isNewChat.value === true) {
     await newChatSession()
+    setChatSessions()
   }
 
   const onSuccessChat = (responseChat: string) => {
@@ -72,8 +73,6 @@ const nuevoMensaje = async (params: ChatAI[]) => {
         tipo: 'texto',
       },
     ])
-
-    // setChatSessions()
 
     if (isNewChat.value) {
       router.push(`/chat/${useChatId.value}`)
