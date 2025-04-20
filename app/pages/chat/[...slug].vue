@@ -31,8 +31,6 @@ const scrollToBottom = async () => {
       top: chatContainer.value.scrollHeight - chatContainer.value.clientHeight,
       behavior: 'instant',
     })
-    /*  chatContainer.value.scrollTop =
-      chatContainer.value.scrollHeight - chatContainer.value.clientHeight */
   }
 }
 
@@ -51,6 +49,26 @@ const isNewChat = computed(() => {
 
 /**
  *
+ * @param responseChat
+ */
+const onSuccessChat = (responseChat: string) => {
+  addItemsChat([
+    {
+      chat: responseChat,
+      origen: 'llm',
+      tipo: 'texto',
+    },
+  ])
+
+  setChatSessions()
+
+  if (isNewChat.value) {
+    router.push(`/chat/${useChatId.value}`)
+  }
+}
+
+/**
+ *
  * @param params
  */
 const nuevoMensaje = async (params: ChatAI[]) => {
@@ -62,22 +80,6 @@ const nuevoMensaje = async (params: ChatAI[]) => {
 
   if (isNewChat.value === true) {
     await newChatSession()
-  }
-
-  const onSuccessChat = (responseChat: string) => {
-    addItemsChat([
-      {
-        chat: responseChat,
-        origen: 'llm',
-        tipo: 'texto',
-      },
-    ])
-
-    setChatSessions()
-
-    if (isNewChat.value) {
-      router.push(`/chat/${useChatId.value}`)
-    }
   }
 
   addPrompt(params, onSuccessChat)
@@ -98,7 +100,7 @@ onMounted(async () => {
     statusChat.value = 'success'
   }
   await nextTick()
-  await timeSleep(0.2)
+  await timeSleep(0.1)
 
   await scrollToBottom()
 })
