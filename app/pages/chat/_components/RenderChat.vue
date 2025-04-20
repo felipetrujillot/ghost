@@ -1,5 +1,14 @@
 <script setup lang="ts">
 defineProps<{ chat: ChatAI }>()
+
+function escapeHTML(input) {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
 </script>
 
 <template>
@@ -9,13 +18,15 @@ defineProps<{ chat: ChatAI }>()
 
   <div
     v-if="chat.origen === 'user'"
-    class="fadeInFast max-w-[75%] gap-2 rounded-lg px-3 py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
+    class="fadeInFast max-w-[75%] gap-2 rounded-lg py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
   >
-    <div
-      v-if="chat.tipo === 'texto'"
-      class="prose prose-md dark:prose-invert"
-      v-html="chat.chat"
-    ></div>
+    <template v-if="chat.tipo === 'texto'">
+      <div
+        class="prose prose-md dark:prose-invert"
+        style="white-space: pre-wrap"
+        v-html="escapeHTML(chat.chat)"
+      ></div>
+    </template>
 
     <div v-if="chat.tipo === 'imagen'" class="prose prose-md dark:prose-invert">
       <img :src="chat.chat" style="max-height: 8vh; object-fit: contain" />

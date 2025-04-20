@@ -42,7 +42,7 @@ const updateConfig = async () => {
 </script>
 
 <template>
-  <VueModal @closeModal="$emit('closeModal')">
+  <VueModal @closeModal="$emit('closeModal')" size="max-w-3xl">
     <Card>
       <div class="space-y-1">
         <Label> Modelo </Label>
@@ -84,13 +84,14 @@ const updateConfig = async () => {
           </SelectContent>
         </Select>
       </div>
-      <div class="border p-4">
+      <div class="border p-4" v-if="foundedPrompt">
         <div
           v-html="foundedPrompt?.system_prompt"
+          style="white-space: pre-wrap"
           class="prose prose-sm dark:prose-invert"
         ></div>
       </div>
-      <Button class="w-full" @click.prevent="updateConfig">Guardar</Button>
     </Card>
+    <Button class="w-full" @click.prevent="updateConfig">Guardar</Button>
   </VueModal>
 </template>

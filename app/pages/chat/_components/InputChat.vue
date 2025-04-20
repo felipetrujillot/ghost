@@ -45,7 +45,7 @@ const nuevoMensaje = () => {
   if (!inputChat.value) return
   if (inputChat.value?.length === 0) return
 
-  const chatPersistent = inputChat.value.replace(/\n/g, '<br>')
+  const chatPersistent = inputChat.value //.replace(/\n/g, '<br>')
 
   const chatArray: ChatAI[] = [
     {
