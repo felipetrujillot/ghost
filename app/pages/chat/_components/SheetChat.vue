@@ -68,11 +68,11 @@ const selectItem = (to: string) => {
                   <CommandItem
                     class="text-start px-0"
                     :class="
-                      route.query.id === c.uuid
+                      route.params.slug[0] === c.uuid
                         ? 'bg-accent data-[highlighted]:bg-accent'
                         : 'bg-background data-[highlighted]:bg-background'
                     "
-                    @select="selectItem(`/chat?id=${c.uuid}`)"
+                    @select="selectItem(`/chat/${c.uuid}`)"
                     :value="`CHAT: ${c.titulo} ${c.id_chat_session}`"
                   >
                     {{ c.titulo }}
