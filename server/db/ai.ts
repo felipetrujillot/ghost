@@ -5,20 +5,22 @@ import type { Part } from '@google/genai'
 import { gcpBucket } from './gcp'
 import { newUuid } from '~/composables/helper'
 
-// Initialize Vertex with your Cloud project and location
-const ai = new GoogleGenAI({
-  vertexai: true,
-  project: 'linebox-412716',
-  location: 'us-central1',
-  googleAuthOptions: {
-    keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
-  },
-  httpOptions: {
-    headers: {
-      Connection: 'keep-alive',
+const startAi = (location: string) => {
+  return new GoogleGenAI({
+    vertexai: true,
+    project: 'linebox-412716',
+    location: location,
+    googleAuthOptions: {
+      keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
     },
-  },
-})
+    httpOptions: {
+      headers: {
+        Connection: 'keep-alive',
+      },
+    },
+  })
+}
+// Initialize Vertex with your Cloud project and location
 
 /**
  *
@@ -28,15 +30,19 @@ const ai = new GoogleGenAI({
 export async function generateContent({
   system_prompt,
   llm_model,
+  location,
   contents,
 }: {
   system_prompt: string
   llm_model: string
+  location: string
   contents: {
     role: string
     parts: Part[]
   }[]
 }) {
+  const ai = startAi(location)
+
   const streamingResp = await ai.models.generateContentStream({
     model: llm_model,
     contents: contents,
@@ -95,15 +101,19 @@ export async function generateContent({
 export async function generateImage({
   system_prompt,
   llm_model,
+  location,
   contents,
 }: {
   system_prompt: string
   llm_model: string
+  location: string
   contents: {
     role: string
     parts: Part[]
   }[]
 }) {
+  const ai = startAi(location)
+
   const streamingResp = await ai.models.generateContent({
     model: llm_model,
     contents: contents,
@@ -113,16 +123,6 @@ export async function generateImage({
       topP: 0.95,
       seed: 0,
       responseModalities: ['IMAGE', 'TEXT'],
-
-      /*  systemInstruction: {
-        role: 'system',
-        parts: [
-          {
-            text: `
-                ${system_prompt}`,
-          },
-        ],
-      }, */
 
       safetySettings: [
         {

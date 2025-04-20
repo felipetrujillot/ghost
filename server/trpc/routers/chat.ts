@@ -119,6 +119,7 @@ export const chatTrpc = {
           id_system_prompt: usuarios.id_system_prompt,
           system_prompt: system_prompts.system_prompt,
           llm_model: models.llm_model,
+          location: models.location,
         })
         .from(usuarios)
         .innerJoin(models, eq(models.id_model, usuarios.id_model))
@@ -128,7 +129,7 @@ export const chatTrpc = {
         )
         .where(eq(usuarios.id_usuario, id_usuario))
 
-      const { system_prompt, llm_model } = myModel
+      const { system_prompt, llm_model, location } = myModel
 
       const contents: {
         role: string
@@ -242,6 +243,7 @@ export const chatTrpc = {
         IMPORTANT: Only use words and not special characters.
             `,
             llm_model: 'gemini-2.0-flash',
+            location,
             contents: contents,
           })
 
@@ -280,6 +282,7 @@ export const chatTrpc = {
 
         if (llm_model === 'gemini-2.0-flash-exp') {
           const imageRes = await generateImage({
+            location,
             system_prompt:
               'You are an expert on generate images, use the provided context ONLY GENERATE IMAGES',
             llm_model: 'gemini-2.0-flash-exp',
@@ -292,6 +295,7 @@ export const chatTrpc = {
           yield llmImageResponse
         } else {
           const streamingResult = await generateContent({
+            location,
             system_prompt: system_prompt,
             llm_model,
             contents: contents,
