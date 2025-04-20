@@ -115,7 +115,7 @@ const changeTheme = (th: 'dark' | 'light') => {
             <template v-if="route.name === 'chat'">
               <template v-for="(c, k) in chats" :key="k">
                 <CommandItem
-                  @select="selectItem(`/chat/${c.uuid}`)"
+                  @select="selectItem(`/chat?id=${c.uuid}`)"
                   :value="`CHAT: ${c.titulo} ${c.id_chat_session}`"
                 >
                   Chat: {{ c.titulo }}
