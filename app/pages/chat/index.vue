@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { routeLocationKey } from 'vue-router'
 import InputChat from './_components/InputChat.vue'
 import RenderChat from './_components/RenderChat.vue'
 import SheetChat from './_components/SheetChat.vue'
@@ -10,7 +11,7 @@ definePageMeta({
 documentTitle('chat')
 
 const statusChat = ref<'idle' | 'pending' | 'generating' | 'success'>('idle')
-
+const isRedirecting = ref(false)
 const route = useRoute()
 const router = useRouter()
 
@@ -38,12 +39,18 @@ const scrollToBottom = async () => {
  *
  */
 const isNewChat = computed(() => {
-  const routeSlug = route.params.slug
+  const routeSlug = route.query.id
+  console.log({ routeSlug })
   if (typeof routeSlug === 'undefined') {
+    useChatId.value = ''
     return true
-  } else if (typeof routeSlug === 'object') {
-    return routeSlug[0]!
+  } else if (typeof routeSlug === 'string') {
+    useChatId.value = routeSlug
+    return routeSlug!
   }
+
+  useChatId.value = ''
+
   return true
 })
 
@@ -61,10 +68,7 @@ const onSuccessChat = (responseChat: string) => {
   ])
 
   setChatSessions()
-
-  if (isNewChat.value) {
-    router.push(`/chat/${useChatId.value}`)
-  }
+  isRedirecting.value = false
 }
 
 /**
@@ -80,15 +84,27 @@ const nuevoMensaje = async (params: ChatAI[]) => {
 
   if (isNewChat.value === true) {
     await newChatSession()
+    isRedirecting.value = true
+    router.replace(`/chat?id=${useChatId.value}`)
   }
 
   addPrompt(params, onSuccessChat)
 }
 
-/**
- *
- */
-onMounted(async () => {
+const checkScrollPosition = () => {
+  if (chatContainer.value) {
+    const scrollHeight = chatContainer.value.scrollHeight
+    const clientHeight = chatContainer.value.clientHeight
+
+    const scrollTop = chatContainer.value.scrollTop
+
+    const res = scrollHeight - scrollTop
+
+    isAtBottom.value = res - 200 <= clientHeight
+  }
+}
+
+const handleView = async () => {
   clearChat()
   statusChat.value = 'pending'
 
@@ -103,20 +119,18 @@ onMounted(async () => {
   await timeSleep(0.1)
 
   await scrollToBottom()
-})
-
-const checkScrollPosition = () => {
-  if (chatContainer.value) {
-    const scrollHeight = chatContainer.value.scrollHeight
-    const clientHeight = chatContainer.value.clientHeight
-
-    const scrollTop = chatContainer.value.scrollTop
-
-    const res = scrollHeight - scrollTop
-
-    isAtBottom.value = res - 200 <= clientHeight
-  }
 }
+
+onMounted(async () => {
+  await handleView()
+})
+/**
+ *
+ */
+watch(route, async () => {
+  if (isRedirecting.value === true) return
+  await handleView()
+})
 
 onMounted(() => {
   chatContainer.value?.addEventListener('scroll', checkScrollPosition)

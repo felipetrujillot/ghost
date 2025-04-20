@@ -37,6 +37,7 @@ const handleEnter = (event: KeyboardEvent) => {
     !event.metaKey
   ) {
     nuevoMensaje()
+    inputChat.value = ''
   }
 }
 /**
@@ -140,7 +141,7 @@ const uploadFile = async (files: File[]) => {
       <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
         <FocusScope>
           <textarea
-            @keydown.enter="handleEnter"
+            @keydown.enter.prevent="handleEnter"
             class="flex min-h-24 max-h-48 w-full rounded-md bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             style="field-sizing: content"
             placeholder="Escribe un mensaje..."
