@@ -237,6 +237,25 @@ export const chatTrpc = {
         await db.insert(chat).values(insertParams)
 
         if (findChatSession[0].titulo.length === 0) {
+          const onlyUserContents = contents.find((c) => {
+            if (c.role === 'user') return c
+          })
+
+          const onlyTextParts = onlyUserContents?.parts.filter((p) => {
+            if ('fileData' in p) return
+            return p
+          })
+
+          const newContent: {
+            role: string
+            parts: Part[]
+          }[] = [
+            {
+              role: 'user',
+              parts: onlyTextParts!,
+            },
+          ]
+
           const streamingResult = await generateContent({
             system_prompt: `You are an expert on summarize the user input in maximun 4 words
         IMPORTANT: Give the answer in Spanish.
@@ -244,7 +263,7 @@ export const chatTrpc = {
             `,
             llm_model: 'gemini-2.0-flash',
             location,
-            contents: contents,
+            contents: newContent,
           })
 
           let fullResponse = ''
@@ -300,6 +319,7 @@ export const chatTrpc = {
             llm_model,
             contents: contents,
           }).catch((err) => {
+            console.log(err)
             console.log('ERROR ACÁ L 300')
             throw err
           })
