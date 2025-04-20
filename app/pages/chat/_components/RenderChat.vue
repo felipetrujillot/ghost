@@ -18,7 +18,7 @@ function escapeHTML(input) {
 
   <div
     v-if="chat.origen === 'user'"
-    class="fadeInFast max-w-[75%] gap-2 rounded-lg py-2 text-sm ml-auto bg-secondary text-primary-foreground p-4"
+    class="fadeInFast max-w-[75%] gap-2 rounded-lg py-2 bg-secondary text-sm ml-auto text-primary-foreground p-4 w-fit"
   >
     <template v-if="chat.tipo === 'texto'">
       <div
@@ -28,8 +28,10 @@ function escapeHTML(input) {
       ></div>
     </template>
 
-    <div v-if="chat.tipo === 'imagen'" class="prose prose-md dark:prose-invert">
-      <img :src="chat.chat" style="max-height: 8vh; object-fit: contain" />
+    <div v-if="chat.tipo === 'imagen'">
+      <a target="_blank" :href="chat.chat">
+        <img :src="chat.chat" style="max-height: 8vh; object-fit: contain" />
+      </a>
     </div>
 
     <div v-if="chat.tipo === 'pdf'" class="prose prose-md dark:prose-invert">
