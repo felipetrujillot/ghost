@@ -292,16 +292,35 @@ export const chatTrpc = {
           fullResponse += llmImageResponse
           yield llmImageResponse
         } else {
+          contents.forEach((c) => {
+            console.log(c.parts)
+          })
           const streamingResult = await generateContent({
             system_prompt: system_prompt,
             llm_model,
             contents: contents,
+          }).catch((err) => {
+            console.log('ERROR ACÁ L 300')
+            throw err
           })
 
           for await (const item of streamingResult) {
-            if (item.text) {
+            /*   if (item.text) {
+              console.log(typeof item.text)
               fullResponse += item.text
               yield item.text
+            } */
+            try {
+              if (item.candidates) {
+                const textChunk = item.candidates![0]!.content!.parts![0]!.text
+
+                if (textChunk) {
+                  fullResponse += textChunk
+                  yield textChunk
+                }
+              }
+            } catch (error) {
+              console.error(error)
             }
           }
         }

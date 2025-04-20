@@ -7,6 +7,9 @@ export type ChatAI = {
 export type TypeStatus = 'idle' | 'pending' | 'success' | 'error'
 export const useChat = () => useState<ChatAI[]>('useChat', () => [])
 export const useIdChat = () => useState<string>('useIdChat', () => '')
+
+const ac = new AbortController()
+
 /**
  *
  * @returns
@@ -31,28 +34,45 @@ export const useGeneratingChat = () => {
       }
     })
 
+    let countError = 0
     status.value = 'pending'
 
-    const res = await $trpc_stream.chat.addPrompt.mutate({
-      id: useChatId.value,
-      input_chat: mapInput,
-    })
+    const abortSignal = () => {}
+    try {
+      const res = await $trpc_stream.chat.addPrompt.mutate(
+        {
+          id: useChatId.value,
+          input_chat: mapInput,
+        },
+        { signal: ac.signal },
+      )
 
-    const randomDelay = () =>
-      new Promise((resolve) => setTimeout(resolve, Math.random() * 30 + 10))
+      const randomDelay = () =>
+        new Promise((resolve) => setTimeout(resolve, Math.random() * 30 + 10))
 
-    for await (const char of res) {
-      try {
-        chatLLM.value += char
+      for await (const item of res) {
+        chatLLM.value += item
 
         await randomDelay()
-      } catch (err) {
-        console.log(err)
       }
-    }
 
-    status.value = 'success'
-    onSuccess()
+      status.value = 'success'
+      onSuccess(chatLLM.value)
+      countError++
+      chatLLM.value = ''
+    } catch (error) {
+      console.error(error)
+      console.log({ countError })
+      //status.value = 'error'
+      if (countError === 0) {
+        console.log('here')
+        onSuccess(chatLLM.value)
+      }
+      chatLLM.value = ''
+      status.value = 'success'
+
+      throw new Error('ERROR: Generando la respuesta')
+    }
   }
 
   return { chatLLM, addPrompt, status }

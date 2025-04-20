@@ -54,26 +54,26 @@ const isNewChat = computed(() => {
  * @param params
  */
 const nuevoMensaje = async (params: ChatAI[]) => {
-  if (isNewChat.value) {
+  if (isNewChat.value === true) {
     clearChat()
   }
 
   addItemsChat(params)
 
-  if (isNewChat.value) {
+  if (isNewChat.value === true) {
     await newChatSession()
   }
 
-  const onSuccessChat = () => {
+  const onSuccessChat = (responseChat: string) => {
     addItemsChat([
       {
-        chat: chatLLM.value,
+        chat: responseChat,
         origen: 'llm',
         tipo: 'texto',
       },
     ])
 
-    setChatSessions()
+    // setChatSessions()
 
     if (isNewChat.value) {
       router.push(`/chat/${useChatId.value}`)
@@ -143,6 +143,7 @@ onBeforeUnmount(() => {
                   (statusChat === 'generating' && chatLLM.length === 0)
                 "
               />
+
               <template v-if="statusChat === 'success'">
                 <template v-for="(chat, k) in chatAI" :key="k">
                   <RenderChat :chat="chat" />
