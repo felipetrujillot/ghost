@@ -292,9 +292,6 @@ export const chatTrpc = {
           fullResponse += llmImageResponse
           yield llmImageResponse
         } else {
-          contents.forEach((c) => {
-            console.log(c.parts)
-          })
           const streamingResult = await generateContent({
             system_prompt: system_prompt,
             llm_model,
