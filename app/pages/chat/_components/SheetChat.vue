@@ -34,8 +34,8 @@ const selectItem = (to: string) => {
 
     <h1 @click.prevent="$router.push('/')">undefined</h1>
 
-    <Button variant="outline" @click.prevent="showSheet = !showSheet">
-      <LucideAlignJustify />
+    <Button variant="outline" @click.prevent="selectItem('/chat')">
+      <LucideSquarePen />
     </Button>
   </div>
   <Sheet :open="showSheet" :invert="!showSheet">

@@ -288,7 +288,6 @@ export const chatTrpc = {
 
           const llmImageResponse = `![Alt Text](${imageRes})`
 
-          console.log(llmImageResponse)
           fullResponse += llmImageResponse
           yield llmImageResponse
         } else {

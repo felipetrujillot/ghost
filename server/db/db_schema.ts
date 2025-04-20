@@ -138,6 +138,7 @@ export const passwords_reset = mySchema.table('passwords_reset', {
  */
 export const models = mySchema.table('models', {
   id_model: int('id_model').primaryKey().autoincrement(),
+  title: varchar('title', { length: 255 }).notNull(),
   location: varchar('location', { length: 255 }).notNull(),
   llm_model: varchar('llm_model', { length: 255 }).notNull(),
   activo: int('activo').default(1).notNull(),

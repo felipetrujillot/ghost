@@ -104,7 +104,6 @@ export async function generateImage({
     parts: Part[]
   }[]
 }) {
-  console.log(contents)
   const streamingResp = await ai.models.generateContent({
     model: llm_model,
     contents: contents,

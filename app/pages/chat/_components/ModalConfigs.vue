@@ -57,7 +57,7 @@ const updateConfig = async () => {
                 :key="k"
                 :value="c.id_model.toString()"
               >
-                {{ c.llm_model }}</SelectItem
+                {{ c.title }} | {{ c.llm_model }}</SelectItem
               >
             </SelectGroup>
           </SelectContent>
