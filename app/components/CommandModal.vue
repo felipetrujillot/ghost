@@ -132,12 +132,6 @@ const changeTheme = (th: 'dark' | 'light') => {
               </CommandItem>
             </template>
           </CommandGroup>
-          <!--  <CommandSeparator /> -->
-          <!--  <CommandGroup heading="Settings">
-            <CommandItem value="profile"> Profile </CommandItem>
-            <CommandItem value="billing"> Billing </CommandItem>
-            <CommandItem value="settings"> Settings </CommandItem>
-          </CommandGroup> -->
         </CommandList>
       </div>
     </CommandDialog>
