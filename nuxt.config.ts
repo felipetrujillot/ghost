@@ -84,6 +84,7 @@ export default defineNuxtConfig({
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     injectManifest: {
+      maximumFileSizeToCacheInBytes: 1000000000,
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
     client: {
