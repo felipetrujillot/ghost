@@ -74,9 +74,12 @@ const nuevoMensaje = () => {
   }
 
   emit('nuevoMensaje', chatArray)
-  inputChat.value = ''
-  url_imagen.value = ''
-  url_pdf.value = ''
+
+  nextTick().then(() => {
+    inputChat.value = ''
+    url_imagen.value = ''
+    url_pdf.value = ''
+  })
 }
 
 /**
@@ -141,7 +144,7 @@ const uploadFile = async (files: File[]) => {
       <div :class="url_imagen.length === 0 ? 'w-full' : 'basis-4/5'">
         <FocusScope>
           <textarea
-            @keydown.enter.prevent="handleEnter"
+            @keydown.enter="handleEnter"
             class="flex min-h-24 max-h-48 w-full rounded-md bg-background px-4 py-4 text-md ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             style="field-sizing: content"
             placeholder="Escribe un mensaje..."

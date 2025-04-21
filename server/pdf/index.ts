@@ -226,17 +226,21 @@ function mergeLinesByYCoordinates(arr: ContentBlock[]): ContentBlock[] {
 }
 
 function convertToMarkdown(text: string, type: ContentBlock['type']): string {
-  const lines = text
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
+  const filteredText = text.replaceAll('•', '-')
+
+  const lines = filteredText.split('\n').map((line) => line.trim())
 
   if (type === 'title') return `## ${text}`
   if (type === 'header') return `#### ${text}`
   if (type === 'footer') return `#### ${text}`
 
-  text.replaceAll('•', '- ')
-  return text
+  const updatedLines = lines.map((line) => {
+    // if (line.includes(':')) return `- ${line}`
+
+    return /^\d/.test(line) ? `- ${line}` : line
+  })
+
+  return updatedLines.join('\n')
 }
 
 /**
@@ -332,7 +336,7 @@ export const convertFullPdf = async (file: Buffer) => {
 
   const totalAvgHeight = calcTotalAverageHeight(pages)
 
-  //return processPage(pages[1], totalAvgHeight)
+  return processPage(pages[15], totalAvgHeight)
 
   const groupedPages = pages.map((page) => {
     return processPage(page, totalAvgHeight)
