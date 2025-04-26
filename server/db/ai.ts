@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai'
 import { HarmCategory } from '@google/genai'
 import { HarmBlockThreshold } from '@google/genai'
-import type { Part } from '@google/genai'
+import type { Part, PartListUnion } from '@google/genai'
 import { gcpBucket } from './gcp'
 import { newUuid } from '~/composables/helper'
 
@@ -12,11 +12,6 @@ const startAi = (location: string) => {
     location: location,
     googleAuthOptions: {
       keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
-    },
-    httpOptions: {
-      headers: {
-        Connection: 'keep-alive',
-      },
     },
   })
 }
@@ -41,6 +36,7 @@ export async function generateContent({
     parts: Part[]
   }[]
 }) {
+  console.log({ llm_model, location, contents })
   const ai = startAi(location)
 
   const streamingResp = await ai.models.generateContentStream({
