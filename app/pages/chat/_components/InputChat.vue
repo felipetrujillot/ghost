@@ -131,7 +131,7 @@ const uploadFile = async (files: File[]) => {
         <img
           style="object-fit: contain"
           :src="url_imagen"
-          class="w-full min-h-24 max-h-24"
+          class="w-full min-h-24 max-h-28"
         />
       </div>
 
