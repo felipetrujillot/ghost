@@ -121,7 +121,7 @@ const uploadFile = async (files: File[]) => {
   <ModalConfigs v-if="showModalConfig" @closeModal="showModalConfig = false" />
 
   <div class="max-w-3xl mx-auto min-h-full flex-1 relative">
-    <div class="absolute w-full text-center" v-if="!isAtBottom">
+    <div class="absolute right-0 text-center" v-if="!isAtBottom">
       <Button @click="$emit('scrollToBottom')" variant="outline">
         <LucideChevronDown />
       </Button>
