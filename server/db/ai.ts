@@ -1,10 +1,9 @@
-import { GoogleGenAI } from '@google/genai'
-import { HarmCategory } from '@google/genai'
-import { HarmBlockThreshold } from '@google/genai'
-import type { Part, PartListUnion } from '@google/genai'
+import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from '@google/genai'
+import type { Part } from '@google/genai'
 import { gcpBucket } from './gcp'
 import { newUuid } from '~/composables/helper'
 
+// Initialize Vertex with your Cloud project and location
 const startAi = (location: string) => {
   return new GoogleGenAI({
     vertexai: true,
@@ -15,7 +14,6 @@ const startAi = (location: string) => {
     },
   })
 }
-// Initialize Vertex with your Cloud project and location
 
 /**
  *

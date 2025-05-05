@@ -4,10 +4,7 @@ import { usuarios, empresas, passwords_reset } from '~~/server/db/db_schema'
 import { protectedProcedure, publicProcedure, router } from '../trpc'
 import { db } from '~~/server/db/db'
 import { z } from 'zod'
-import { and, desc, eq, sql } from 'drizzle-orm'
-import type { RouterOutput } from '.'
-import { generateRandom13Digits } from '~/composables/helper'
-import { rejects } from 'assert'
+import { and, eq } from 'drizzle-orm'
 
 /**
  *
@@ -35,7 +32,7 @@ export const usuariosTrpc = router({
       z.object({
         id_model: z.number(),
         id_system_prompt: z.number(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const { id_model, id_system_prompt } = input
@@ -62,7 +59,7 @@ export const usuariosTrpc = router({
       z.object({
         email: z.string().email(),
         password: z.string(),
-      })
+      }),
     )
     .mutation(async (opts) => {
       const { email, password } = opts.input
@@ -85,7 +82,7 @@ export const usuariosTrpc = router({
         .from(usuarios)
         .innerJoin(empresas, eq(empresas.id_empresa, usuarios.id_empresa))
         .where(
-          and(eq(usuarios.email, email.toLocaleLowerCase().replace(/\s/g, '')))
+          and(eq(usuarios.email, email.toLocaleLowerCase().replace(/\s/g, ''))),
         )
         .limit(1)
 
@@ -117,7 +114,7 @@ export const usuariosTrpc = router({
     .input(
       z.object({
         token: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { token } = input
@@ -132,7 +129,7 @@ export const usuariosTrpc = router({
     .input(
       z.object({
         id_usuario: z.number(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { id_usuario } = input
@@ -220,7 +217,7 @@ export type BcryptUsuario = {
 export const bcryptToken = async (
   usuario: BcryptUsuario,
   password: string,
-  dbPass: string
+  dbPass: string,
 ) => {
   const config = useRuntimeConfig()
 

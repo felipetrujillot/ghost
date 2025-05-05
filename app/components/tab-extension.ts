@@ -21,7 +21,6 @@ export const TabHandler = Extension.create({
             })
             .run()
 
-          // Prevent default behavior (losing focus)
           return true
         }
       },
