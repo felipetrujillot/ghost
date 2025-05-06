@@ -10,7 +10,7 @@ const startAi = (location: string) => {
     project: 'linebox-412716',
     location: location,
     googleAuthOptions: {
-      keyFilename: 'server/db/linebox-412716-3a4261d61cad.json',
+      keyFilename: 'server/db/linebox-412716-99194e13da0c.json',
     },
   })
 }

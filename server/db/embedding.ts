@@ -6,8 +6,8 @@ const { PredictionServiceClient } = v1
 export const vertexAI = new PredictionServiceClient({
   project: project,
   location: location,
+  keyFilename: 'server/db/linebox-412716-99194e13da0c.json',
   apiEndpoint: 'us-central1-aiplatform.googleapis.com',
-  keyFilename: 'server/db/linebox-412716-fe1f0c92ff90.json',
 })
 const model = 'text-multilingual-embedding-002'
 const endpoint = `projects/${project}/locations/${location}/publishers/google/models/${model}`
